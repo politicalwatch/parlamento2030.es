@@ -33,19 +33,7 @@
             <div class="data-result" v-else>
               <ScannerWordsCloud :result="this.result"></ScannerWordsCloud>
               <ScannerSunburst :result="this.result"></ScannerSunburst>
-              <div class="row">
-                <div class="col-sm-7">
-                  <tipi-neuron
-                    v-if="fakeInitiative && allTopics"
-                    :initiative="fakeInitiative"
-                    :topics="allTopics"
-                    :styles="styles"
-                  />
-                </div>
-                <div class="col-sm-5">
-                  <p class="helptext">Aquí tienes una una relación visual de tu texto, para que de un primer vistazo veas conexiones interesantes.</p>
-                </div>
-              </div>
+              <ScannerBarchart :result="this.result"></ScannerBarchart>
               <div class="row">
                 <div class="col-sm-7">
                   <tipi-topics meta="ODS tratados" :topics="result.topics" :tags="result.tags"/>
@@ -81,6 +69,7 @@ import api from '@/api';
 import { mapState } from 'vuex';
 import ScannerWordsCloud from '@/components/scanner-wordscloud.vue';
 import ScannerSunburst from '@/components/scanner-sunburst.vue';
+import ScannerBarchart from '@/components/scanner-barchart.vue';
 
 const VueScrollTo = require('vue-scrollto');
 
@@ -93,6 +82,7 @@ export default {
     TipiCsvDownload,
     ScannerWordsCloud,
     ScannerSunburst,
+    ScannerBarchart,
   },
   data() {
     return {
@@ -174,6 +164,9 @@ textarea {
 #result {
   min-height: 500px;
   padding: 20px 0px;
+}
+.result {
+  position: static;
 }
 a.disabled {
   cursor: not-allowed;
