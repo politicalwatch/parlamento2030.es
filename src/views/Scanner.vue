@@ -31,6 +31,8 @@
               </div>
             </div>
             <div class="data-result" v-else>
+              <ScannerWordsCloud :result="this.result"></ScannerWordsCloud>
+              <ScannerSunburst :result="this.result"></ScannerSunburst>
               <div class="row">
                 <div class="col-sm-7">
                   <tipi-neuron
@@ -77,6 +79,8 @@ import { TipiHeader, TipiTopics, TipiNeuron, TipiCsvDownload } from 'tipi-uikit'
 import config from '@/config';
 import api from '@/api';
 import { mapState } from 'vuex';
+import ScannerWordsCloud from '@/components/scanner-wordscloud.vue';
+import ScannerSunburst from '@/components/scanner-sunburst.vue';
 
 const VueScrollTo = require('vue-scrollto');
 
@@ -87,6 +91,8 @@ export default {
     TipiTopics,
     TipiNeuron,
     TipiCsvDownload,
+    ScannerWordsCloud,
+    ScannerSunburst,
   },
   data() {
     return {
