@@ -2,29 +2,38 @@
   <div>
     <div id="group" class="o-container o-section u-margin-bottom-10">
       <tipi-header v-if="parliamentarygroup" :title="parliamentarygroup.name"/>
-      <h4 class="u-margin-bottom-4" v-if="latestInitiatives && latestInitiatives.length">Últimas iniciativas</h4>
-      <tipi-results layout="tiny" :initiatives="latestInitiatives" class="u-margin-bottom-4" :topicsStyles="topicsStyles"/>
-
-      <h4 class="u-margin-bottom-4">Diputados/as</h4>
-      <div class="o-grid">
-        <div class="o-grid__col u-12 u-4@sm">
-          <tipi-text meta="" :value="this.dividedDeputies[0]" type="deputies" :source="allDeputies" hideGroup/>
-        </div>
-        <div class="o-grid__col u-12 u-4@sm">
-          <tipi-text meta="" :value="this.dividedDeputies[1]" type="deputies" :source="allDeputies" hideGroup/>
-        </div>
-        <div class="o-grid__col u-12 u-4@sm">
-          <tipi-text meta="" :value="this.dividedDeputies[2]" type="deputies" :source="allDeputies" hideGroup/>
-        </div>
+      <div v-if="latestInitiatives && latestInitiatives.length" class="o-container o-section u-margin-bottom-4">
+        <h4 class="u-margin-bottom-4">Últimas iniciativas</h4>
+        <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="topicsStyles"/>
+      </div>
+      <div class="o-container o-section">
+        <tipi-message type="info" icon>
+          Sin actividad relacionada con la Agenda 2030
+        </tipi-message>
       </div>
 
+      <div class="o-container o-section">
+        <h4 class="u-margin-bottom-4">Diputados/as</h4>
+        <div class="o-grid">
+          <div class="o-grid__col u-12 u-4@sm">
+            <tipi-text meta="" :value="this.dividedDeputies[0]" type="deputies" :source="allDeputies" hideGroup/>
+          </div>
+          <div class="o-grid__col u-12 u-4@sm">
+            <tipi-text meta="" :value="this.dividedDeputies[1]" type="deputies" :source="allDeputies" hideGroup/>
+          </div>
+          <div class="o-grid__col u-12 u-4@sm">
+            <tipi-text meta="" :value="this.dividedDeputies[2]" type="deputies" :source="allDeputies" hideGroup/>
+          </div>
+        </div>
+      </div>
+    </div>
     </div>
   </div>
 </template>
 
 <script>
 
-import { TipiHeader, TipiResults, TipiText } from 'tipi-uikit'
+import { TipiHeader, TipiMessage, TipiResults, TipiText } from 'tipi-uikit'
 import api from '@/api';
 import config from '@/config'
 import { mapGetters, mapState } from  'vuex';
@@ -33,6 +42,7 @@ export default {
   name: 'parliamentarygroup',
   components: {
     TipiHeader,
+    TipiMessage,
     TipiResults,
     TipiText,
   },
