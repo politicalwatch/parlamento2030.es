@@ -4,11 +4,20 @@
       <a v-if="deputy.hasOwnProperty('twitter')" :href="deputy.twitter" target="_blank"><tipi-icon icon="twitter" /> @{{ deputy.twitter.split('/').reverse()[0] }}</a>
       <a v-if="deputy.hasOwnProperty('email')" :href="`mailto:${deputy.email}`" target="_blank"><tipi-icon icon="mail" /> {{deputy.email}}</a>
     </tipi-deputy>
+    <div class="o-container" v-if="!deputy.active">
+      <tipi-message type="info" icon>
+        Causó baja en el Congreso de los DIputados
+      </tipi-message>
+    </div>
     <div v-if="latestInitiatives && latestInitiatives.length" class="o-container o-section">
       <h4 class="u-margin-bottom-4">Últimas iniciativas</h4>
       <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="styles.topics"/>
     </div>
-    <p class="u-text-center u-margin-bottom-10" v-else>No se han encontrado iniciativas para este diputado/a</p>
+    <div class="o-container" v-else>
+      <tipi-message type="info" icon>
+        Sin actividad relacionada con la Agenda 2030
+      </tipi-message>
+    </div>
   </div>
   <div v-else class="o-container o-section u-margin-bottom-10">
     <tipi-loader title="Cargando datos" subtitle="Puede llevar unos segundos"/>
@@ -17,7 +26,7 @@
 
 <script>
 
-import { TipiHeader, TipiDeputy, TipiResults, TipiIcon, TipiLoader } from 'tipi-uikit'
+import { TipiHeader, TipiDeputy, TipiMessage, TipiResults, TipiIcon, TipiLoader } from 'tipi-uikit'
 import api from '@/api';
 import config from '@/config';
 import { mapState } from 'vuex';
@@ -27,6 +36,7 @@ export default {
   components: {
     TipiHeader,
     TipiDeputy,
+    TipiMessage,
     TipiResults,
     TipiIcon,
     TipiLoader,
