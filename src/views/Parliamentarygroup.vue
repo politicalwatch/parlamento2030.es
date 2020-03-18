@@ -6,7 +6,7 @@
         <h4 class="u-margin-bottom-4">Últimas iniciativas</h4>
         <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="topicsStyles"/>
       </div>
-      <div class="o-container o-section">
+      <div class="o-container o-section" v-else>
         <tipi-message type="info" icon>
           Sin actividad relacionada con la Agenda 2030
         </tipi-message>
