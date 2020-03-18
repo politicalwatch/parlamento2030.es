@@ -6,7 +6,7 @@
     </tipi-deputy>
     <div class="o-container" v-if="!deputy.active">
       <tipi-message type="info" icon>
-        Causó baja en el Congreso de los DIputados
+        Causó baja en el Congreso de los Diputados
       </tipi-message>
     </div>
     <div v-if="latestInitiatives && latestInitiatives.length" class="o-container o-section">
@@ -15,7 +15,7 @@
     </div>
     <div class="o-container" v-else>
       <tipi-message type="info" icon>
-        Sin actividad relacionada con la Agenda 2030
+        Sin actividad parlamentaria relacionada con la Agenda 2030 en esta legislatura
       </tipi-message>
     </div>
   </div>

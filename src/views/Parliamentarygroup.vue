@@ -8,7 +8,7 @@
       </div>
       <div class="o-container o-section" v-else>
         <tipi-message type="info" icon>
-          Sin actividad relacionada con la Agenda 2030
+          Sin actividad parlamentaria relacionada con la Agenda 2030 en esta legislatura
         </tipi-message>
       </div>
 
