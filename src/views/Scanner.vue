@@ -10,10 +10,10 @@
 
         <div class="o-grid__col u-12 u-6@sm">
           <p><textarea placeholder="Inserta aqui el texto que quieres escanear..." v-model="inputText" rows="9"/></p>
-          <!-- <div class="c&#45;input&#45;label c&#45;input&#45;label&#45;&#45;file u&#45;block"> -->
-          <!--   <label for="file">Sube un archivo</label> -->
-          <!--   <input type="file" id="file" name="file" placeholder="PDF, doc o txt"> -->
-          <!-- </div> -->
+          <div class="c-input-label c-input-label--file u-block">
+            <label for="file">Sube un archivo</label>
+            <input type="file" id="file" name="file" placeholder="PDF, doc o txt">
+          </div>
           <p>
             <a id="start" class="c-button c-button--primary" @click.prevent="annotate">Iniciar proceso</a>
             <a class="c-button" :class="{ disabled: inProgress }" v-if="inputText!=''" @click="cleanTextAndResult">Limpiar texto <span v-if="result">y resultados</span></a>
@@ -29,11 +29,17 @@
         <div class="o-grid__col u-12 result" v-if="result">
           <h4>Resultado del escáner:</h4>
           <tipi-message v-if="!result.topics.length" type="error" icon>No hemos encontrado ninguna coincidencia entre tu texto y nuestras etiquetas.</tipi-message>
-          <div class="o-grid" v-else>
+          <div class="o-grid o-grid--center" v-else>
             <div class="o-grid__col u-12">
               <tipi-message type="info" icon>Aquí tienes una una relación visual de tu texto, para que de un primer vistazo veas conexiones interesantes.</tipi-message>
-              <ScannerWordsCloud :result="this.result" :styles="styles"></ScannerWordsCloud>
+            </div>
+            <div class="o-grid__col u-12 u-6@sm">
               <ScannerSunburst :result="this.result" :styles="styles"></ScannerSunburst>
+            </div>
+            <div class="o-grid__col u-12 u-6@sm">
+              <ScannerWordsCloud :result="this.result" :styles="styles"></ScannerWordsCloud>
+            </div>
+            <div class="o-grid__col u-12 u-padding-top-4">
               <ScannerBarchart :result="this.result" :styles="styles"></ScannerBarchart>
             </div>
             <div class="o-grid__col u-12 u-text-center u-margin-top-4 u-padding-top-4 u-border-top">
