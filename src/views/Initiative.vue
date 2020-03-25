@@ -1,54 +1,79 @@
 <template>
   <div>
-    <div id="initiative">
-      <tipi-header :title="initiative.title" />
-      <div class="container page">
-        <div class="row">
-          <div class="col-sm-6 keyvalues">
-            <tipi-text meta="Tipo de acto parlamentario" :value="initiative.initiative_type_alt" />
-            <tipi-text meta="Referencia" :value="initiative.reference" />
-            <tipi-text meta="Autor" :value="initiative.authors" type="parliamentarygroups" :source="allParliamentaryGroups" />
-            <tipi-text meta="Diputada/o" :value="initiative.deputies" type="deputies" :source="allDeputies" />
-            <tipi-text meta="Lugar" :value="initiative.place" />
-            <tipi-text meta="Registro" :value="moment(initiative.created).format('DD/MM/Y')" />
-            <tipi-text meta="Actualización" :value="moment(initiative.updated).format('DD/MM/Y')" />
-            <tipi-topics meta="ODS tratados" :topics="initiative.topics" :tags="initiative.tags" />
-          </div>
-          <div class="col-sm-6">
-            <div class="row">
-              <div class="col-sm-8 col-sm-offset-2">
-                <tipi-initiative-meta :initiative="initiative" link-text="Ver en el Congreso de los Diputados" />
-              </div>
+    <div v-if="loaded" id="initiative" class="o-container o-section u-margin-bottom-10">
+      <div class="o-grid o-grid--between">
+        <div class="o-grid__col u-12 u-8@md">
+          <div class="o-grid">
+            <div class="o-grid__col u-12 u-6@md">
+              <tipi-topic-pill v-if="initiative.topics && initiative.topics.length" class="u-margin-bottom-2" :topicsStyles="styles.topics" :topics="initiative.topics" with-links/>
             </div>
-            <div class="row">
-              <div class="col-sm-12 text-center neuron-block">
-                <span>Relación de esta iniciativa con los ODS <sup title="El gráfico muestra los ODS relacionados con la iniciativa y el grado de relación con cada uno de ellos, cuya intensidad se refleja en la barra circular que los rodea."><i class="fa fa-question-circle"></i></sup></span>
-                <tipi-neuron :initiative="initiative" :topics="allTopics" v-if="dataLoaded" :styles="styles"/>
-              </div>
+            <div class="o-grid__col u-12 u-6@md u-text-right@md u-margin-bottom-2" v-if="initiative.related && initiative.related.length">
+              <a href="#related" class="c-button c-button--compact u-padding-left-0">Ver iniciativas relacionadas</a>
+            </div>
+          </div>
+          <p class="u-color-secondary u-margin-bottom-1 u-margin-top-0">Actualizado {{ moment(initiative.updated).fromNow() }}</p>
+          <h1 class="u-text-th4 u-margin-bottom-4">{{ initiative.title }}</h1>
+
+          <div class="o-grid u-padding-top-4 u-border-top u-border-bottom u-margin-bottom-4">
+            <div class="o-grid__col o-grid__col--fill">
+              <tipi-text meta="Tipo de acto parlamentario" :value="initiative.initiative_type_alt" />
+            </div>
+            <div class="o-grid__col u-12 u-3@sm">
+              <tipi-text meta="Referencia" :value="initiative.reference" />
+            </div>
+            <div class="o-grid__col u-12 u-3@sm">
+              <tipi-text meta="Registro" :value="moment(initiative.created).format('DD/MM/Y')" />
+            </div>
+          </div>
+          <tipi-topics class="u-hide u-block@md" meta="ODS tratados" :topics="initiative.topics" :tags="initiative.tags" :topicsStyles="styles.topics" />
+
+          <div class="o-grid u-margin-top-4 u-padding-top-4 u-border-top u-hide u-block@md" v-if="initiative.related && initiative.related.length">
+            <div class="o-grid__col o-grid__col--fill">
+              <h4 id="related" class="u-margin-bottom-4">Iniciativas relacionadas</h4>
+              <tipi-results :initiatives="initiative.related" :topicsStyles="styles.topics"/>
             </div>
           </div>
         </div>
-        <div v-if="initiative.related && initiative.related.length">
-          <hr>
-          <div class="row">
-            <div class="col-sm-12">
-              <tipi-related-initiatives meta="Actos relacionados" :related="initiative.related"/>
-            </div>
+        <div class="o-grid__col u-12 u-3@md">
+          <div class="u-padding-bottom-4 u-border-bottom u-margin-bottom-4">
+            <tipi-initiative-meta :initiative="initiative" link-text="Ver en el Congreso de los Diputados" />
+          </div>
+
+          <div class="u-padding-bottom-4 u-border-bottom u-margin-bottom-4">
+            <InitiativeChart :initiative="initiative" :topics="allTopics" :styles="styles" v-if="dataLoaded"></InitiativeChart>
+            <span class="u-text-tbody2">Relación de esta iniciativa con los ODS <sup title="El gráfico muestra los ODS relacionados con la iniciativa y el grado de relación con cada uno de ellos, cuya intensidad se refleja en la barra circular que los rodea."><i class="fa fa-question-circle"></i></sup></span>
+          </div>
+          <div class="u-border-bottom u-margin-bottom-4">
+            <tipi-text meta="Autor" :value="initiative.authors" type="parliamentarygroups" :source="allParliamentaryGroups" />
+            <tipi-text meta="Diputada/o" :value="initiative.deputies" type="deputies" :source="allDeputies" />
           </div>
         </div>
       </div>
+      <div class="u-hide@md">
+        <tipi-topics meta="ODS tratados" :topics="initiative.topics" :tags="initiative.tags" :topicsStyles="styles.topics" />
+
+        <div class="u-margin-top-4 u-padding-top-4 u-border-top" v-if="initiative.related && initiative.related.length">
+          <h4 id="related" class="u-margin-bottom-4">Iniciativas relacionadas</h4>
+          <tipi-results :initiatives="initiative.related" :topicsStyles="styles.topics"/>
+        </div>
+      </div>
+    </div>
+    <div v-else class="o-container o-section u-margin-bottom-10">
+      <tipi-loader title="Cargando datos" subtitle="Puede llevar unos segundos"/>
     </div>
   </div>
 </template>
 
 <script>
 
-import { TipiHeader, TipiText, TipiTopics, TipiInitiativeMeta, TipiNeuron, TipiRelatedInitiatives } from 'tipi-uikit'
+import { TipiHeader, TipiText, TipiTopics, TipiInitiativeMeta, TipiNeuron, TipiTopicPill, TipiResults, TipiLoader } from 'tipi-uikit'
 import api from '@/api';
 import config from '@/config';
 import { mapState } from 'vuex';
+import InitiativeChart from '@/components/initiative-chart.vue';
 
 const moment = require('moment');
+moment.locale('es');
 
 export default {
   name: 'initiative',
@@ -58,13 +83,17 @@ export default {
     TipiTopics,
     TipiInitiativeMeta,
     TipiNeuron,
-    TipiRelatedInitiatives,
+    TipiTopicPill,
+    TipiResults,
+    InitiativeChart,
+    TipiLoader,
   },
   data: function() {
     return {
       initiative: {},
       moment: moment,
       styles: config.STYLES,
+      loaded: false,
     }
   },
   computed: {
@@ -78,6 +107,7 @@ export default {
       api.getInitiative(this.$route.params.id)
         .then(response => {
           this.initiative = response;
+          this.loaded = true;
           window.document.title = window.document.head.querySelector('meta[property="og:title"]').content = window.document.head.querySelector('meta[name="twitter:title"]').content = `${this.initiative.title} - ${config.DEFAULT_PAGE_TITLE}`;
         })
         .catch(error => {
@@ -94,15 +124,3 @@ export default {
   }
 }
 </script>
-
-<style scoped lang="scss">
-.neuron-block {
-  margin-top: 60px;
-    span {
-      text-transform: uppercase;
-      border-bottom: 5px solid #efefef;
-      padding-bottom: 10px;
-      font-weight: bold;
-    }
-}
-</style>

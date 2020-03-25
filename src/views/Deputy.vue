@@ -1,20 +1,35 @@
 <template>
-  <div>
-    <tipi-header v-if="deputy" :title="deputy.name"/>
-    <div id="deputy">
-      <div class="container page">
-        <tipi-deputy :deputy="deputy" :parliamentaryGroup="parliamentarygroup" />
-        <hr v-if="latestInitiatives">
-        <tipi-results layout="tiny" :initiatives="latestInitiatives"/>
-      </div>
+  <div v-if="deputy" id="deputy" class="u-margin-bottom-10">
+    <tipi-deputy v-if="deputy" :deputy="deputy" :parliamentaryGroup="parliamentarygroup">
+      <a v-if="deputy.hasOwnProperty('twitter')" :href="deputy.twitter" target="_blank"><tipi-icon icon="twitter" /> @{{ deputy.twitter.split('/').reverse()[0] }}</a>
+      <a v-if="deputy.hasOwnProperty('email')" :href="`mailto:${deputy.email}`" target="_blank"><tipi-icon icon="mail" /> {{deputy.email}}</a>
+      <a v-if="deputy.hasOwnProperty('url')" :href="deputy.url" target="_blank"><tipi-icon icon="building" /> Ver en el Congreso</a>
+    </tipi-deputy>
+    <div class="o-container" v-if="!deputy.active">
+      <tipi-message type="info" icon>
+        Causó baja en el Congreso de los Diputados
+      </tipi-message>
     </div>
+    <div v-if="latestInitiatives && latestInitiatives.length" class="o-container o-section">
+      <h4 class="u-margin-bottom-4">Últimas iniciativas</h4>
+      <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="styles.topics"/>
+    </div>
+    <div class="o-container" v-else>
+      <tipi-message type="info" icon>
+        Sin actividad parlamentaria relacionada con la Agenda 2030 en esta legislatura
+      </tipi-message>
+    </div>
+  </div>
+  <div v-else class="o-container o-section u-margin-bottom-10">
+    <tipi-loader title="Cargando datos" subtitle="Puede llevar unos segundos"/>
   </div>
 </template>
 
 <script>
 
-import { TipiHeader, TipiDeputy, TipiResults } from 'tipi-uikit'
+import { TipiHeader, TipiDeputy, TipiMessage, TipiResults, TipiIcon, TipiLoader } from 'tipi-uikit'
 import api from '@/api';
+import config from '@/config';
 import { mapState } from 'vuex';
 
 export default {
@@ -22,13 +37,17 @@ export default {
   components: {
     TipiHeader,
     TipiDeputy,
-    TipiResults
+    TipiMessage,
+    TipiResults,
+    TipiIcon,
+    TipiLoader,
   },
   data: function() {
     return {
       deputy: null,
       parliamentarygroup: null,
       latestInitiatives: null,
+      styles: config.STYLES,
     }
   },
   computed: {
@@ -48,7 +67,7 @@ export default {
         });
     },
     getLatestInitiatives: function() {
-      api.getInitiatives({ 'deputy': this.deputy.name, 'per_page': 10 })
+      api.getInitiatives({ 'deputy': this.deputy.name, 'per_page': 12 })
         .then(response => {
           if (response.initiatives) this.latestInitiatives = response.initiatives;
         })

@@ -1,6 +1,6 @@
 export default {
   SHORTNAME: process.env.VUE_APP_SHORTNAME || 'p2030',
-  URL: process.env.VUE_APP_URL || 'http://localhost:5000',
+  URL: process.env.VUE_APP_BACKEND_URL || 'http://localhost:5000',
   GOOGLE_ANALYTICS: process.env.VUE_APP_GOOGLE_ANALYTICS || 'XXXXXXXXXXXX',
   USE_ALERTS: process.env.VUE_APP_USE_ALERTS || false,
   SCANNER_HELPTEXT: process.env.VUE_APP_SCANNER_HELPTEXT || "",
@@ -11,8 +11,8 @@ export default {
       condition: true,
     },
     {
-      route: 'topics',
-      name: 'Temáticas',
+      route: 'ods',
+      name: 'ODS',
       condition: true,
     },
     {
@@ -107,83 +107,103 @@ export default {
   ],
   STYLES: {
     topics: {
-      "ODS 1 - Fin de la Pobreza": {
+      "ODS 1 Fin de la pobreza": {
+        shortname: "ODS 1",
         color: "#eb1c2d",
-        image: "S_SDG-goals_icons-individual-rgb-01.png",
+        image: "ods-1.svg",
       },
-      "ODS 2 - Hambre Cero": {
+      "ODS 2 Hambre cero": {
+        shortname: "ODS 2",
         color: "#d3a029",
-        image: "S_SDG-goals_icons-individual-rgb-02.png",
+        image: "ods-2.svg",
       },
-      "ODS 3 - Salud y bienestar": {
+      "ODS 3 Salud y bienestar": {
+        shortname: "ODS 3",
         color: "#4c9f38",
-        image: "S_SDG-goals_icons-individual-rgb-03.png",
+        image: "ods-3.svg",
       },
-      "ODS 4 - Educación de calidad": {
+      "ODS 4 Educación de calidad": {
+        shortname: "ODS 4",
         color: "#c52333",
-        image: "S_SDG-goals_icons-individual-rgb-04.png",
+        image: "ods-4.svg",
       },
-      "ODS 5 - Igualdad de género": {
+      "ODS 5 Igualdad de género": {
+        shortname: "ODS 5",
         color: "#ed4135",
-        image: "S_SDG-goals_icons-individual-rgb-05.png",
+        image: "ods-5.svg",
       },
-      "ODS 6 - Agua limpia y saneamiento": {
+      "ODS 6 Agua limpia y saneamiento": {
+        shortname: "ODS 6",
         color: "#00aed9",
-        image: "S_SDG-goals_icons-individual-rgb-06.png",
+        image: "ods-6.svg",
       },
-      "ODS 7 - Energía asequible y no contaminante": {
+      "ODS 7 Energía asequible y no contaminante": {
+        shortname: "ODS 7",
         color: "#fdb713",
-        image: "S_SDG-goals_icons-individual-rgb-07.png",
+        image: "ods-7.svg",
       },
-      "ODS 8 - Trabajo decente y crecimiento económico": {
+      "ODS 8 Trabajo decente y crecimiento económico": {
+        shortname: "ODS 8",
         color: "#8f1838",
-        image: "S_SDG-goals_icons-individual-rgb-08.png",
+        image: "ods-8.svg",
       },
-      "ODS 9 - Industria, innovación e infraestructura": {
+      "ODS 9 Industria, innovación e infraestructura": {
+        shortname: "ODS 9",
         color: "#f06a38",
-        image: "S_SDG-goals_icons-individual-rgb-09.png",
+        image: "ods-9.svg",
       },
-      "ODS 10 - Reducción de las desigualdades": {
+      "ODS 10 Reducción de las desigualdades": {
+        shortname: "ODS 10",
         color: "#dd1367",
-        image: "S_SDG-goals_icons-individual-rgb-10.png",
+        image: "ods-10.svg",
       },
-      "ODS 11 - Ciudades y comunidades sostenibles": {
+      "ODS 11 Ciudades y comunidades sostenibles": {
+        shortname: "ODS 11",
         color: "#f69c39",
-        image: "S_SDG-goals_icons-individual-rgb-11.png",
+        image: "ods-11.svg",
       },
-      "ODS 12 - Producción y consumo responsables": {
+      "ODS 12 Producción y consumo responsables": {
+        shortname: "ODS 12",
         color: "#cf8d2a",
-        image: "S_SDG-goals_icons-individual-rgb-12.png",
+        image: "ods-12.svg",
       },
-      "ODS 13 - Acción por el clima": {
+      "ODS 13 Acción por el clima": {
+        shortname: "ODS 13",
         color: "#48773e",
-        image: "S_SDG-goals_icons-individual-rgb-13.png",
+        image: "ods-13.svg",
       },
-      "ODS 14 - Vida submarina": {
+      "ODS 14 Vida submarina": {
+        shortname: "ODS 14",
         color: "#007dbc",
-        image: "S_SDG-goals_icons-individual-rgb-14.png",
+        image: "ods-14.svg",
       },
-      "ODS 15 - Vida de ecosistemas terrestres": {
+      "ODS 15 Vida de ecosistemas terrestres": {
+        shortname: "ODS 15",
         color: "#5cb84d",
-        image: "S_SDG-goals_icons-individual-rgb-15.png",
+        image: "ods-15.svg",
       },
-      "ODS 16 - Paz, justicia e instituciones sólidas": {
+      "ODS 16 Paz, justicia e instituciones sólidas": {
+        shortname: "ODS 16",
         color: "#02558b",
-        image: "S_SDG-goals_icons-individual-rgb-16.png",
+        image: "ods-16.svg",
       },
-      "ODS 17 - Alianzas para lograr los objetivos": {
+      "ODS 17 Alianzas para lograr los objetivos": {
+        shortname: "ODS 17",
         color: "#183668",
-        image: "S_SDG-goals_icons-individual-rgb-17.png",
+        image: "ods-17.svg",
       },
+      "no-topic": {
+        shortname: "Sin relación con la Agenda2030"
+      }
     },
     subtopics: {
       "1.1 Erradicar la pobreza extrema": {
         color: "#eb1c2d",
-        image: "S_SDG-goals_icons-individual-rgb-01.png",
+        image: "ods-01.svg",
       },
       "1.2 Niveles nacionales de pobreza": {
         color: "#eb1c2d",
-        image: "S_SDG-goals_icons-individual-rgb-01.png",
+        image: "ods-01.svg",
       },
     },
     defaultColor: "#cecece",

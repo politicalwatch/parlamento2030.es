@@ -3,61 +3,52 @@
     <tipi-splash>
       <img src="/img/logo.png">
       <p><strong>Parlamento 2030</strong> te ofrece toda la información sobre la actividad del Congreso de los Diputados relacionada con los <strong>Objetivos de Desarrollo Sostenible (ODS)</strong>. Entra y descubre cómo trabajan los diputados españoles de cara al cumplimiento de la <strong>Agenda 2030</strong>.</p>
-      <p>Estás a punto de entrar en la versión beta de Parlamento 2030. En ella encontrarás toda la información parlamentaria relacionada con 6 de los 17 ODS que configuran la Agenda 2030. Estamos actualmente trabajando en el resto de ODS y pronto estarán disponible.</p>
       <p>
         <router-link :to="{name: 'about-en'}">Learn more about this project in English</router-link>
       </p>
     </tipi-splash>
-    <div id="search">
+    <div id="search" class="o-container o-section u-margin-bottom-10">
+
       <tipi-header :title="'Buscar'" :subtitle="'Bucea en la actividad parlamentaria relacionada con los ODS con las múltiples opciones que te ofrece el buscador de Parlamento 2030'" />
-      <tipi-messages :errors="this.errors" :queryMeta="this.query_meta" />
-      <div class="container page">
-        <div class="row">
-          <div class="col-sm-12">
-            <div class="well">
-              <search-form :data="this.data" @getResults="getResults" />
-            </div>
-            <p v-if="this.data.author || this.data.deputy">
-              <span v-if="getParliamentaryGroupByName(this.data.author)">
-                ¿Quieres ver el perfil del
-                <router-link :to="{ path: `/parliamentarygroups/${getParliamentaryGroupByName(this.data.author).id}` }">{{ this.data.author }}</router-link>?
-              </span>
-              <span v-if="getDeputyByName(this.data.deputy)">
-                ¿Quieres ver el perfil del diputado
-                <router-link :to="{ path: `/deputies/${getDeputyByName(this.data.deputy).id}` }">{{ this.data.deputy }}</router-link>?
-              </span>
-            </p>
-            <div class="well search-actions" v-show="this.query_meta.total">
-              <save-alert :searchparams="data" v-show="alertsIsEnabled()" />
-              <tipi-csv-download
-                :initiatives="initiatives || []"
-                :csvItems="csvItems"
-                :canDownloadCSV="canDownloadCSV"
-                @loadCSVItems="loadCSVItems"
-              />
-            </div>
-            <tipi-results
-              :loadingResults="loadingResults"
-              :initiatives="initiatives || []"
-              :queryMeta="query_meta"
-              @loadMore="loadMore"
-            />
-          </div>
+
+      <search-form :formData="this.data" @getResults="getResults" />
+
+      <div class="o-grid o-grid--align-center u-margin-bottom-4" id="results">
+        <div class="o-grid__col o-grid__col--fill">
+          <tipi-message v-if="this.query_meta.page" :type="message.type" :icon="message.icon">{{ message.message }}</tipi-message>
+        </div>
+        <div class="o-grid__col o-grid__col--right">
+          <tipi-csv-download
+            :initiatives="initiatives || []"
+            :csvItems="csvItems"
+            :canDownloadCSV="canDownloadCSV"
+            @loadCSVItems="loadCSVItems"
+          />
+          <save-alert :searchparams="data" v-show="alertsIsEnabled() && this.query_meta.page" />
         </div>
       </div>
+      <tipi-results
+        :loadingResults="loadingResults"
+        :initiatives="initiatives || []"
+        :topicsStyles="topicsStyles"
+        :queryMeta="query_meta"
+        @loadMore="loadMore"
+      />
     </div>
   </div>
 </template>
 
 <script>
+import Vue from 'vue'
 import searchForm from '@/components/search-form';
 import SaveAlert from '@/components/save-alert';
 import config from '@/config'
 import api from '@/api'
-import { TipiHeader, TipiCsvDownload, TipiMessages, TipiResults, TipiSplash } from 'tipi-uikit'
+import { TipiHeader, TipiCsvDownload, TipiMessage, TipiResults, TipiSplash } from 'tipi-uikit'
 import { mapGetters } from 'vuex';
 
 const qs = require('qs');
+const VueScrollTo = require('vue-scrollto');
 
 export default {
   name: 'search',
@@ -65,7 +56,7 @@ export default {
     TipiSplash,
     SaveAlert,
     TipiResults,
-    TipiMessages,
+    TipiMessage,
     TipiCsvDownload,
     TipiHeader,
     searchForm,
@@ -83,11 +74,15 @@ export default {
         enddate: '',
         place: '',
         reference: '',
-        page: 1
+        page: 1,
+        tags: [],
+        subtopics: [],
       },
       loadingResults: false,
       csvItems: [],
       LIMITCSV: 1000,
+      topicsStyles: config.STYLES.topics,
+      scrollToID: '#results'
     }
   },
   computed: {
@@ -95,17 +90,32 @@ export default {
       return this.query_meta.total < this.LIMITCSV;
     },
     ...mapGetters(['getDeputyByName', 'getParliamentaryGroupByName']),
+    message: function() {
+      if (this.errors) {
+        return { icon: true, type: 'error', message: this.errors }
+      }
+      if (this.query_meta.total) {
+        return { icon: true, type: 'success', message: `Se han encontrado ${this.query_meta.total} iniciativas.` }
+      } else {
+        return { icon: true, type: 'error', message: `No se han encontrado iniciativas que cumplan los criterios.` }
+      }
+    }
   },
   methods: {
-    getResults: function(event) {
+    getResults: function(event, formData) {
       this.loadingResults = true;
       this.csvItems = [];
       const isNewSearch = event && event.type === 'submit';
       const params = this.$route.params.data && !isNewSearch ?
         qs.parse(this.$route.params.data)
-        : {};
+        : formData;
       this.data = Object.assign(this.data, params);
       const urlParams = Object.assign({}, this.data);
+
+      if (isNewSearch) {
+        this.scrollToID = '#results';
+        event.preventDefault();
+      }
 
       Object.keys(urlParams).forEach(
         key => (!urlParams[key] || key === "page") && delete urlParams[key])
@@ -126,15 +136,22 @@ export default {
             }
             this.query_meta = response.query_meta;
             this.loadingResults = false;
+            Vue.nextTick()
+              .then(() => {
+                VueScrollTo.scrollTo(this.scrollToID, 1500)
+              })
           })
          .catch(error => this.errors = error);
     },
     loadMore: function() {
+      let node = document.querySelectorAll('.c-initiative-card');
+      node = node[node.length - 1]
+      this.scrollToID = `#${node.id}`;
       this.data.page++;
       this.getResults();
     },
     alertsIsEnabled: function() {
-      return config.USE_ALERTS;
+      return (config.USE_ALERTS === "true");
     },
     loadCSVItems: function(event) {
       if (!this.canDownloadCSV) return false;
@@ -148,6 +165,11 @@ export default {
          .catch(error => this.errors = error);
     },
   },
+  created: function() {
+    if (this.$route.name == "results") {
+      this.getResults();
+    }
+  },
   updated: function() {
     if (document.getElementById('downloadCSV')) {
       document.getElementById('downloadCSV').click();
@@ -155,18 +177,3 @@ export default {
   }
 }
 </script>
-
-<style src="vue-multiselect/dist/vue-multiselect.min.css"></style>
-<style scoped lang="scss">
-.multiselect {
-  &__content {
-    max-width: 100%;
-    font-size: 14px;
-  }
-}
-.container {
-  @media (min-width: 992px) and (max-width: 1200px) {
-    width: 98%;
-  }
-}
-</style>

@@ -160,7 +160,7 @@ export default {
     function getEndpoint() {
       return [
         config.URL,
-        '/alerts/'
+        '/alerts'
       ].join('');
     }
   },
@@ -189,7 +189,7 @@ export default {
       ].join('');
     }
   },
-  getDeputiesRanking(topic, subtopic) {
+  getDeputiesRanking(topic, subtopic, limit = 5) {
     let params = {'topic': topic};
     if (subtopic) {
       params['subtopic'] = subtopic;
@@ -198,7 +198,7 @@ export default {
       .get(getEndpoint(), {
         params: params
       })
-      .then(response => response.data.slice(0,5));
+      .then(response => response.data.slice(0,limit));
 
     function getEndpoint() {
       return [
@@ -247,15 +247,25 @@ export default {
     return axios.post(
       getEndpoint(),
       qs.stringify({ 'text': text })
-    ).then(response => response.data)
-    .catch(error => {
-      console.log(error.response)
-    });
+    ).then(response => response.data);
 
     function getEndpoint() {
       return [
         config.URL,
         '/labels/extract'
+      ].join('');
+    }
+  },
+  getScannerResult(taskID) {
+    return axios.get(
+      getEndpoint(taskID)
+    )
+
+    function getEndpoint(taskID) {
+      return [
+        config.URL,
+        '/labels/result/',
+        taskID
       ].join('');
     }
   }
