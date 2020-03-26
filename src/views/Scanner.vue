@@ -35,7 +35,7 @@
               <tipi-topics meta="ODS tratados" :topics="result.topics" :tags="result.tags" :topicsStyles="styles.topics"/>
             </div>
             <div class="o-grid__col u-12 u-offset-2@sm u-3@sm">
-              <tipi-message type="info" icon>Aquí tienes una una relación visual de tu texto, para que de un primer vistazo veas conexiones interesantes.</tipi-message>
+              <tipi-message type="info" icon>Aquí tienes una relación visual de tu texto, para que de un vistazo puedas ver las conexiones temáticas existentes</tipi-message>
               <InitiativeChart :initiative="fakeInitiative" :topics="allTopics" :styles="styles"></InitiativeChart>
               <span class="u-text-tbody2">Relación de este texto con los ODS <sup title="El gráfico muestra los ODS relacionados con el texto y el grado de relación con cada uno de ellos, cuya intensidad se muestra en cuánto de coloreado está cada ODS en al gráfica."><i class="fa fa-question-circle"></i></sup></span>
             </div>
