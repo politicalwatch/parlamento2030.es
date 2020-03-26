@@ -29,7 +29,7 @@
         <div class="o-grid__col u-12 result" v-if="result">
           <h4>Resultado del escáner:</h4>
           <tipi-message v-if="!result.topics.length" type="error" icon>No hemos encontrado ninguna coincidencia entre tu texto y nuestras etiquetas.</tipi-message>
-          <div class="o-grid o-grid--center" v-else>
+          <div class="o-grid" v-else>
             <div class="o-grid__col u-12">
               <tipi-message type="info" icon>Aquí tienes una una relación visual de tu texto, para que de un primer vistazo veas conexiones interesantes.</tipi-message>
             </div>
@@ -39,9 +39,21 @@
             <div class="o-grid__col u-12 u-6@sm">
               <ScannerWordsCloud :result="this.result" :styles="styles"></ScannerWordsCloud>
             </div>
-            <div class="o-grid__col u-12 u-padding-top-4">
+            <div class="o-grid__col u-12 padding-top-4">
+              <div class="c-select-label u-block">
+                <label for="topic">Comparar con...</label>
+                <multiselect
+                  @select="showComparison"
+                  v-model="textToCompare"
+                  :options="preScannedTexts.map(pst => pst.title)"
+                  name="pre-scanned-text" id="pre-scanned-text" placeholder="Selecciona uno">
+                </multiselect>
+              </div>
+            </div>
+            <div class="o-grid__col u-12">
               <ScannerBarchart :result="this.result" :styles="styles"></ScannerBarchart>
             </div>
+
             <div class="o-grid__col u-12 u-text-center u-margin-top-4 u-padding-top-4 u-border-top">
               <tipi-csv-download
                 :initiatives="csvItems || []"
@@ -61,7 +73,9 @@
 
 <script>
 import { TipiMessage, TipiHeader, TipiLoader, TipiTopics, TipiNeuron, TipiCsvDownload } from 'tipi-uikit'
+import Multiselect from 'vue-multiselect';
 import config from '@/config';
+import preScannedTexts from '@/scanned';
 import api from '@/api';
 import { mapState } from 'vuex';
 import ScannerWordsCloud from '@/components/scanner-wordscloud.vue';
@@ -80,18 +94,21 @@ export default {
     ScannerWordsCloud,
     ScannerSunburst,
     ScannerBarchart,
+    Multiselect,
     TipiMessage,
     TipiLoader,
   },
   data() {
     return {
       config: config,
+      preScannedTexts: preScannedTexts,
       inputText: '',
       result: null,
       errors: null,
       fakeInitiative: null,
       inProgress: false,
       estimatedTime: 0,
+      textToCompare: null,
       csvItems: [],
       csvFields: ['topic', 'subtopic', 'tag'],
       styles: config.STYLES,
@@ -144,6 +161,9 @@ export default {
           this.inProgress = false;
           document.getElementById('start').text = 'Iniciar proceso'
         });
+    },
+    showComparison: function() {
+
     },
     getNameFromCSV: function() {
       let d = new Date();
