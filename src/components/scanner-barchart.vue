@@ -15,11 +15,11 @@ export default {
     return {
       datum: [],
       config: {
-        key: 'name',
+        key: 'shortname',
         values: ['Resultado'],
         orientation: 'horizontal',
         color: { key: 'color' },
-        margin: { left: 220 },
+        margin: { left: 60 },
       },
     };
   },
@@ -48,8 +48,10 @@ export default {
 
       this.result.tags.forEach((d) => {
         const idx = topics.map(d => d.name).indexOf(d.topic)
+        const names = d.topic.split(' ');
+        const name = `${names[0]} ${names[1]}`;
         if (idx === -1) {
-          topics.push({ name: d.topic, result: 1});
+          topics.push({ name: d.topic, shortname: name, result: 1});
         } else {
           topics[idx].result += 1;
         }
@@ -57,6 +59,7 @@ export default {
 
       this.datum = topics.map(d => ({
         name: d.name,
+        shortname: d.shortname,
         Resultado: d.result,
         color: this.styles.topics[d.name].color,
       }));
