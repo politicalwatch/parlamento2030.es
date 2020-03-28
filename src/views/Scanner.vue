@@ -87,6 +87,7 @@ import { mapState } from 'vuex';
 import ScannerWordsCloud from '@/components/scanner-wordscloud.vue';
 import ScannerSunburst from '@/components/scanner-sunburst.vue';
 import ScannerBarchart from '@/components/scanner-barchart.vue';
+import InitiativeChart from '@/components/initiative-chart.vue';
 
 const VueScrollTo = require('vue-scrollto');
 
@@ -103,6 +104,7 @@ export default {
     Multiselect,
     TipiMessage,
     TipiLoader,
+    InitiativeChart,
   },
   data() {
     return {
