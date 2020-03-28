@@ -60,19 +60,18 @@ export default {
 
       this.result.tags.forEach((d) => {
         const topics = sunburstitems.children.map(d => d.name);
-        const names = d.topic.split(' ');
-        const name = `${names[0]} ${names[1]}`;
+        const topiccode = d.topic.split("-")[0].trim();
 
-        if (topics.indexOf(name) === -1) {
+        if (topics.indexOf(d.topic) === -1) {
           // Topic is new -> append topic, subtopic and tag
           sunburstitems.children.push({
-            name,
+            name: d.topic,
             color: this.styles.topics[d.topic].color,
             children: [{
               name: d.subtopic,
               color: d3.color(this.styles.topics[d.topic].color).brighter(0.5).formatHex(),
               children: [{
-                name: d.tag,
+                name: `${topiccode}: ${d.tag}`,
                 color: d3.color(this.styles.topics[d.topic].color).brighter(1).formatHex(),
                 value: d.times,
               }]
@@ -81,17 +80,17 @@ export default {
         } else {
           // Topic exists -> check for subtopic
           const subtopics = sunburstitems
-            .children[topics.indexOf(name)]
+            .children[topics.indexOf(d.topic)]
             .children.map(d => d.name);
           if(subtopics.indexOf(d.subtopic) === -1) {
             // Subtopic is new -> append subtopic and tag
             sunburstitems
-              .children[topics.indexOf(name)]
+              .children[topics.indexOf(d.topic)]
               .children.push({
               name: d.subtopic,
               color: d3.color(this.styles.topics[d.topic].color).brighter(0.5).formatHex(),
               children: [{
-                name: d.tag,
+                name: `${topiccode}: ${d.tag}`,
                 color: d3.color(this.styles.topics[d.topic].color).brighter(1).formatHex(),
                 value: d.times,
               }]
@@ -99,17 +98,17 @@ export default {
           } else {
             // Subtopic exists -> check for tag
             const tags = sunburstitems
-              .children[topics.indexOf(name)]
+              .children[topics.indexOf(d.topic)]
               .children[subtopics.indexOf(d.subtopic)]
               .children.map(d => d.name);
 
-            if(tags.indexOf(d.tag) === -1) {
+            if(tags.indexOf(`${topiccode}: ${d.tag}`) === -1) {
               // Tag is new -> append tag
               sunburstitems
-                .children[topics.indexOf(name)]
+                .children[topics.indexOf(d.topic)]
                 .children[subtopics.indexOf(d.subtopic)]
                 .children.push({
-                name: d.tag,
+                name: `${topiccode}: ${d.tag}`,
                 color: d3.color(this.styles.topics[d.topic].color).brighter(1).formatHex(),
                 value: d.times,
               })
