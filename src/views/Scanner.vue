@@ -10,10 +10,10 @@
 
         <div class="o-grid__col u-12 u-6@sm">
           <p><textarea placeholder="Inserta aqui el texto que quieres escanear..." v-model="inputText" rows="9"/></p>
-          <!-- <div class="c&#45;input&#45;label c&#45;input&#45;label&#45;&#45;file u&#45;block"> -->
-          <!--   <label for="file">Sube un archivo</label> -->
-          <!--   <input type="file" id="file" name="file" placeholder="PDF, doc o txt"> -->
-          <!-- </div> -->
+          <div class="c-input-label c-input-label--file u-block">
+            <label for="file">Sube un archivo</label>
+            <input type="file" id="file" name="file" placeholder="PDF, doc o txt">
+          </div>
           <p>
             <a id="start" class="c-button c-button--primary" @click.prevent="annotate">Iniciar proceso</a>
             <a class="c-button" :class="{ disabled: inProgress }" v-if="inputText!=''" @click="cleanTextAndResult">Limpiar texto <span v-if="result">y resultados</span></a>
@@ -39,6 +39,27 @@
               <InitiativeChart :initiative="fakeInitiative" :topics="allTopics" :styles="styles"></InitiativeChart>
               <span class="u-text-tbody2">Relación de este texto con los ODS <sup title="El gráfico muestra los ODS relacionados con el texto y el grado de relación con cada uno de ellos, cuya intensidad se muestra en cuánto de coloreado está cada ODS en al gráfica."><i class="fa fa-question-circle"></i></sup></span>
             </div>
+            <div class="o-grid__col u-12 u-6@sm">
+              <ScannerSunburst :result="this.result" :styles="styles"></ScannerSunburst>
+            </div>
+            <div class="o-grid__col u-12 u-6@sm">
+              <ScannerWordsCloud :result="this.result" :styles="styles"></ScannerWordsCloud>
+            </div>
+            <div class="o-grid__col u-12 padding-top-4">
+              <div class="c-select-label u-block">
+                <label for="topic">Comparar con...</label>
+                <multiselect
+                  @select="showComparison"
+                  v-model="textToCompare"
+                  :options="preScannedTexts.map(pst => pst.title)"
+                  name="pre-scanned-text" id="pre-scanned-text" placeholder="Selecciona uno">
+                </multiselect>
+              </div>
+            </div>
+            <div class="o-grid__col u-12">
+              <ScannerBarchart :result="this.result" :styles="styles"></ScannerBarchart>
+            </div>
+
             <div class="o-grid__col u-12 u-text-center u-margin-top-4 u-padding-top-4 u-border-top">
               <tipi-csv-download
                 :initiatives="csvItems || []"
@@ -58,10 +79,14 @@
 
 <script>
 import { TipiMessage, TipiHeader, TipiLoader, TipiTopics, TipiNeuron, TipiCsvDownload } from 'tipi-uikit'
+import Multiselect from 'vue-multiselect';
 import config from '@/config';
+import preScannedTexts from '@/scanned';
 import api from '@/api';
 import { mapState } from 'vuex';
-import InitiativeChart from '@/components/initiative-chart.vue';
+import ScannerWordsCloud from '@/components/scanner-wordscloud.vue';
+import ScannerSunburst from '@/components/scanner-sunburst.vue';
+import ScannerBarchart from '@/components/scanner-barchart.vue';
 
 const VueScrollTo = require('vue-scrollto');
 
@@ -72,19 +97,24 @@ export default {
     TipiTopics,
     TipiNeuron,
     TipiCsvDownload,
+    ScannerWordsCloud,
+    ScannerSunburst,
+    ScannerBarchart,
+    Multiselect,
     TipiMessage,
-    InitiativeChart,
     TipiLoader,
   },
   data() {
     return {
       config: config,
+      preScannedTexts: preScannedTexts,
       inputText: '',
       result: null,
       errors: null,
       fakeInitiative: null,
       inProgress: false,
       estimatedTime: 0,
+      textToCompare: null,
       csvItems: [],
       csvFields: ['topic', 'subtopic', 'tag'],
       styles: config.STYLES,
@@ -137,6 +167,9 @@ export default {
           this.inProgress = false;
           document.getElementById('start').text = 'Iniciar proceso'
         });
+    },
+    showComparison: function() {
+
     },
     getNameFromCSV: function() {
       let d = new Date();
