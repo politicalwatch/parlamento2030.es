@@ -1,5 +1,5 @@
 <template>
-  <D3BarChart :config="config" :datum="datum" height="400"></D3BarChart>
+  <D3BarChart :config="config" :datum="datum" :height="400"></D3BarChart>
 </template>
 
 
@@ -15,7 +15,7 @@ export default {
     return {
       datum: [],
       config: {
-        key: 'shortname',
+        key: 'key',
         values: ['Resultado'],
         orientation: 'horizontal',
         color: { key: 'color' },
@@ -28,6 +28,10 @@ export default {
       type: Object || null,
       required: true,
     },
+    resultToCompare: {
+      type: Object || null,
+      default: () => ({}),
+    },
     styles: {
       type: Object,
       required: true,
@@ -36,6 +40,12 @@ export default {
   },
   created() {
     this.parseResults();
+  },
+  computed: {
+    isComparing(){
+      return this.resultToCompare
+        && this.resultToCompare.result.tags;
+    }
   },
   methods: {
     parseResults() {
@@ -46,29 +56,66 @@ export default {
 
       const topics = [];
 
+      // Add comparation result to array
       this.result.tags.forEach((d) => {
-        const idx = topics.map(d => d.name).indexOf(d.topic)
         const names = d.topic.split(' ');
-        const name = `${names[0]} ${names[1]}`;
+        const shortname = `${names[0]} ${names[1]}`;
+        const idx = topics.map(d => d.shortname).indexOf(shortname)
         if (idx === -1) {
-          topics.push({ name: d.topic, shortname: name, result: 1});
+          topics.push({
+            shortname,
+            name: d.topic,
+            result: 1,
+            compared: 0,
+          });
         } else {
           topics[idx].result += 1;
         }
       });
 
+      // Add comparation result to array if exists
+      if(this.isComparing) {
+        this.resultToCompare.result.tags.forEach((d) => {
+          const names = d.topic.split(' ');
+          const shortname = `${names[0]} ${names[1]}`;
+          const idx = topics.map(d => d.shortname).indexOf(shortname)
+          if (idx === -1) {
+            topics.push({
+              shortname,
+              name: d.topic,
+              result: 0,
+              compared: 1,
+            });
+          } else {
+            topics[idx].compared += 1;
+          }
+        });
+      }
+
+      // Map values
       this.datum = topics.map(d => ({
-        name: d.name,
-        shortname: d.shortname,
+        key: d.shortname,
         Resultado: d.result,
+        Comparado: d.compared,
         color: this.styles.topics[d.name].color,
-      }));
+      })).sort((a, b) => {
+        return +a.key.split(' ')[1] - b.key.split(' ')[1];
+      });
+
+      // Change chart's configuration
+      this.config.values = this.isComparing
+        ? ['Resultado', 'Comparado']
+        : ['Resultado'];
+
     },
   },
   watch: {
     result() {
       this.parseResults();
     },
+    resultToCompare() {
+      this.parseResults();
+    }
   },
 };
 </script>

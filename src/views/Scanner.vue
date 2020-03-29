@@ -63,13 +63,12 @@
               <div class="c-select-label u-block">
                 <label for="topic">Comparar con...</label>
                 <multiselect
-                  @select="showComparison"
                   v-model="textToCompare"
                   :options="preScannedTexts.map(pst => pst.title)"
                   name="pre-scanned-text" id="pre-scanned-text" placeholder="Selecciona uno">
                 </multiselect>
               </div>
-              <ScannerBarchart :result="this.result" :styles="styles"></ScannerBarchart>
+              <ScannerBarchart :result="this.result" :resultToCompare="resultToCompare" :styles="styles"></ScannerBarchart>
             </div>
 
             <div class="u-padding-top-10">
@@ -131,6 +130,7 @@ export default {
       preScannedTexts: preScannedTexts,
       inputText: '',
       result: null,
+      resultToCompare: null,
       errors: null,
       fakeInitiative: null,
       inProgress: false,
@@ -210,9 +210,6 @@ export default {
         });
         */
     },
-    showComparison: function() {
-
-    },
     getNameFromCSV: function() {
       let d = new Date();
       return "export-scanner-" + d.toISOString() + ".csv";
@@ -240,6 +237,14 @@ export default {
         }, 3000);
       })
     }
-  }
-}
+  },
+  watch: {
+    textToCompare(val) {
+      const compareWith = preScannedTexts.filter(d => d.title === val);
+      this.resultToCompare = compareWith.length
+        ? compareWith[0]
+        : null;
+    },
+  },
+};
 </script>
