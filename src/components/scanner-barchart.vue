@@ -1,5 +1,5 @@
 <template>
-  <D3BarChart :config="config" :datum="datum"></D3BarChart>
+  <D3BarChart :config="config" :datum="datum" height="400"></D3BarChart>
 </template>
 
 

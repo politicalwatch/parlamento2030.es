@@ -29,23 +29,37 @@
         <div class="o-grid__col u-12 result" v-if="result">
           <h4>Resultado del escáner:</h4>
           <tipi-message v-if="!result.topics.length" type="error" icon>No hemos encontrado ninguna coincidencia entre tu texto y nuestras etiquetas.</tipi-message>
-          <div class="o-grid" v-else>
-            <div class="o-grid__col u-12 u-7@sm">
-              <tipi-message type="info" icon>Si haces clic en cualquiera de las etiquetas relacionadas con tu texto podrás conocer además toda la actividad parlamentaria asociada con dicha etiqueta.</tipi-message >
-              <tipi-topics meta="ODS tratados" :topics="result.topics" :tags="result.tags" :topicsStyles="styles.topics"/>
+          <div v-else>
+
+            <div class="o-grid">
+              <div class="o-grid__col u-12 u-7@sm">
+                <tipi-message type="info" icon>Si haces clic en cualquiera de las etiquetas relacionadas con tu texto podrás conocer además toda la actividad parlamentaria asociada con dicha etiqueta.</tipi-message >
+                <tipi-topics meta="ODS tratados" :topics="result.topics" :tags="result.tags" :topicsStyles="styles.topics"/>
+              </div>
+
+              <div class="o-grid__col u-12 u-offset-2@sm u-3@sm">
+                <tipi-message type="info" icon>Aquí tienes una relación visual de tu texto, para que de un vistazo puedas ver las conexiones temáticas existentes</tipi-message>
+                <InitiativeChart :initiative="fakeInitiative" :topics="allTopics" :styles="styles"></InitiativeChart>
+                <span class="u-text-tbody2">Relación del resultado con los ODS <sup title="El gráfico muestra los ODS relacionados con el texto y el grado de relación con cada uno de ellos, cuya intensidad se muestra en cuánto de coloreado está cada ODS en al gráfica."><i class="fa fa-question-circle"></i></sup></span>
+              </div>
             </div>
-            <div class="o-grid__col u-12 u-offset-2@sm u-3@sm">
-              <tipi-message type="info" icon>Aquí tienes una relación visual de tu texto, para que de un vistazo puedas ver las conexiones temáticas existentes</tipi-message>
-              <InitiativeChart :initiative="fakeInitiative" :topics="allTopics" :styles="styles"></InitiativeChart>
-              <span class="u-text-tbody2">Relación de este texto con los ODS <sup title="El gráfico muestra los ODS relacionados con el texto y el grado de relación con cada uno de ellos, cuya intensidad se muestra en cuánto de coloreado está cada ODS en al gráfica."><i class="fa fa-question-circle"></i></sup></span>
+
+            <div class="u-padding-top-10">
+              <h5>Distribución de los resultados:</h5>
+              <tipi-message type="info" icon>Puedes hacer zoom haciendo click en cada una de las porciones.</tipi-message>
+              <div class="o-grid">
+                <div class="o-grid__col u-12 u-6@sm">
+                  <ScannerSunburst :result="this.result" :styles="styles"></ScannerSunburst>
+                </div>
+                <div class="o-grid__col u-12 u-6@sm">
+                  <ScannerWordsCloud :result="this.result" :styles="styles"></ScannerWordsCloud>
+                </div>
+              </div>
             </div>
-            <div class="o-grid__col u-12 u-6@sm">
-              <ScannerSunburst :result="this.result" :styles="styles"></ScannerSunburst>
-            </div>
-            <div class="o-grid__col u-12 u-6@sm">
-              <ScannerWordsCloud :result="this.result" :styles="styles"></ScannerWordsCloud>
-            </div>
-            <div class="o-grid__col u-12 padding-top-4">
+
+            <div class="u-padding-top-10">
+              <h5>Compara los resultados:</h5>
+              <tipi-message type="info" icon>Selecciona un texto de referencia para poder comparar tus resultados con él.</tipi-message>
               <div class="c-select-label u-block">
                 <label for="topic">Comparar con...</label>
                 <multiselect
@@ -55,12 +69,11 @@
                   name="pre-scanned-text" id="pre-scanned-text" placeholder="Selecciona uno">
                 </multiselect>
               </div>
-            </div>
-            <div class="o-grid__col u-12">
               <ScannerBarchart :result="this.result" :styles="styles"></ScannerBarchart>
             </div>
 
-            <div class="o-grid__col u-12 padding-top-4">
+            <div class="u-padding-top-10">
+              <h5>Resultados en detalle:</h5>
               <ScannerTable :result="this.result"></ScannerTable>
             </div>
 

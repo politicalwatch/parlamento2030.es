@@ -1,5 +1,5 @@
 <template>
-  <D3WordsCloud :config="config" :datum="datum" :height="600"></D3WordsCloud>
+  <D3WordsCloud :config="config" :datum="datum" :height="400" title="Etiquetas más comunes"></D3WordsCloud>
 </template>
 
 
@@ -19,6 +19,7 @@ export default {
         value: 'size',
         angle: [0, 90],
         color: {key: 'color'},
+        fontFamily: "Rubik",
       },
     };
   },

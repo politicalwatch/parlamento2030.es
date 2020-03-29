@@ -1,5 +1,5 @@
 <template>
-  <D3Sunburst class="scanner-sunburst" :config="config" :datum="datum" :height="600" source="Haz click en cada porción para hacer zoom"></D3Sunburst>
+  <D3Sunburst class="scanner-sunburst" :config="config" :datum="datum" :height="400" title="Clasificación de resultados"></D3Sunburst>
 </template>
 
 
