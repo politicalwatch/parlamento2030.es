@@ -1,5 +1,5 @@
 <template>
-  <D3Sunburst :config="config" :datum="datum" :height="600"></D3Sunburst>
+  <D3Sunburst class="scanner-sunburst" :config="config" :datum="datum" :height="600" source="Haz click en cada porción para hacer zoom"></D3Sunburst>
 </template>
 
 
@@ -129,3 +129,11 @@ export default {
   },
 };
 </script>
+
+<style lang="scss">
+.scanner-sunburst {
+  .chart__source {
+    text-align: center;
+  }
+}
+</style>
