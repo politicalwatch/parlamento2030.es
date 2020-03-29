@@ -49,12 +49,13 @@
               <tipi-message type="info" icon>Puedes hacer zoom haciendo click en cada una de las porciones.</tipi-message>
               <div class="o-grid">
                 <div class="o-grid__col u-12 u-6@sm">
-                  <ScannerSunburst :result="this.result" :styles="styles"></ScannerSunburst>
+                  <ScannerSunburst :result="result" :styles="styles"></ScannerSunburst>
                 </div>
                 <div class="o-grid__col u-12 u-6@sm">
-                  <ScannerWordsCloud :result="this.result" :styles="styles"></ScannerWordsCloud>
+                  <ScannerWordsCloud :result="result" :styles="styles"></ScannerWordsCloud>
                 </div>
               </div>
+              <ScannerLegend :result="result" :styles="styles"></ScannerLegend>
             </div>
 
             <div class="u-padding-top-10">
@@ -73,7 +74,7 @@
 
             <div class="u-padding-top-10">
               <h5>Resultados en detalle:</h5>
-              <ScannerTable :result="this.result"></ScannerTable>
+              <ScannerTable :result="result"></ScannerTable>
             </div>
 
             <div class="o-grid__col u-12 u-text-center u-margin-top-4 u-padding-top-4 u-border-top">
@@ -104,6 +105,7 @@ import ScannerWordsCloud from '@/components/scanner-wordscloud.vue';
 import ScannerSunburst from '@/components/scanner-sunburst.vue';
 import ScannerBarchart from '@/components/scanner-barchart.vue';
 import ScannerTable from '@/components/scanner-table.vue';
+import ScannerLegend from '@/components/scanner-legend.vue';
 import InitiativeChart from '@/components/initiative-chart.vue';
 
 const VueScrollTo = require('vue-scrollto');
@@ -119,6 +121,7 @@ export default {
     ScannerSunburst,
     ScannerBarchart,
     ScannerTable,
+    ScannerLegend,
     Multiselect,
     TipiMessage,
     TipiLoader,
