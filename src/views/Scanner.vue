@@ -60,6 +60,10 @@
               <ScannerBarchart :result="this.result" :styles="styles"></ScannerBarchart>
             </div>
 
+            <div class="o-grid__col u-12 padding-top-4">
+              <ScannerTable :result="this.result"></ScannerTable>
+            </div>
+
             <div class="o-grid__col u-12 u-text-center u-margin-top-4 u-padding-top-4 u-border-top">
               <tipi-csv-download
                 :initiatives="csvItems || []"
@@ -87,6 +91,7 @@ import { mapState } from 'vuex';
 import ScannerWordsCloud from '@/components/scanner-wordscloud.vue';
 import ScannerSunburst from '@/components/scanner-sunburst.vue';
 import ScannerBarchart from '@/components/scanner-barchart.vue';
+import ScannerTable from '@/components/scanner-table.vue';
 import InitiativeChart from '@/components/initiative-chart.vue';
 
 const VueScrollTo = require('vue-scrollto');
@@ -101,6 +106,7 @@ export default {
     ScannerWordsCloud,
     ScannerSunburst,
     ScannerBarchart,
+    ScannerTable,
     Multiselect,
     TipiMessage,
     TipiLoader,
