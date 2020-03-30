@@ -27,35 +27,23 @@
           <tipi-loader v-if="inProgress" title="Escaneando resultados" :subtitle="subtitle" />
         </div>
         <div class="o-grid__col u-12 result" v-if="result">
-          <h4>Resultado del escáner:</h4>
           <tipi-message v-if="!result.topics.length" type="error" icon>No hemos encontrado ninguna coincidencia entre tu texto y nuestras etiquetas.</tipi-message>
           <div v-else>
 
-            <div class="o-grid">
-              <div class="o-grid__col u-12 u-7@sm">
-                <tipi-message type="info" icon>Si haces clic en cualquiera de las etiquetas relacionadas con tu texto podrás conocer además toda la actividad parlamentaria asociada con dicha etiqueta.</tipi-message >
-                <tipi-topics meta="ODS tratados" :topics="result.topics" :tags="result.tags" :topicsStyles="styles.topics"/>
-              </div>
-
-              <div class="o-grid__col u-12 u-offset-2@sm u-3@sm">
-                <tipi-message type="info" icon>Aquí tienes una relación visual de tu texto, para que de un vistazo puedas ver las conexiones temáticas existentes</tipi-message>
-                <InitiativeChart :initiative="fakeInitiative" :topics="allTopics" :styles="styles"></InitiativeChart>
-                <span class="u-text-tbody2">Relación del resultado con los ODS <sup title="El gráfico muestra los ODS relacionados con el texto y el grado de relación con cada uno de ellos, cuya intensidad se muestra en cuánto de coloreado está cada ODS en al gráfica."><i class="fa fa-question-circle"></i></sup></span>
-              </div>
-            </div>
-
-            <div class="u-padding-top-10">
+            <div>
               <h5>Distribución de los resultados:</h5>
-              <tipi-message type="info" icon>Puedes hacer zoom haciendo click en cada una de las porciones.</tipi-message>
               <div class="o-grid">
+                <div class="o-grid__col u-12 u-padding-bottom-4">
+                  <ScannerLegend :result="result" :styles="styles"></ScannerLegend>
+                </div>
                 <div class="o-grid__col u-12 u-6@sm">
                   <ScannerSunburst :result="result" :styles="styles"></ScannerSunburst>
+                  <tipi-message type="info" icon>Puedes hacer zoom haciendo click en cada una de las porciones.</tipi-message>
                 </div>
                 <div class="o-grid__col u-12 u-6@sm">
                   <ScannerWordsCloud :result="result" :styles="styles"></ScannerWordsCloud>
                 </div>
               </div>
-              <ScannerLegend :result="result" :styles="styles"></ScannerLegend>
             </div>
 
             <div class="u-padding-top-10">
@@ -95,7 +83,7 @@
 </template>
 
 <script>
-import { TipiMessage, TipiHeader, TipiLoader, TipiTopics, TipiNeuron, TipiCsvDownload } from 'tipi-uikit'
+import { TipiMessage, TipiHeader, TipiLoader, TipiTopics, TipiCsvDownload } from 'tipi-uikit'
 import Multiselect from 'vue-multiselect';
 import config from '@/config';
 import preScannedTexts from '@/scanned';
@@ -115,7 +103,6 @@ export default {
   components: {
     TipiHeader,
     TipiTopics,
-    TipiNeuron,
     TipiCsvDownload,
     ScannerWordsCloud,
     ScannerSunburst,
