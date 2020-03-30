@@ -16,10 +16,11 @@ export default {
       datum: [],
       config: {
         key: 'key',
-        values: ['Resultado'],
+        values: ['Texto original'],
         orientation: 'horizontal',
         color: { key: 'color' },
         margin: { left: 60 },
+        tooltip: { suffix: 'ocurrencias' },
       },
     };
   },
@@ -95,8 +96,8 @@ export default {
       // Map values
       this.datum = topics.map(d => ({
         key: d.shortname,
-        Resultado: d.result,
-        Comparado: d.compared,
+        'Texto original': d.result,
+        'Texto comparado': d.compared,
         color: this.styles.topics[d.name].color,
       })).sort((a, b) => {
         return +a.key.split(' ')[1] - b.key.split(' ')[1];
@@ -104,8 +105,8 @@ export default {
 
       // Change chart's configuration
       this.config.values = this.isComparing
-        ? ['Resultado', 'Comparado']
-        : ['Resultado'];
+        ? ['Texto original', 'Texto comparado']
+        : ['Texto original'];
 
     },
   },
