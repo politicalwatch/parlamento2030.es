@@ -30,23 +30,21 @@ export default {
 </script>
 
 <style lang="scss">
+$width: 36px;
 .legend {
-  &__item {
-    display: inline-block;
-    margin-right: 10px;
-  }
   &__img {
-    margin: 2px;
-    width: 18px;
-    height: 18px;
+    margin: 0px 5px 5px 0px;
+    width: $width;
+    height: $width;
     display: inline-block;
     vertical-align: top;
-    background-size: 10px 10px;
+    background-size: $width/2 $width/2;
     background-repeat: no-repeat;
     background-position: center;
   }
   &__text {
-    vertical-align: top;
+    line-height: $width;
+    
   }
 }
 </style>
