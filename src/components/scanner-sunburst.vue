@@ -27,6 +27,7 @@ export default {
           key: 'color',
         },
         tooltip: { suffix: 'ocurrencias' },
+        transition: { duration: 1000 },
       },
     };
   },
