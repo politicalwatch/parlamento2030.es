@@ -7,7 +7,7 @@
             'background-color': styles.topics[d].color,
             'background-image': `url(/img/topics/${styles.topics[d].image})`,
           }"></div>
-        <span class="legend__text">{{d}}</span>
+        <span class="legend__text c-topic-link__name u-color-secondary">{{d}}</span>
       </div>
     </div>
 </template>
@@ -38,13 +38,12 @@ $width: 36px;
     height: $width;
     display: inline-block;
     vertical-align: top;
-    background-size: $width/2 $width/2;
+    background-size: $width/1.5 $width/1.5;
     background-repeat: no-repeat;
     background-position: center;
   }
   &__text {
-    line-height: $width;
-    
+    line-height: $width !important;
   }
 }
 </style>
