@@ -24,7 +24,7 @@
 </template>
 
 <script>
-import { TipiMessage } from 'tipi-uikit';
+import { TipiMessage, Utils } from 'tipi-uikit';
 
 export default {
   name: 'scanner-table',
@@ -63,7 +63,7 @@ export default {
         const item = { ...d };
         item.percent = Math.floor((d.times / totaltags)*100);
         return item;
-      }).slice(0, this.limitRows);
+      }).sort((a, b) => Utils.naturalSort(a.topic, b.topic)).slice(0, this.limitRows);
     },
   },
 };

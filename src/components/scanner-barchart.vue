@@ -4,7 +4,7 @@
 
 
 <script>
-import { D3BarChart } from 'tipi-uikit';
+import { D3BarChart, Utils } from 'tipi-uikit';
 
 export default {
   name: 'ScannerBarchart',
@@ -99,9 +99,7 @@ export default {
         'Texto original': d.result,
         'Texto comparado': d.compared,
         color: this.styles.topics[d.name].color,
-      })).sort((a, b) => {
-        return +a.key.split(' ')[1] - b.key.split(' ')[1];
-      });
+      })).sort((a, b) => Utils.naturalSort(a.key, b.key));
 
       // Change chart's configuration
       this.config.values = this.isComparing

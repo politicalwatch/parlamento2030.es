@@ -1,6 +1,6 @@
 <template>
     <div class="legend">
-      <div v-for="(d, i) in result.topics" :key="i" class="legend__item">
+      <div v-for="(d, i) in sortedTopics" :key="i" class="legend__item">
         <div
           class="legend__img"
           :style="{
@@ -13,6 +13,8 @@
 </template>
 
 <script>
+import { Utils } from 'tipi-uikit';
+
 export default {
   name: 'scanner-legend',
   props: {
@@ -24,6 +26,12 @@ export default {
       type: Object,
       required: true,
       default: () => ({}),
+    },
+  },
+  computed: {
+    sortedTopics() {
+      const topics = [ ...this.result.topics ];
+      return topics.sort(Utils.naturalSort);
     },
   },
 };

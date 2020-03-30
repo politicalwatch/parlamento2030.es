@@ -5,7 +5,7 @@
 
 <script>
 import { color } from 'd3-color';
-import { D3Sunburst } from 'tipi-uikit';
+import { D3Sunburst, Utils } from 'tipi-uikit';
 const d3 = {color};
 
 export default {
@@ -120,7 +120,8 @@ export default {
           }
         }
       });
-
+      // Sort topics
+      sunburstitems.children.sort((a, b) => Utils.naturalSort(a.name, b.name));
       this.datum = [sunburstitems];
     }
   },
