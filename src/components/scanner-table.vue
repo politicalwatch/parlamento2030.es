@@ -6,8 +6,6 @@
           <th>Topic</th>
           <th>Subtopic</th>
           <th>Etiqueta</th>
-          <th>Ocurrencias</th>
-          <th>Porcentaje</th>
         </tr>
       </thead>
       <tbody>
@@ -15,20 +13,29 @@
           <td data-label="Topic">{{d.topic}}</td>
           <td data-label="Subtopic">{{d.subtopic}}</td>
           <td data-label="Etiqueta">{{d.tag}}</td>
-          <td class="number" data-label="Ocurrencias">{{d.times}}</td>
-          <td class="number" data-label="Porcentaje">{{d.percent}}%</td>
         </tr>
       </tbody>
     </table>
+    <tipi-message
+      v-if="totalRows > limitRows"
+      type="info"
+      icon>Se muestran {{limitRows}} resultados de un total de {{totalRows}} encontrados.</tipi-message>
   </div>
 </template>
 
 <script>
+import { TipiMessage } from 'tipi-uikit';
+
 export default {
   name: 'scanner-table',
+  components: {
+    TipiMessage,
+  },
   data() {
     return {
       datum: [],
+      totalRows: 0,
+      limitRows: 20,
     };
   },
   created() {
@@ -50,11 +57,13 @@ export default {
       const totaltags = this.result.tags
         .reduce((cnt, o) => (cnt + o.times), 0);
 
+      this.totalRows = this.result.tags.length;
+
       this.datum = this.result.tags.map(d => {
         const item = { ...d };
         item.percent = Math.floor((d.times / totaltags)*100);
         return item;
-      });
+      }).slice(0, this.limitRows);
     },
   },
 };
