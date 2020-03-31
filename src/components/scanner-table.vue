@@ -6,6 +6,7 @@
           <th>Topic</th>
           <th>Subtopic</th>
           <th>Etiqueta</th>
+          <th>Ocurrencias</th>
         </tr>
       </thead>
       <tbody>
@@ -13,6 +14,7 @@
           <td data-label="Topic">{{d.topic}}</td>
           <td data-label="Subtopic">{{d.subtopic}}</td>
           <td data-label="Etiqueta">{{d.tag}}</td>
+          <td data-label="Ocurrencias">{{d.times}}</td>
         </tr>
       </tbody>
     </table>
@@ -35,7 +37,7 @@ export default {
     return {
       datum: [],
       totalRows: 0,
-      limitRows: 20,
+      limitRows: 10,
     };
   },
   created() {

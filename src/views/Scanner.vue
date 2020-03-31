@@ -65,14 +65,14 @@
               <ScannerTable :result="result"></ScannerTable>
             </div>
 
-            <div class="o-grid__col u-12 u-text-center u-margin-top-4 u-padding-top-4 u-border-top">
+            <div class="o-grid__col u-12 u-margin-top-4">
               <tipi-csv-download
                 :initiatives="csvItems || []"
                 :csvItems="csvItems"
                 :csvFields="csvFields"
                 :canDownloadCSV="true"
                 button-class="c-button--primary"
-                label="Descárgalo en CSV"
+                label="Descárgalos en CSV"
               />
             </div>
           </div>
@@ -127,7 +127,7 @@ export default {
       estimatedTime: 0,
       textToCompare: null,
       csvItems: [],
-      csvFields: ['topic', 'subtopic', 'tag'],
+      csvFields: ['topic', 'subtopic', 'tag', 'times'],
       styles: config.STYLES,
     };
   },
