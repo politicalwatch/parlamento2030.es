@@ -127,7 +127,7 @@ export default {
       estimatedTime: 0,
       textToCompare: null,
       csvItems: [],
-      csvFields: ['topic', 'subtopic', 'tag'],
+      csvFields: ['topic', 'subtopic', 'tag', 'times'],
       styles: config.STYLES,
     };
   },
