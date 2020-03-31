@@ -5,6 +5,10 @@
 
 <script>
 import { D3WordsCloud } from 'tipi-uikit';
+import { scaleLinear } from 'd3-scale';
+import { max } from 'd3-array';
+
+const d3 = { scaleLinear, max };
 
 export default {
   name: 'ScannerWordsCloud',
@@ -21,6 +25,8 @@ export default {
         color: {key: 'color'},
         fontFamily: "Rubik",
       },
+      minFontSize: 12,
+      maxFontSize: 36,
     };
   },
   props: {
@@ -44,9 +50,13 @@ export default {
       */
       if (!this.result.tags) return;
 
+      const textScale = d3.scaleLinear()
+        .range([this.minFontSize, this.maxFontSize])
+        .domain([1, d3.max(this.result.tags, (d) => d.times)]);
+
       this.datum = this.result.tags.map(d => ({
         tag: d.tag,
-        size: d.times * 10,
+        size: textScale(d.times),
         color: this.styles.topics[d.topic].color,
       }));
     },
