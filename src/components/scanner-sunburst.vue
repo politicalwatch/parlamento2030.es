@@ -138,5 +138,8 @@ export default {
   .chart__source {
     text-align: center;
   }
+  .chart__labels {
+    fill: white;
+  }
 }
 </style>
