@@ -3,8 +3,8 @@
     <table class="scanner-table">
       <thead>
         <tr>
-          <th>Topic</th>
-          <th>Subtopic</th>
+          <th>ODS</th>
+          <th>Meta</th>
           <th>Etiqueta</th>
           <th>Ocurrencias</th>
         </tr>
@@ -21,7 +21,7 @@
     <tipi-message
       v-if="totalRows > limitRows"
       type="info"
-      icon>Se muestran {{limitRows}} resultados de un total de {{totalRows}} encontrados.</tipi-message>
+      icon>Estamos mostrando {{limitRows}} de un total de {{totalRows}} resultados encontrados.</tipi-message>
   </div>
 </template>
 
