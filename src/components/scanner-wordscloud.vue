@@ -21,7 +21,7 @@ export default {
       config: {
         key: 'tag',
         value: 'size',
-        angle: [0, 90],
+        angle: [0],
         color: {key: 'color'},
         fontFamily: "Rubik",
       },
