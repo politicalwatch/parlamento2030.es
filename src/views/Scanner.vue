@@ -36,11 +36,11 @@
                 <div class="o-grid__col u-12 u-padding-bottom-4">
                   <ScannerLegend :result="result" :styles="styles"></ScannerLegend>
                 </div>
-                <div class="o-grid__col u-12 u-6@sm">
+                <div class="o-grid__col u-12 u-4@sm">
                   <ScannerSunburst :result="result" :styles="styles"></ScannerSunburst>
                   <tipi-message type="info" icon>Puedes hacer zoom haciendo click en cada una de las porciones.</tipi-message>
                 </div>
-                <div class="o-grid__col u-12 u-6@sm">
+                <div class="o-grid__col u-12 u-8@sm">
                   <ScannerWordsCloud :result="result" :styles="styles"></ScannerWordsCloud>
                 </div>
               </div>
