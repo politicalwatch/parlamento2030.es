@@ -26,7 +26,7 @@ export default {
         color: {
           key: 'color',
         },
-        tooltip: { suffix: 'ocurrencias' },
+        tooltip: { suffix: 'aparición', suffixPlural: 'apariciones' },
         transition: { duration: 1000 },
       },
     };

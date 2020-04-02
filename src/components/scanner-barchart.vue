@@ -20,7 +20,7 @@ export default {
         orientation: 'horizontal',
         color: { key: 'color' },
         margin: { left: 60 },
-        tooltip: { suffix: 'ocurrencias' },
+        tooltip: { suffix: 'aparición', suffixPlural: 'apariciones' },
       },
     };
   },
