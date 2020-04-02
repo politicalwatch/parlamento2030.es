@@ -5,10 +5,10 @@
 
 <script>
 import { D3WordsCloud } from 'tipi-uikit';
-import { scaleLinear } from 'd3-scale';
-import { max } from 'd3-array';
+import { scalePow } from 'd3-scale';
+import { extent } from 'd3-array';
 
-const d3 = { scaleLinear, max };
+const d3 = { scalePow, extent };
 
 export default {
   name: 'ScannerWordsCloud',
@@ -20,13 +20,17 @@ export default {
       datum: [],
       config: {
         key: 'tag',
-        value: 'size',
-        angle: [0],
+        size: 'size',
+        value: 'value',
+        angle: [0, 90],
         color: {key: 'color'},
         fontFamily: "Rubik",
+        tooltip: { suffix: 'aparición', suffixPlural: 'apariciones' },
       },
-      minFontSize: 12,
-      maxFontSize: 36,
+      minFontSize: 10,
+      maxFontSize: 40,
+      fontScaleExponent: 4,
+      maxResults: 50,
     };
   },
   props: {
@@ -50,13 +54,19 @@ export default {
       */
       if (!this.result.tags) return;
 
-      const textScale = d3.scaleLinear()
+      const tags = this.result.tags
+        .sort((a, b) => b.times - a.times)
+        .slice(0, this.maxResults);
+
+      const textScale = d3.scalePow()
+        .exponent(this.fontScaleExponent)
         .range([this.minFontSize, this.maxFontSize])
-        .domain([1, d3.max(this.result.tags, (d) => d.times)]);
+        .domain(d3.extent(tags, (d) => d.times));
 
       this.datum = this.result.tags.map(d => ({
         tag: d.tag,
         size: textScale(d.times),
+        value: d.times,
         color: this.styles.topics[d.topic].color,
       }));
     },
