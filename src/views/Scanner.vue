@@ -12,7 +12,7 @@
           <p><textarea placeholder="Inserta aqui el texto que quieres escanear..." v-model="inputText" rows="9"/></p>
           <div class="c-input-label c-input-label--file u-block">
             <label for="file">Sube un archivo</label>
-            <input type="file" id="file" name="file" placeholder="PDF, doc o txt">
+            <input type="file" id="file" name="file" v-on:change="loadSelectedFile" placeholder="PDF, doc o txt">
           </div>
           <p>
             <a id="start" class="c-button c-button--primary" @click.prevent="annotate">Iniciar proceso</a>
@@ -119,6 +119,7 @@ export default {
       config: config,
       preScannedTexts: preScannedTexts,
       inputText: '',
+      inputFile: null,
       result: null,
       resultToCompare: null,
       errors: null,
@@ -140,6 +141,8 @@ export default {
   methods: {
     cleanText() {
       this.inputText = ""
+      this.inputFile = null
+      document.getElementById("file").value = "";
     },
     cleanResult() {
       this.fakeInitiative = null
@@ -149,12 +152,15 @@ export default {
       this.cleanText()
       this.cleanResult()
     },
+    loadSelectedFile(event) {
+      this.inputFile = event.target.files[0]
+    },
     annotate() {
       this.cleanResult();
       this.inProgress = true;
       document.getElementById('start').text = 'Procesando...'
       this.fakeInitiative = null
-      api.annotate(this.inputText)
+      api.annotate(this.inputText, this.inputFile)
         .then(response => {
           if (response.status==="SUCCESS") {
             this.result = response.result
