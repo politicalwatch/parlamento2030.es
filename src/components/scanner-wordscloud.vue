@@ -63,7 +63,7 @@ export default {
         .range([this.minFontSize, this.maxFontSize])
         .domain(d3.extent(tags, (d) => d.times));
 
-      this.datum = this.result.tags.map(d => ({
+      this.datum = tags.map(d => ({
         tag: d.tag,
         size: textScale(d.times),
         value: d.times,
