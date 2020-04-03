@@ -66,11 +66,11 @@ export default {
           topics.push({
             shortname,
             name: d.topic,
-            result: 1,
+            result: d.times,
             compared: 0,
           });
         } else {
-          topics[idx].result += 1;
+          topics[idx].result += d.times;
         }
       });
 
@@ -85,10 +85,10 @@ export default {
               shortname,
               name: d.topic,
               result: 0,
-              compared: 1,
+              compared: d.times,
             });
           } else {
-            topics[idx].compared += 1;
+            topics[idx].compared += d.times;
           }
         });
       }
