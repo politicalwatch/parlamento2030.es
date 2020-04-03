@@ -140,6 +140,7 @@ export default {
   }
   .chart__labels {
     fill: white;
+    pointer-events: none;
   }
 }
 </style>
