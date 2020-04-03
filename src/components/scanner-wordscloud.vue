@@ -1,5 +1,5 @@
 <template>
-  <D3WordsCloud :config="config" :datum="datum" :height="400" title="Etiquetas más comunes"></D3WordsCloud>
+  <D3WordsCloud :config="config" :datum="datum" :height="400" title="Etiquetas más populares"></D3WordsCloud>
 </template>
 
 
@@ -22,7 +22,7 @@ export default {
         key: 'tag',
         size: 'size',
         value: 'value',
-        angle: [0, 90],
+        angle: [0],
         color: {key: 'color'},
         fontFamily: "Rubik",
         tooltip: { suffix: 'aparición', suffixPlural: 'apariciones' },
@@ -30,13 +30,17 @@ export default {
       minFontSize: 10,
       maxFontSize: 40,
       fontScaleExponent: 4,
-      maxResults: 50,
     };
   },
   props: {
     result: {
       type: Object || null,
       required: true,
+    },
+    maxResults: {
+      type: Number || null,
+      required: true,
+      defalt: 25,
     },
     styles: {
       type: Object,
@@ -63,7 +67,7 @@ export default {
         .range([this.minFontSize, this.maxFontSize])
         .domain(d3.extent(tags, (d) => d.times));
 
-      this.datum = this.result.tags.map(d => ({
+      this.datum = tags.map(d => ({
         tag: d.tag,
         size: textScale(d.times),
         value: d.times,
