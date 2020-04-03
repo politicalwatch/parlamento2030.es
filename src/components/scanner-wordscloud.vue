@@ -29,7 +29,7 @@ export default {
       },
       minFontSize: 10,
       maxFontSize: 40,
-      fontScaleExponent: 4,
+      fontScaleExponent: 2,
       maxResults: 50,
     };
   },
