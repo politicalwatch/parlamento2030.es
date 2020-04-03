@@ -6,7 +6,7 @@
           <th>ODS</th>
           <th>Meta</th>
           <th>Etiqueta</th>
-          <th>Ocurrencias</th>
+          <th>Apariciones</th>
         </tr>
       </thead>
       <tbody>

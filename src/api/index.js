@@ -243,10 +243,14 @@ export default {
       ].join('');
     }
   },
-  annotate(text) {
+  annotate(text, file) {
+    let formData = new FormData()
+    formData.append('text', text)
+    formData.append('file', file)
+
     return axios.post(
       getEndpoint(),
-      qs.stringify({ 'text': text })
+      formData,
     ).then(response => response.data);
 
     function getEndpoint() {
