@@ -16,14 +16,14 @@
           </div>
           <p>
             <a id="start" class="c-button c-button--primary" @click.prevent="annotate">Iniciar proceso</a>
-            <a class="c-button" :class="{ disabled: inProgress }" v-if="inputText!=''" @click="cleanTextAndResult">Limpiar texto <span v-if="result">y resultados</span></a>
+            <a class="c-button" :class="{ disabled: inProgress }" v-if="hasInput" @click="cleanTextAndResult">Limpiar</span></a>
           </p>
         </div>
 
       </div>
       <div id="result" class="o-section o-grid">
         <div v-if="inProgress || errors" class="o-grid__col u-12">
-          <tipi-message v-if="errors" type="error" icon>Has sobrepasado el límite de escaneos por hora. Vuelve a intentarlo pasado un tiempo</tipi-message>
+          <tipi-message v-if="errors" type="error" icon>{{errors}}</tipi-message>
           <tipi-loader v-if="inProgress" title="Escaneando resultados" :subtitle="subtitle" />
         </div>
         <div class="o-grid__col u-12 result" v-if="result">
@@ -138,6 +138,9 @@ export default {
     ...mapState(['allTopics']),
     subtitle () {
       return this.estimatedTime ? `Tardaremos unos ${this.estimatedTime} segundos en mostrarte resultados. No te vayas` : "Ten paciencia, estamos trabajando duro"
+    },
+    hasInput () {
+      return this.inputText!='' || this.inputFile!=null
     }
   },
   methods: {
@@ -149,6 +152,7 @@ export default {
     cleanResult() {
       this.fakeInitiative = null
       this.result = null
+      this.errors = null
     },
     cleanTextAndResult() {
       this.cleanText()
@@ -182,9 +186,11 @@ export default {
           }
         })
         .catch(error => {
-          this.errors = error.response.data.message
+          if (error.response.status == 429) this.errors = "Has sobrepasado el límite de escaneos por hora. Vuelve a intentarlo pasado un tiempo"
+          else this.errors = error.response.data.message
           this.inProgress = false;
           document.getElementById('start').text = 'Iniciar proceso'
+          
         });
     },
     getNameFromCSV: function() {
