@@ -9,6 +9,7 @@ import Topic from '@/views/Topic.vue'
 import Deputy from '@/views/Deputy.vue'
 import Parliamentarygroup from '@/views/Parliamentarygroup.vue'
 import Scanner from '@/views/Scanner.vue'
+import Scanned from '@/views/Scanned.vue'
 import About from '@/views/About.vue'
 import AboutEnglish from '@/views/AboutEnglish.vue'
 import Mediakit from '@/views/Mediakit.vue'
@@ -230,6 +231,11 @@ const routes = [{
     path: "/scanner",
     name: "scanner",
     component: Scanner
+  },
+  {
+    path: "/scanner/:id",
+    name: "scanned",
+    component: Scanned
   },
   {
     path: "/about",

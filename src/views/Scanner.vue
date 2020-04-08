@@ -2,140 +2,90 @@
   <div>
     <div id="scanner" class="o-container o-section u-margin-bottom-10">
       <tipi-header title="Scanner"/>
-      <div class="o-grid u-margin-bottom-4">
 
-        <div class="o-grid__col u-12 u-6@sm" v-if="config.SCANNER_HELPTEXT">
-          <tipi-message type="info" icon><div v-html="config.SCANNER_HELPTEXT"></div></tipi-message>
-        </div>
-
-        <div class="o-grid__col u-12 u-6@sm">
-          <p><textarea placeholder="Inserta aqui el texto que quieres escanear..." v-model="inputText" rows="9"/></p>
-          <div class="c-input-label c-input-label--file u-block">
-            <label for="file">Sube un archivo</label>
-            <input type="file" id="file" name="file" v-on:change="loadSelectedFile" placeholder="PDF, doc o txt">
+        <div class="o-grid u-margin-bottom-4">
+          <div class="o-grid__col u-12 u-6@sm">
+            <tipi-message type="info" icon><div v-html="'Abrimos nuestra tecnología al mundo para que puedas escanear y etiquetar en clave de los 17 ODS y sus metas cualquier tipo de texto de la misma manera que Parlamento 2030 lo hace con la actividad parlamentaria española.'"></div></tipi-message>
           </div>
-          <p>
+
+          <div class="o-grid__col u-12 u-6@sm">
+            <p><textarea placeholder="Inserta aqui el texto que quieres escanear..." v-model="inputText" rows="9"/></p>
+            <div class="c-input-label c-input-label--file u-block">
+              <label for="file">Sube un archivo</label>
+              <input type="file" id="file" name="file" v-on:change="loadSelectedFile" placeholder="PDF, doc o txt">
+            </div>
+            <p>
             <a id="start" class="c-button c-button--primary" @click.prevent="annotate">Iniciar proceso</a>
             <a class="c-button" :class="{ disabled: inProgress }" v-if="hasInput" @click="cleanTextAndResult">Limpiar</span></a>
-          </p>
-        </div>
-
-      </div>
-      <div id="result" class="o-section o-grid">
-        <div v-if="inProgress || errors" class="o-grid__col u-12">
-          <tipi-message v-if="errors" type="error" icon>{{errors}}</tipi-message>
-          <tipi-loader v-if="inProgress" title="Escaneando resultados" :subtitle="subtitle" />
-        </div>
-        <div class="o-grid__col u-12 result" v-if="result">
-          <tipi-message v-if="!result.topics.length" type="error" icon>No hemos encontrado ninguna coincidencia entre tu texto y nuestras etiquetas.</tipi-message>
-          <div v-else>
-
-            <div>
-              <h5>Distribución de los resultados:</h5>
-              <div class="o-grid">
-                <div class="o-grid__col u-12 u-padding-bottom-4">
-                  <ScannerLegend :result="result" :styles="styles"></ScannerLegend>
-                </div>
-                <div class="o-grid__col u-12 u-6@sm">
-                  <ScannerSunburst :result="result" :styles="styles"></ScannerSunburst>
-                  <tipi-message type="info" icon>Puedes hacer zoom haciendo click en cada una de las porciones.</tipi-message>
-                </div>
-                <div class="o-grid__col u-12 u-6@sm u-text-center">
-                  <ScannerWordsCloud :result="result" :maxResults="tagsInWordCloud" :styles="styles"></ScannerWordsCloud>
-                  <tipi-message type="info" icon>Se muestran un máximo de {{tagsInWordCloud}} etiquetas</tipi-message>
-                </div>
-              </div>
-            </div>
-
-            <div class="u-padding-top-10">
-              <h5>Compara los resultados:</h5>
-              <tipi-message type="info" icon>Selecciona un texto de referencia para poder comparar tus resultados con él.</tipi-message>
-              <div class="c-select-label u-block">
-                <label for="topic">Comparar con...</label>
-                <multiselect
-                  v-model="textToCompare"
-                  :options="preScannedTexts.map(pst => pst.title)"
-                  name="pre-scanned-text" id="pre-scanned-text" placeholder="Selecciona uno">
-                </multiselect>
-              </div>
-              <ScannerBarchart :result="this.result" :resultToCompare="resultToCompare" :styles="styles"></ScannerBarchart>
-            </div>
-
-            <div class="u-padding-top-10">
-              <h5>Resultados en detalle:</h5>
-              <ScannerTable :result="result"></ScannerTable>
-            </div>
-
-            <div class="o-grid__col u-12 u-margin-top-4">
-              <tipi-csv-download
-                :initiatives="csvItems || []"
-                :csvItems="csvItems"
-                :csvFields="csvFields"
-                :canDownloadCSV="true"
-                button-class="c-button--primary"
-                label="Descárgalos en CSV"
-              />
-            </div>
+            </p>
           </div>
         </div>
-      </div>
+
+        <div id="result" class="o-section o-grid">
+          <div v-if="inProgress || errors" class="o-grid__col u-12">
+            <tipi-message v-if="errors" type="error" icon>{{errors}}</tipi-message>
+            <tipi-loader v-if="inProgress" title="Escaneando resultados" :subtitle="subtitle" />
+          </div>
+          <div class="o-grid__col u-12 result" v-if="result">
+            
+            <tipi-message v-if="!result.topics.length" type="error" icon>No hemos encontrado ninguna coincidencia entre tu texto y nuestras etiquetas.</tipi-message>
+
+            <div v-else>
+
+              <scanner-visualizations :result="result"></scanner-visualizations>
+
+            </div>
+
+
+            <!-- Begin CTAs -->
+            <div class="o-grid o-grid--wide o-grid--center u-bg-primary-light u-padding-top-8 u-padding-bottom-8 u-margin-top-8" v-if="result.topics.length">
+              <div class="o-grid__col u-12 u-12@xs u-10@sm u-text-center">
+                <h5>Lorem fistrum amatomaa</h5>
+                <p>Sexuarl mamaar no te digo trigo por no llamarte Rodrigor la caidita por la gloria de mi madre ese pedazo de quietooor sexuarl a gramenawer. Amatomaa va usté muy cargadoo sexuarl de la pradera benemeritaar tiene musho peligro quietooor te voy a borrar el cerito jarl. Tiene musho peligro qué dise usteer ese pedazo de sexuarl al ataquerl quietooor al ataquerl. </p>
+                <a @click="saveResult" class="c-button c-button--primary">Guarda el resultado</a>
+              </div>
+            </div>
+            <!-- End CTAs -->
+
+
+          </div>
+        </div>
     </div>
   </div>
 </template>
 
 <script>
-import { TipiMessage, TipiHeader, TipiLoader, TipiTopics, TipiCsvDownload } from 'tipi-uikit'
-import Multiselect from 'vue-multiselect';
-import config from '@/config';
-import preScannedTexts from '@/scanned';
+  import { TipiMessage, TipiHeader, TipiLoader } from 'tipi-uikit';
+import ScannerVisualizations from '@/components/scanner-visualizations.vue';
+import swal from 'sweetalert2';
 import api from '@/api';
-import { mapState } from 'vuex';
-import ScannerWordsCloud from '@/components/scanner-wordscloud.vue';
-import ScannerSunburst from '@/components/scanner-sunburst.vue';
-import ScannerBarchart from '@/components/scanner-barchart.vue';
-import ScannerTable from '@/components/scanner-table.vue';
-import ScannerLegend from '@/components/scanner-legend.vue';
-import InitiativeChart from '@/components/initiative-chart.vue';
 
 const VueScrollTo = require('vue-scrollto');
 
 export default {
-  name: 'tagger',
+  name: 'scanner',
   components: {
     TipiHeader,
-    TipiTopics,
-    TipiCsvDownload,
-    ScannerWordsCloud,
-    ScannerSunburst,
-    ScannerBarchart,
-    ScannerTable,
-    ScannerLegend,
-    Multiselect,
     TipiMessage,
     TipiLoader,
-    InitiativeChart,
+    ScannerVisualizations
   },
   data() {
     return {
-      config: config,
-      preScannedTexts: preScannedTexts,
       inputText: '',
       inputFile: null,
       result: null,
-      resultToCompare: null,
       errors: null,
-      fakeInitiative: null,
       inProgress: false,
       estimatedTime: 0,
-      textToCompare: null,
       csvItems: [],
       csvFields: ['topic', 'subtopic', 'tag', 'times'],
+      excerptText: '',
+      scanned: {},
       tagsInWordCloud: 25,
-      styles: config.STYLES,
     };
   },
   computed: {
-    ...mapState(['allTopics']),
     subtitle () {
       return this.estimatedTime ? `Tardaremos unos ${this.estimatedTime} segundos en mostrarte resultados. No te vayas` : "Ten paciencia, estamos trabajando duro"
     },
@@ -150,7 +100,6 @@ export default {
       document.getElementById("file").value = "";
     },
     cleanResult() {
-      this.fakeInitiative = null
       this.result = null
       this.errors = null
     },
@@ -165,16 +114,11 @@ export default {
       this.cleanResult();
       this.inProgress = true;
       document.getElementById('start').text = 'Procesando...'
-      this.fakeInitiative = null
       api.annotate(this.inputText, this.inputFile)
         .then(response => {
           if (response.status==="SUCCESS") {
             this.result = response.result
-            this.csvItems = this.result.tags
-            this.fakeInitiative = {
-              'topics': this.result.topics,
-              'tags': this.result.tags
-            }
+            this.excerptText = response.excerpt
             this.inProgress = false;
             document.getElementById('start').text = 'Iniciar proceso'
             VueScrollTo.scrollTo('#result', 1500)
@@ -190,22 +134,71 @@ export default {
           else this.errors = error.response.data.message
           this.inProgress = false;
           document.getElementById('start').text = 'Iniciar proceso'
-          
+
         });
     },
-    getNameFromCSV: function() {
-      let d = new Date();
-      return "export-scanner-" + d.toISOString() + ".csv";
+    saveResult: function() {
+      swal({
+        title: 'Ponle un nombre',
+        input: 'text',
+        focusConfirm: true,
+        showCancelButton: true,
+        confirmButtonText: 'Guardar',
+        confirmButtonAriaLabel: 'Guardar',
+        cancelButtonText: 'Cancelar',
+        cancelButtonAriaLabel: 'Cancelar'
+      })
+        .then(title => {
+          if (!title.value) throw null;
+
+          api.saveScanned(title.value, this.excerptText, this.result)
+            .then(response => {
+
+              if (!response.id) throw null
+
+              swal({
+                title: 'Guardado!',
+                text: 'El etiquetado del documento se ha guardado satisfactoriamente',
+                focusConfirm: false,
+                confirmButtonText: 'Continuar',
+                confirmButtonAriaLabel: 'Continuar',
+                type: 'success'
+              }).then(function (){
+                this.scanned.title = response.title
+                this.scanned.excerpt = response.excerpt
+                this.$router.replace({
+                  name: 'scanned',
+                  params: {
+                    id: response.id
+                  }
+                });
+                location.reload()
+              }.bind(this, response));
+            })
+            .catch(
+              error => {
+                this.errors = error
+                swal({
+                  title: 'Se ha producido un error',
+                  text: 'Inténtalo de nuevo más tarde',
+                  focusConfirm: false,
+                  confirmButtonText: 'Entendido',
+                  confirmButtonAriaLabel: 'Entendido',
+                  type: 'error'
+                });
+              }
+            );
+
+        })
+        .catch(error => {
+          this.errors = error
+        });
     },
     getAsyncResults: function(taskID) {
       api.getScannerResult(taskID).then(response => {
         if (response.data.status==="SUCCESS") {
           this.result = response.data.result
-          this.csvItems = this.result.tags
-          this.fakeInitiative = {
-            'topics': this.result.topics,
-            'tags': this.result.tags
-          }
+          this.excerptText = response.data.excerpt
           this.inProgress = false;
           document.getElementById('start').text = 'Iniciar proceso'
           VueScrollTo.scrollTo('#result', 1500)
@@ -220,14 +213,6 @@ export default {
         }, 3000);
       })
     }
-  },
-  watch: {
-    textToCompare(val) {
-      const compareWith = preScannedTexts.filter(d => d.title === val);
-      this.resultToCompare = compareWith.length
-        ? compareWith[0]
-        : null;
-    },
-  },
+  }
 };
 </script>

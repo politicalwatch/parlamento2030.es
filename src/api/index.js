@@ -272,5 +272,41 @@ export default {
         taskID
       ].join('');
     }
+  },
+  saveScanned(title, excerpt, result) {
+    return axios.post(
+      getEndpoint(),
+      {
+        title: title,
+        excerpt: excerpt,
+        result: JSON.stringify(result)
+      }
+    ).then(response => response.data)
+      .catch(error => {
+        console.log(error.response)
+      });
+
+    function getEndpoint() {
+      return [
+        config.URL,
+        '/scanned/',
+      ].join('');
+    }
+  },
+  getScanned(scannedId) {
+    return axios.get(
+      getEndpoint(scannedId)
+    ).then(response => response.data)
+      .catch(error => {
+        console.log(error.response)
+      });
+
+    function getEndpoint(scannedId) {
+      return [
+        config.URL,
+        '/scanned/',
+        scannedId
+      ].join('');
+    }
   }
 };
