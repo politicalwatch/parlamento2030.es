@@ -16,7 +16,7 @@
             </div>
             <p>
             <a id="start" class="c-button c-button--primary" @click.prevent="annotate">Iniciar proceso</a>
-            <a class="c-button" :class="{ disabled: inProgress }" v-if="hasInput" @click="cleanTextAndResult">Limpiar</span></a>
+            <a class="c-button" :class="{ disabled: inProgress }" v-if="hasInput" @click="cleanTextAndResult">Limpiar</a>
             </p>
           </div>
         </div>
