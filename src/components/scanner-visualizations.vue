@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="u-padding-top-10">
+    <div>
       <h5>Distribución de los resultados:</h5>
 
       <div class="o-grid">

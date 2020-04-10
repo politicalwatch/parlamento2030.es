@@ -6,9 +6,11 @@
         <div id="result" class="o-section o-grid">
           <div class="o-grid__col u-12 result">
 
-            <h5>Extracto del texto:</h5>
-            <div class="o-grid__col u-12 u-8@sm u-12@xs result">
-              <p class="u-color-secondary">{{ excerpt }}</p>
+            <div class="u-padding-bottom-10">
+              <h5>Extracto del texto:</h5>
+              <div class="o-grid__col u-12 u-8@sm u-12@xs">
+                <p class="u-color-secondary">{{ excerpt }}</p>
+              </div>
             </div>
 
 
