@@ -155,7 +155,6 @@ export default {
 
     return axios
       .post(getEndpoint(), search)
-      .then(response => response.data);
 
     function getEndpoint() {
       return [
@@ -251,7 +250,7 @@ export default {
     return axios.post(
       getEndpoint(),
       formData,
-    ).then(response => response.data);
+    )
 
     function getEndpoint() {
       return [
@@ -281,7 +280,7 @@ export default {
         excerpt: excerpt,
         result: JSON.stringify(result)
       }
-    ).then(response => response.data);
+    )
 
     function getEndpoint() {
       return [

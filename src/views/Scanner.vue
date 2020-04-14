@@ -116,17 +116,17 @@ export default {
       document.getElementById('start').text = 'Procesando...'
       api.annotate(this.inputText, this.inputFile)
         .then(response => {
-          if (response.status==="SUCCESS") {
-            this.result = response.result
-            this.excerptText = response.excerpt
+          if (response.data.status==="SUCCESS") {
+            this.result = response.data.result
+            this.excerptText = response.data.excerpt
             this.inProgress = false;
             document.getElementById('start').text = 'Iniciar proceso'
             VueScrollTo.scrollTo('#result', 1500)
-          } else if (response.status==="PROCESSING") {
-            this.estimatedTime = response.estimated_time
+          } else if (response.data.status==="PROCESSING") {
+            this.estimatedTime = response.data.estimated_time
             setTimeout(() => {
-              this.getAsyncResults(response.task_id)
-            }, response.estimated_time * 1000);
+              this.getAsyncResults(response.data.task_id)
+            }, response.data.estimated_time * 1000);
           }
         })
         .catch(error => {
@@ -154,36 +154,31 @@ export default {
           api.saveScanned(title.value, this.excerptText, this.result)
             .then(response => {
 
-              if (!response.id) throw null
-
               swal({
                 title: 'Guardado!',
-                text: 'El etiquetado del documento se ha guardado satisfactoriamente',
+                text: 'Texto escaneado guardado satisfactoriamente',
                 focusConfirm: false,
                 confirmButtonText: 'Continuar',
                 confirmButtonAriaLabel: 'Continuar',
                 type: 'success'
               }).then(function (){
-                this.scanned.title = response.title
-                this.scanned.excerpt = response.excerpt
+                this.scanned.title = response.data.title
+                this.scanned.excerpt = response.data.excerpt
                 this.$router.replace({
                   name: 'scanned',
                   params: {
-                    id: response.id
+                    id: response.data.id
                   }
                 });
-                location.reload()
-              }.bind(this, response));
+              }.bind(this, response.data));
             })
             .catch(
               error => {
-                this.errors = error
+                const limited = error.response.status === 429;
                 swal({
-                  title: 'Se ha producido un error',
+                  title: limited ? 'Limite excedido por hora' : 'Error al guardar el texto escaneado',
                   text: 'Inténtalo de nuevo más tarde',
                   focusConfirm: false,
-                  confirmButtonText: 'Entendido',
-                  confirmButtonAriaLabel: 'Entendido',
                   type: 'error'
                 });
               }
