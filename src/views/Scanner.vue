@@ -130,7 +130,8 @@ export default {
           }
         })
         .catch(error => {
-          if (error.response.status == 429) this.errors = "Has sobrepasado el límite de escaneos por hora. Vuelve a intentarlo pasado un tiempo"
+          if (error.response.status == 429) this.errors = "Has sobrepasado el límite de escaneos por hora. Vuelve a intentarlo pasado un tiempo."
+          else if (error.response.status == 413) this.errors = "Fichero demasiado pesado para procesarlo. Pruebe con otro más liviano."
           else this.errors = error.response.data.message
           this.inProgress = false;
           document.getElementById('start').text = 'Iniciar proceso'
