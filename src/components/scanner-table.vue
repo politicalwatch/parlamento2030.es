@@ -65,7 +65,7 @@ export default {
         const item = { ...d };
         item.percent = Math.floor((d.times / totaltags)*100);
         return item;
-      }).sort((a, b) => Utils.naturalSort(a.topic, b.topic)).slice(0, this.limitRows);
+      }).sort(d => d.times).slice(0, this.limitRows);
     },
   },
 };
