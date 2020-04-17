@@ -45,6 +45,7 @@ export default {
     datum() {
       const datum = [];
       Object.keys(this.styles.topics).forEach((k) => {
+        if (k === 'no-topic') return;
         datum.push({
           name: this.styles.topics[k].shortname,
           color: this.styles.topics[k].color,
