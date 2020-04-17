@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import { TipiMessage, Utils } from 'tipi-uikit';
+import { TipiMessage } from 'tipi-uikit';
 
 export default {
   name: 'scanner-table',
