@@ -44,12 +44,14 @@ export default {
   computed: {
     datum() {
       const datum = [];
-      Object.keys(this.styles.topics).forEach((k) => {
-        datum.push({
-          name: this.styles.topics[k].shortname,
-          color: this.styles.topics[k].color,
-          value: this.initiative.tags.filter(d => d.topic === k).length,
-        });
+      Object.keys(this.styles.topics)
+        .filter((k) => k !== 'no-topic')
+        .forEach((k) => {
+          datum.push({
+            name: this.styles.topics[k].shortname,
+            color: this.styles.topics[k].color,
+            value: this.initiative.tags.filter(d => d.topic === k).length,
+          });
       });
       return datum;
     },
