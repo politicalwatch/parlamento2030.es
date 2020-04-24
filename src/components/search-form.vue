@@ -99,7 +99,7 @@
         <div class="c-datepicker-label u-block">
           <label for="startdate">Desde</label>
           <datepicker
-            :value="moment(this.form.startdate, 'YYYY-MM-DD').format('DD/MMM/YYYY')" @selected="selectStartDate"
+            v-model="form.startdate"
             @cleared="clearStartDate"
             placeholder="dd/mm/YYYY" format="dd/MM/yyyy" name="startdate">
           </datepicker>
@@ -109,8 +109,7 @@
         <div class="c-datepicker-label u-block">
           <label for="enddate">Hasta</label>
           <datepicker
-            :value="moment(this.form.enddate, 'YYYY-MM-DD').format('DD/MMM/YYYY')"
-            @selected="selectEndDate"
+            v-model="form.enddate"
             @cleared="clearEndDate"
             placeholder="dd/mm/YYYY" format="dd/MM/yyyy" name="enddate">
           </datepicker>
@@ -271,12 +270,6 @@ export default {
     clearEndDate: function() {
       this.form.enddate = '';
     },
-    selectStartDate: function(date) {
-      this.form.startdate = moment(date).format('YYYY-MM-DD');
-    },
-    selectEndDate: function(date) {
-      this.form.enddate = moment(date).format('YYYY-MM-DD');
-    },
     getSubtopicsAndTags: function(topicID) {
       api.getTags(topicID)
         .then(tags => {
@@ -303,6 +296,8 @@ export default {
       this.filterTags();
     },
     getResults: function(event) {
+      this.form.enddate = this.form.enddate ? moment(this.form.enddate).format('YYYY-MM-DD') : undefined;
+      this.form.startdate = this.form.startdate ? moment(this.form.startdate).format('YYYY-MM-DD') : undefined;
       this.$emit('getResults', event, this.form);
     },
     prepareForm: function() {
