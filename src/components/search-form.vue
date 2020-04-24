@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="o-grid__col u-12 u-6@sm u-padding-bottom-4">
-        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !this.subtopics.length }">
+        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !form.topic.length }">
           <label for="subtopics">Metas</label>
           <multiselect
             selectedLabel="Seleccionada"
@@ -30,14 +30,14 @@
             :multiple="true"
             :options="subtopics"
             :allow-empty="true"
-            :disabled="!this.subtopics.length"
-            :placeholder="this.subtopics.length ? 'Todos' : 'Selecciona previamente un ODS'"
+            :disabled="!form.topic.length"
+            :placeholder="form.topic.length ? 'Todos' : 'Selecciona previamente un ODS'"
             name="subtopics" id="subtopics" >
           </multiselect>
         </div>
       </div>
       <div class="o-grid__col u-12 u-6@sm u-padding-bottom-4">
-        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !this.filteredTags.length }">
+        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !form.topic.length }">
           <label for="tags">Etiquetas</label>
           <multiselect
           selectedLabel="Seleccionada"
@@ -47,8 +47,8 @@
           :multiple="true"
           :options="filteredTags"
           :allow-empty="true"
-          :disabled="!this.filteredTags.length"
-          :placeholder="this.filteredTags.length ? 'Todos' : 'Selecciona previamente un ODS'"
+          :disabled="!form.topic.length"
+          :placeholder="form.topic.length ? 'Todos' : 'Selecciona previamente un ODS'"
           name="tags" id="tags" >
         </multiselect>
         </div>
