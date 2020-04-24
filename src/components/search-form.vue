@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="o-grid__col u-12 u-6@sm u-padding-bottom-4">
-        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !form.topic.length }">
+        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !form.topic }">
           <label for="subtopics">Metas</label>
           <multiselect
             selectedLabel="Seleccionada"
@@ -30,14 +30,14 @@
             :multiple="true"
             :options="subtopics"
             :allow-empty="true"
-            :disabled="!form.topic.length"
-            :placeholder="form.topic.length ? 'Todos' : 'Selecciona previamente un ODS'"
+            :disabled="!form.topic"
+            :placeholder="form.topic ? 'Todos' : 'Selecciona previamente un ODS'"
             name="subtopics" id="subtopics" >
           </multiselect>
         </div>
       </div>
       <div class="o-grid__col u-12 u-6@sm u-padding-bottom-4">
-        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !form.topic.length }">
+        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !form.topic }">
           <label for="tags">Etiquetas</label>
           <multiselect
           selectedLabel="Seleccionada"
@@ -47,8 +47,8 @@
           :multiple="true"
           :options="filteredTags"
           :allow-empty="true"
-          :disabled="!form.topic.length"
-          :placeholder="form.topic.length ? 'Todos' : 'Selecciona previamente un ODS'"
+          :disabled="!form.topic"
+          :placeholder="form.topic ? 'Todos' : 'Selecciona previamente un ODS'"
           name="tags" id="tags" >
         </multiselect>
         </div>
@@ -216,7 +216,7 @@ export default {
       moment: moment,
       selectedSubtopics: [],
       filteredTags: [],
-      advanced: false,
+      advanced: this.formData && (this.formData.startdate || this.formData.enddate || this.formData.status || this.formData.place || this.formData.type || this.formData.reference || this.formData.title),
     }
   },
   computed: {
