@@ -5,6 +5,9 @@
       <div class="o-grid__col u-6 u-3@sm u-2@md" v-for="topic in allTopics" :key="topic.id">
         <tipi-topic-link path="ods" :topic="topic" :image="topicsStyles[topic.name].image" :color="topicsStyles[topic.name].color" />
       </div>
+      <div class="o-grid__col u-6 u-3@sm u-2@md">
+        <a target="_blank" href="https://www.un.org/sustainabledevelopment/es/objetivos-de-desarrollo-sostenible/" class="c-topic-link__image-link"><img src="/img/topics/ods-18.jpg" alt="Imagen general de los ODS de Naciones Unidfas" class="c-topic-link__image" style="max-width: 100%;max-height: 100%;"></a>
+      </div>
     </div>
   </div>
 </template>
