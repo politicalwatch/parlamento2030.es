@@ -4,8 +4,8 @@
       <tipi-header title="Scanner"/>
       <div class="o-grid u-margin-bottom-4">
 
-        <div class="o-grid__col u-12 u-6@sm" v-if="config.SCANNER_HELPTEXT">
-          <tipi-message type="info" icon><div v-html="config.SCANNER_HELPTEXT"></div></tipi-message>
+        <div class="o-grid__col u-12 u-6@sm">
+          <tipi-message type="info" icon><div v-html="'Abrimos nuestra tecnología al mundo para que puedas escanear y etiquetar en clave de los 17 ODS y sus metas cualquier tipo de texto de la misma manera que Parlamento 2030 lo hace con la actividad parlamentaria española.'"></div></tipi-message>
         </div>
 
         <div class="o-grid__col u-12 u-6@sm">
