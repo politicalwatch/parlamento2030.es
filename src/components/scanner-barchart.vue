@@ -1,5 +1,5 @@
 <template>
-  <D3BarChart :config="config" :datum="datum" :height="400"></D3BarChart>
+  <D3BarChart :config="config" :datum="datum" :height="height"></D3BarChart>
 </template>
 
 
@@ -22,6 +22,9 @@ export default {
         margin: { left: 60 },
         tooltip: { suffix: 'aparición', suffixPlural: 'apariciones' },
       },
+      height: 500,
+      barHeight: 40,
+      maxHeight: 900,
     };
   },
   props: {
@@ -92,6 +95,11 @@ export default {
           }
         });
       }
+
+      // Set chart height
+      this.height = topics.length * this.barHeight > this.maxHeight
+       ? this.maxHeight
+       : topics.length * this.barHeight;
 
       // Map values
       this.datum = topics.map(d => ({
