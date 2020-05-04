@@ -27,7 +27,7 @@
             <tipi-loader v-if="inProgress" title="Escaneando resultados" :subtitle="subtitle" />
           </div>
           <div class="o-grid__col u-12 result" v-if="result">
-            
+
             <tipi-message v-if="!result.topics.length" type="error" icon>No hemos encontrado ninguna coincidencia entre tu texto y nuestras etiquetas.</tipi-message>
 
             <div v-else>

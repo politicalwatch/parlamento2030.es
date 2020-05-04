@@ -18,7 +18,7 @@
         </div>
       </div>
       <div class="o-grid__col u-12 u-6@sm u-padding-bottom-4">
-        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !this.subtopics.length }">
+        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !form.topic }">
           <label for="subtopics">Metas</label>
           <multiselect
             selectedLabel="Seleccionada"
@@ -30,14 +30,14 @@
             :multiple="true"
             :options="subtopics"
             :allow-empty="true"
-            :disabled="!this.subtopics.length"
-            :placeholder="this.subtopics.length ? 'Todos' : 'Selecciona previamente un ODS'"
+            :disabled="!form.topic"
+            :placeholder="form.topic ? 'Todos' : 'Selecciona previamente un ODS'"
             name="subtopics" id="subtopics" >
           </multiselect>
         </div>
       </div>
       <div class="o-grid__col u-12 u-6@sm u-padding-bottom-4">
-        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !this.filteredTags.length }">
+        <div class="c-select-label u-block" :class="{ 'c-select-label--disabled' : !form.topic }">
           <label for="tags">Etiquetas</label>
           <multiselect
           selectedLabel="Seleccionada"
@@ -47,8 +47,8 @@
           :multiple="true"
           :options="filteredTags"
           :allow-empty="true"
-          :disabled="!this.filteredTags.length"
-          :placeholder="this.filteredTags.length ? 'Todos' : 'Selecciona previamente un ODS'"
+          :disabled="!form.topic"
+          :placeholder="form.topic ? 'Todos' : 'Selecciona previamente un ODS'"
           name="tags" id="tags" >
         </multiselect>
         </div>
@@ -99,7 +99,7 @@
         <div class="c-datepicker-label u-block">
           <label for="startdate">Desde</label>
           <datepicker
-            :value="moment(this.form.startdate, 'YYYY-MM-DD').format('DD/MMM/YYYY')" @selected="selectStartDate"
+            v-model="form.startdate"
             @cleared="clearStartDate"
             placeholder="dd/mm/YYYY" format="dd/MM/yyyy" name="startdate">
           </datepicker>
@@ -109,8 +109,7 @@
         <div class="c-datepicker-label u-block">
           <label for="enddate">Hasta</label>
           <datepicker
-            :value="moment(this.form.enddate, 'YYYY-MM-DD').format('DD/MMM/YYYY')"
-            @selected="selectEndDate"
+            v-model="form.enddate"
             @cleared="clearEndDate"
             placeholder="dd/mm/YYYY" format="dd/MM/yyyy" name="enddate">
           </datepicker>
@@ -217,7 +216,7 @@ export default {
       moment: moment,
       selectedSubtopics: [],
       filteredTags: [],
-      advanced: false,
+      advanced: this.formData && (this.formData.startdate || this.formData.enddate || this.formData.status || this.formData.place || this.formData.type || this.formData.reference || this.formData.title),
     }
   },
   computed: {
@@ -271,12 +270,6 @@ export default {
     clearEndDate: function() {
       this.form.enddate = '';
     },
-    selectStartDate: function(date) {
-      this.form.startdate = moment(date).format('YYYY-MM-DD');
-    },
-    selectEndDate: function(date) {
-      this.form.enddate = moment(date).format('YYYY-MM-DD');
-    },
     getSubtopicsAndTags: function(topicID) {
       api.getTags(topicID)
         .then(tags => {
@@ -303,6 +296,8 @@ export default {
       this.filterTags();
     },
     getResults: function(event) {
+      this.form.enddate = this.form.enddate ? moment(this.form.enddate).format('YYYY-MM-DD') : undefined;
+      this.form.startdate = this.form.startdate ? moment(this.form.startdate).format('YYYY-MM-DD') : undefined;
       this.$emit('getResults', event, this.form);
     },
     prepareForm: function() {
