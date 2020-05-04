@@ -50,7 +50,9 @@ export default {
           datum.push({
             name: this.styles.topics[k].shortname,
             color: this.styles.topics[k].color,
-            value: this.initiative.tags.filter(d => d.topic === k).length,
+            value: this.initiative.tags
+              .filter(d => d.topic === k)
+              .reduce((cnt, o) => (cnt + o.times), 0),
           });
       });
       return datum;
