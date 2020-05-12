@@ -38,7 +38,7 @@ export default {
     route: 'about-en',
     name: 'Learn more about this project in English',
   },
-  LOGO: '/img/logo-beta.png',
+  LOGO: '/img/logo.png',
 
   DEFAULT_PAGE_TITLE: 'Parlamento 2030',
   DEFAULT_METATAGS: [
