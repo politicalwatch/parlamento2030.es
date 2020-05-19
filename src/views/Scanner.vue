@@ -13,6 +13,7 @@
             <div class="c-input-label c-input-label--file u-block">
               <label for="file">Sube un archivo</label>
               <input type="file" id="file" name="file" v-on:change="loadSelectedFile" placeholder="PDF, doc o txt">
+              <small class="u-color-secondary">pdf, txt, doc, docx, odt, xls, xlsx, ppt, pptx, jpg, png, gif, html</small>
             </div>
             <p>
             <a id="start" class="c-button c-button--primary" @click.prevent="annotate">Iniciar proceso</a>
