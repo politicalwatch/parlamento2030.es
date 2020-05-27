@@ -6,7 +6,7 @@
           <div class="o-container">
             <div class="o-grid">
               <div class="o-grid__col u-3@sm text-center">
-                <a href="/"><img src="/img/logo-beta.png" class="big" alt="Logo de Parlamento 2030"></a>
+                <a href="/"><img src="/img/logo.png" class="big" alt="Logo de Parlamento 2030"></a>
                 <a href="http://politicalwatch.es" target="_blank"><img src="/img/politicalwatch.png" class="small" alt="Logo de Political Watch"></a>
               </div>
               <div class="o-grid__col u-8@sm u-offset-1@sm u-text-tbody2">
