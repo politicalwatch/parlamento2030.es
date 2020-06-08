@@ -252,7 +252,7 @@ export default {
     function getEndpoint() {
       return [
         config.URL,
-        '/labels/extract'
+        '/tagger/'
       ].join('');
     }
   },
@@ -264,7 +264,7 @@ export default {
     function getEndpoint(taskID) {
       return [
         config.URL,
-        '/labels/result/',
+        '/tagger/result/',
         taskID
       ].join('');
     }
