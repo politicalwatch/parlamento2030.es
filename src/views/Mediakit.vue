@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="mediakit" class="o-container o-section u-margin-bottom-10">
-      <tipi-header title="Media Kit"/>
+      <tipi-header title="Media Kit (2018)"/>
       <div class="o-grid o-grid--center">
         <div class="o-grid__col u-12 u-4@sm u-bg-secondary-light u-margin-right-2@sm">
           <div class="u-padding-4">
