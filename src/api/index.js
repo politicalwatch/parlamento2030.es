@@ -155,7 +155,6 @@ export default {
 
     return axios
       .post(getEndpoint(), search)
-      .then(response => response.data);
 
     function getEndpoint() {
       return [
@@ -243,11 +242,15 @@ export default {
       ].join('');
     }
   },
-  annotate(text) {
+  annotate(text, file) {
+    let formData = new FormData()
+    formData.append('text', text)
+    formData.append('file', file)
+
     return axios.post(
       getEndpoint(),
-      qs.stringify({ 'text': text })
-    ).then(response => response.data);
+      formData,
+    )
 
     function getEndpoint() {
       return [
@@ -266,6 +269,39 @@ export default {
         config.URL,
         '/tagger/result/',
         taskID
+      ].join('');
+    }
+  },
+  saveScanned(title, excerpt, result) {
+    return axios.post(
+      getEndpoint(),
+      {
+        title: title,
+        excerpt: excerpt,
+        result: JSON.stringify(result)
+      }
+    )
+
+    function getEndpoint() {
+      return [
+        config.URL,
+        '/scanned/',
+      ].join('');
+    }
+  },
+  getScanned(scannedId) {
+    return axios.get(
+      getEndpoint(scannedId)
+    ).then(response => response.data)
+      .catch(error => {
+        console.log(error.response)
+      });
+
+    function getEndpoint(scannedId) {
+      return [
+        config.URL,
+        '/scanned/',
+        scannedId
       ].join('');
     }
   }

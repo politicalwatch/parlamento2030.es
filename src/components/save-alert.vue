@@ -61,7 +61,6 @@ export default {
 
           })
           .catch(error => {
-            this.errors = error.response;
             const limited = error.response.status === 429;
             swal({
               title: limited ? 'Limite excedido por hora' : 'Error al guardar la búsqueda',
