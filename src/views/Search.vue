@@ -16,6 +16,7 @@
       <div class="o-grid o-grid--align-center u-margin-bottom-4" id="results">
         <div class="o-grid__col o-grid__col--fill">
           <tipi-message v-if="this.query_meta.page" :type="message.type" :icon="message.icon">{{ message.message }}</tipi-message>
+          <tipi-message v-if="!canDownloadCSV" icon type="info">Se ha superado el número máximo de datos para descargar</tipi-message>
         </div>
         <div class="o-grid__col o-grid__col--right">
           <tipi-csv-download
