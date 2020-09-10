@@ -38,7 +38,7 @@
               <div class="o-grid__col u-12 u-offset-2@sm u-3@sm">
                 <tipi-message type="info" icon>Aquí tienes una relación visual de tu texto, para que de un vistazo puedas ver las conexiones temáticas existentes</tipi-message>
                 <InitiativeChart :initiative="fakeInitiative" :topics="allTopics" :styles="styles"></InitiativeChart>
-                <span class="u-text-tbody2">Relación de este texto con los ODS <sup title="El gráfico muestra los ODS relacionados con el texto y el grado de relación con cada uno de ellos, cuya intensidad se muestra en cuánto de coloreado está cada ODS en la gráfica."><i class="fa fa-question-circle"></i></sup></span>
+                <span class="u-text-tbody2">Relación de este texto con los ODS <sup title="El gráfico muestra los ODS relacionados con el texto y el grado de relación con cada uno de ellos, cuya intensidad se muestra en cuánto de coloreado está cada ODS en la gráfica.">?</sup></span>
               </div>
               <div class="o-grid__col u-12 u-text-center u-margin-top-4 u-padding-top-4 u-border-top">
                 <tipi-csv-download
