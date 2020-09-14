@@ -90,12 +90,6 @@ export default {
       styles: config.STYLES,
     };
   },
-  methods: {
-    getNameFromCSV: function() {
-      let d = new Date();
-      return "export-scanner-" + d.toISOString() + ".csv";
-    },
-  },
   watch: {
     textToCompare(val) {
       const compareWith = preScannedTexts.filter(d => d.title === val);
