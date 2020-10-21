@@ -304,5 +304,11 @@ export default {
         scannedId
       ].join('');
     }
+  },
+  proxy(url) {
+    return [
+      config.URL,
+      '/proxy?url=' + url
+    ].join('');
   }
 };
