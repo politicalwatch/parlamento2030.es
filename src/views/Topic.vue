@@ -98,7 +98,6 @@ export default {
       api.getDeputiesRanking(topic, null, 3)
         .then(response => {
           this.deputies = response;
-          console.log(response);
           this.deputies.forEach((deputy, index) => {
             let foundDeputy = this.allDeputies.find(allD => allD.name === deputy._id );
             this.deputies[index].name = this.deputies[index]._id;
@@ -131,7 +130,6 @@ export default {
     getLatestInitiatives: function(topic) {
       api.getInitiatives({ 'topic': topic, 'per_page': 12 })
          .then(response => {
-           console.log(response)
             if (response.initiatives) this.latestInitiatives = response.initiatives;
           })
          .catch(error => this.errors = error);
