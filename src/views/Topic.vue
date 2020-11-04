@@ -1,20 +1,7 @@
 <template>
-  <div v-if="loaded">
+  <div >
     <tipi-topic-card :topic="topic" :topicsStyles="styles"/>
       
-    <div id="topic" class="o-container o-section">
-      <div class="o-grid">
-        <div class="o-grid__col u-12 u-3@sm" v-if="this.styles[topic.name].logos.length != 0">      
-          <br>
-          <h5>Entidades colaboradoras</h5>
-        </div>
-        <div class="o-grid__col u-12 u-9@sm" v-if="this.styles[topic.name].logos.length != 0">      
-          <span v-for= "collab in this.styles[topic.name].logos" style="padding-right:20px;">
-            <img  :src="'/img/collaborators/' + collab" style="height:70px;" />
-          </span>
-        </div>
-      </div>
-    </div>
     <div id="topic" class="o-container o-section">
       <div class="o-grid">
         <div class="o-grid__col u-12 u-4@sm" v-if="deputies">
@@ -32,6 +19,19 @@
         <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="styles"/>
       </div>
     </div> 
+    <div id="topic" class="o-container o-section">
+      <div class="o-grid">
+        <div class="o-grid__col u-12 u-3@sm" v-if="this.styles[topic.name].logos.length != 0">      
+          <br>
+          <h5>Entidades colaboradoras</h5>
+        </div>
+        <div class="o-grid__col u-12 u-9@sm" v-if="this.styles[topic.name].logos.length != 0">      
+          <span v-for= "collab in this.styles[topic.name].logos" style="padding-right:20px;">
+            <img  :src="'/img/collaborators/' + collab" style="height:95px;" />
+          </span>
+        </div>
+      </div>
+    </div>
     <div class="o-section o-section--double" v-if="latestInitiatives" :style="`background-color: ${styles[topic.name].color}`">
       <div class="o-container">
         <p class="u-text-subtitle u-margin-0 u-color-white">MÁS INICIATIVAS SOBRE</p>
@@ -44,9 +44,10 @@
       </div>
    </div> 
   </div>
+  <!---
   <div v-else class="o-container o-section u-margin-bottom-10">
     <tipi-loader title="Cargando datos" subtitle="Puede llevar unos segundos"/>
-  </div> 
+  </div> --> 
 </template>
 
 <script>

@@ -133,7 +133,7 @@ export default {
         shortname: "ODS 5",
         color: "#ed4135",
         image: "ods-5.svg",
-        logos: ["cedawsombra.png","coordinadora.png","fpfe_grande.png"]
+        logos: ["cedawsombra.png","coordinadora.png","fpfe_g.png"]
       },
       "ODS 6 Agua limpia y saneamiento": {
         shortname: "ODS 6",
