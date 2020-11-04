@@ -1,5 +1,5 @@
 <template>
-  <div >
+  <div v-if="loaded">
     <tipi-topic-card :topic="topic" :topicsStyles="styles"/>
       
     <div id="topic" class="o-container o-section">
@@ -44,10 +44,9 @@
       </div>
    </div> 
   </div>
-  <!---
   <div v-else class="o-container o-section u-margin-bottom-10">
     <tipi-loader title="Cargando datos" subtitle="Puede llevar unos segundos"/>
-  </div> --> 
+  </div>  
 </template>
 
 <script>
