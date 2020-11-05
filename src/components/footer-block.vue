@@ -8,10 +8,10 @@
             <p class="u-text-overline">Impulsado por</p>
             <div class="o-grid">
               <div class="o-grid__col u-7@sm">
-                <a href="http://www.exteriores.gob.es/Portal/es/Ministerio/SecretariosDeEstado/SecretariaDeEstadoCooperacionInternacional/Paginas/Inicio.aspx" target="_blank"><img src="/img/maeuec-seci.jpg" class="big" alt="Logo de la Secretaria de Estado de Cooperación (Ministerio de Asuntos Exteriores, Unión Europea y Cooperación) del Gobierno de España"></a>
+                <a href="http://www.exteriores.gob.es/Portal/es/Ministerio/SecretariosDeEstado/SecretariaDeEstadoCooperacionInternacional/Paginas/Inicio.aspx" target="_blank"><img src="/img/maeuec-seci.jpg" class="big u-margin-top-3" alt="Logo de la Secretaria de Estado de Cooperación (Ministerio de Asuntos Exteriores, Unión Europea y Cooperación) del Gobierno de España"></a>
               </div>
               <div class="o-grid__col u-5@sm">
-                <a href="http://politicalwatch.es" target="_blank"><img src="/img/ciecode.png" class="big" alt="Logo de CIECODE"></a>
+                <a href="http://politicalwatch.es" target="_blank"><img src="/img/logo-politicalwatch.png" class="big" alt="Logo de Political Watch"></a>
               </div>
             </div>
           </div>
@@ -19,12 +19,12 @@
             <p class="u-text-overline">Contacto</p>
             <tipi-icon icon="github" class="c-icon--secondary-dark" />&nbsp;<a class="u-color-secondary-dark u-text-tbody2" href="http://github.com/politicalwatch/" title="github.com/politicalwatch" target="_blank">Consulta nuestro código en Github</a>
             <br>
-            <tipi-icon icon="mail" class="c-icon--secondary-dark" />&nbsp;<a class="u-color-secondary-dark u-text-tbody2" href="mailto:parlamento2030@ciecode.es" title="parlamento2030@ciecode.es" target="_blank">Escribe a parlamento2030@ciecode.es</a>
+            <tipi-icon icon="mail" class="c-icon--secondary-dark" />&nbsp;<a class="u-color-secondary-dark u-text-tbody2" href="mailto:parlamento2030@politicalwatch.es" title="parlamento2030@politicalwatch.es" target="_blank">Escribe a parlamento2030@politicalwatch.es</a>
           </div>
         </div>
         <div class="o-grid">
           <div class="o-grid__col u-12@sm u-margin-top-4">
-            <p class="u-color-secondary-dark u-text-tbody2">{{ (new Date()).getFullYear()  }} Political Watch. Algunos derechos reservados.</p>
+            <p class="u-color-secondary-dark u-text-tbody2">{{ (new Date()).getFullYear()  }} Political Watch - Algunos derechos reservados</p>
           </div>
         </div>
       </div>
