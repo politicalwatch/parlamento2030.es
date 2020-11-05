@@ -1,7 +1,7 @@
 <template>
   <div v-if="loaded">
     <tipi-topic-card :topic="topic" :topicsStyles="styles"/>
-      
+
     <div id="topic" class="o-container o-section">
       <div class="o-grid">
         <div class="o-grid__col u-12 u-4@sm" v-if="deputies">
@@ -18,17 +18,14 @@
         <h4 class="u-margin-bottom-4" v-if="latestInitiatives">Últimas iniciativas</h4>
         <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="styles"/>
       </div>
-    </div> 
+    </div>
     <div id="topic" class="o-container o-section">
       <div class="o-grid">
-        <div class="o-grid__col u-12 u-3@sm" v-if="this.styles[topic.name].logos.length != 0">      
-          <br>
-          <h5>Entidades colaboradoras</h5>
+        <div class="o-grid__col u-12 u-12@sm" v-if="this.styles[topic.name].orgs_logos.length != 0">
+          <h4 class="u-margin-bottom-4">Entidades colaboradoras</h4>
         </div>
-        <div class="o-grid__col u-12 u-9@sm" v-if="this.styles[topic.name].logos.length != 0">      
-          <span v-for= "collab in this.styles[topic.name].logos" style="padding-right:20px;">
-            <img  :src="'/img/collaborators/' + collab" style="height:95px;" />
-          </span>
+        <div class="o-grid__col u-12 u-12@sm u-margin-bottom-4">
+            <img v-for= "logo in this.styles[topic.name].orgs_logos" v-bind:key="collab" class="u-padding-right-4" :src="'/img/collaborators/' + logo" style="height:100px;" />
         </div>
       </div>
     </div>
@@ -42,11 +39,11 @@
           Explorar
         </router-link>
       </div>
-   </div> 
+   </div>
   </div>
   <div v-else class="o-container o-section u-margin-bottom-10">
     <tipi-loader title="Cargando datos" subtitle="Puede llevar unos segundos"/>
-  </div>  
+  </div>
 </template>
 
 <script>
