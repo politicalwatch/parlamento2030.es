@@ -20,7 +20,7 @@ export default {
     },
     {
       route: 'scanner',
-      name: 'Scanner',
+      name: 'Escáner',
       condition: true,
     },
     {
