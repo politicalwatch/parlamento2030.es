@@ -51,4 +51,12 @@
 </script>
 
 <style lang="scss">
+.c-disclaimer {
+  a {
+    img {
+      width: 25px !important;
+      height: auto !important;
+    }
+  }
+}
 </style>

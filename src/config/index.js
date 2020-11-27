@@ -36,7 +36,8 @@ export default {
   ],
   DISCLAIMER: {
     route: 'about-en',
-    name: 'Learn more about this project in English',
+    name: '<img src="/img/uk.svg"> Learn more about this project in English',
+    external: false
   },
   LOGO: '/img/logo.png',
 
