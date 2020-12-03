@@ -19,7 +19,7 @@ export default {
       condition: true,
     },
     {
-      route: 'scanner',
+      route: 'http://escaner2030.es',
       name: 'Escáner',
       condition: true,
       icon: 'open-blank',
