@@ -22,7 +22,8 @@ export default {
       route: 'scanner',
       name: 'Escáner',
       condition: true,
-      icon: 'open-blank'
+      icon: 'open-blank',
+      external: true
     },
     {
       route: 'alerts',
