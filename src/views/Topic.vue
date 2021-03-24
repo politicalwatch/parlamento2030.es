@@ -101,7 +101,6 @@ export default {
             this.deputies[index].id = foundDeputy.id;
             this.deputies[index].image = foundDeputy.image;
           });
-          this.loaded = true;
         })
         .catch(error => this.errors = error);
     },
@@ -111,6 +110,7 @@ export default {
           this.places = response.map(place => `${place._id}`);
         })
         .catch(error => this.errors = error);
+        this.loaded = true;
     },
     getParliamentarygroupsRanking: function(topic) {
       api.getParliamentarygroupsRanking(topic)
