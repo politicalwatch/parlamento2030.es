@@ -1,6 +1,6 @@
 <template>
   <a class="c-button c-button--compact c-button--primary c-button--icon-right" href="#" @click.prevent="saveAlert">
-    Recibe alertas <tipi-icon class="c-icon--white" icon="bell" />
+    Crear alerta <tipi-icon class="c-icon--white" icon="bell" />
   </a>
 </template>
 
@@ -21,19 +21,21 @@ export default {
   methods: {
     saveAlert: async function() {
       let search_params = Object.assign({}, this.searchparams);
-      delete search_params.page;
+      if (search_params.hasOwnProperty('page')) delete search_params.page;
 
       // ensure some params are array
-      search_params.subtopics = search_params.subtopics.constructor !== Array ?
-        [search_params.subtopics] :
-        search_params.subtopics;
-      search_params.tags = search_params.tags.constructor !== Array ?
-        [search_params.tags] :
-        search_params.tags;
+      if (search_params.hasOwnProperty('subtopic'))
+        search_params.subtopics = search_params.subtopics.constructor !== Array ?
+          [search_params.subtopics] :
+          search_params.subtopics;
+      if (search_params.hasOwnProperty('tags'))
+        search_params.tags = search_params.tags.constructor !== Array ?
+          [search_params.tags] :
+          search_params.tags;
 
       const {value: email} = await swal({
-        title: 'Introduce tu correo electrónico',
-        text: 'A esta dirección de correo te enviaremos alertas cada vez que haya una novedad en el Congreso de los Diputados dentro de los parámetros que has seleccionado',
+        title: 'Crea una alerta personalizada',
+        text: 'Te enviaremos un correo electrónico cada vez que haya alguna novedad en el Congreso de los Diputados relacionada con los criterios seleccionados',
         input: 'email',
         inputPlaceholder: 'nombre@dominio.com',
         imageUrl: '/img/email-alert-icon.svg',
@@ -42,8 +44,8 @@ export default {
         imageAlt: 'Imagen de correo electrónico',
         animation: false,
         focusConfirm: false,
-        confirmButtonText: 'Guardar',
-        confirmButtonAriaLabel: 'Guardar',
+        confirmButtonText: 'Crear',
+        confirmButtonAriaLabel: 'Crear',
       });
       if (email) {
         let params = {
@@ -53,7 +55,7 @@ export default {
         api.saveAlert(params)
           .then(() => {
             swal({
-              title: 'Alerta guardada!',
+              title: 'Alerta creada',
               text: 'Recibirá en breve un correo de confirmación',
               focusConfirm: false,
               type: 'success'
@@ -61,9 +63,10 @@ export default {
 
           })
           .catch(error => {
+            this.errors = error.response;
             const limited = error.response.status === 429;
             swal({
-              title: limited ? 'Limite excedido por hora' : 'Error al guardar la búsqueda',
+              title: limited ? 'Limite excedido por hora' : 'Error al crear la alerta',
               text: 'Inténtalo de nuevo más tarde',
               focusConfirm: false,
               type: 'error'
@@ -78,4 +81,3 @@ export default {
 
 <style scoped lang="scss">
 </style>
-
