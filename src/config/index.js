@@ -37,8 +37,9 @@ export default {
     },
   ],
   DISCLAIMER: {
-    route: 'about-en',
-    name: '<img src="/img/uk.svg"> Learn more about this project in English',
+    route: '',
+    name: "Por motivos técnicos, las alertas permanecerán desactivadas unos días. Pedimos disculpas.",
+
     external: false
   },
   LOGO: '/img/logo.png',
