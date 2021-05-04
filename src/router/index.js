@@ -9,6 +9,9 @@ import Topic from '@/views/Topic.vue'
 import Deputy from '@/views/Deputy.vue'
 import Parliamentarygroup from '@/views/Parliamentarygroup.vue'
 import About from '@/views/About.vue'
+import LegalNotice from '@/views/LegalNotice.vue'
+import PrivacyPolicy from '@/views/PrivacyPolicy.vue'
+import CookiePolicy from '@/views/CookiePolicy.vue'
 import AboutEnglish from '@/views/AboutEnglish.vue'
 import Mediakit from '@/views/Mediakit.vue'
 import Alerts from '@/views/Alerts.vue'
@@ -243,6 +246,21 @@ const routes = [{
     path: "/mediakit",
     name: "mediakit",
     component: Mediakit
+  },
+  {
+    path: "/legal-notice",
+    name: "legalnotice",
+    component: LegalNotice
+  },
+  {
+    path: "/privacy-policy",
+    name: "privacypolicy",
+    component: PrivacyPolicy
+  },
+  {
+    path: "/cookie-policy",
+    name: "cookiepolicy",
+    component: CookiePolicy
   },
   {
     path: "/alerts",
