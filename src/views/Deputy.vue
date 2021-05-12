@@ -10,6 +10,9 @@
         Causó baja en el Congreso de los Diputados
       </tipi-message>
     </div>
+    <div class="o-container alerts-block u-margin-top-4" v-show="use_alerts">
+      <save-alert :searchparams="{deputy: deputy.name}" />
+    </div>
     <div v-if="latestInitiatives && latestInitiatives.length" class="o-container o-section">
       <h4 class="u-margin-bottom-4">Últimas iniciativas</h4>
       <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="styles.topics"/>
@@ -28,6 +31,7 @@
 <script>
 
 import { TipiHeader, TipiDeputy, TipiMessage, TipiResults, TipiIcon, TipiLoader } from 'tipi-uikit'
+import SaveAlert from '@/components/save-alert';
 import api from '@/api';
 import config from '@/config';
 import { mapState } from 'vuex';
@@ -41,12 +45,14 @@ export default {
     TipiResults,
     TipiIcon,
     TipiLoader,
+    SaveAlert,
   },
   data: function() {
     return {
       deputy: null,
       parliamentarygroup: null,
       latestInitiatives: null,
+      use_alerts: config.USE_ALERTS,
       styles: config.STYLES,
     }
   },

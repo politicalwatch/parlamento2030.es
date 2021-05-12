@@ -2,6 +2,9 @@
   <div>
     <div id="group" class="o-container o-section u-margin-bottom-10">
       <tipi-header v-if="parliamentarygroup" :title="parliamentarygroup.name"/>
+      <div class="alerts-block u-margin-top-1" v-show="use_alerts">
+        <save-alert :searchparams="{author: parliamentarygroup.name}" />
+      </div>
       <div v-if="latestInitiatives && latestInitiatives.length" class="o-container o-section u-margin-bottom-4">
         <h4 class="u-margin-bottom-4">Últimas iniciativas</h4>
         <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="topicsStyles"/>
@@ -33,6 +36,7 @@
 <script>
 
 import { TipiHeader, TipiMessage, TipiResults, TipiText } from 'tipi-uikit'
+import SaveAlert from '@/components/save-alert';
 import api from '@/api';
 import config from '@/config'
 import { mapGetters, mapState } from  'vuex';
@@ -44,11 +48,13 @@ export default {
     TipiMessage,
     TipiResults,
     TipiText,
+    SaveAlert,
   },
   data: function() {
     return {
       parliamentarygroup: null,
       latestInitiatives: null,
+      use_alerts: config.USE_ALERTS,
       topicsStyles: config.STYLES.topics,
     }
   },

@@ -1,6 +1,9 @@
 <template>
   <div v-if="loaded">
     <tipi-topic-card :topic="topic" :topicsStyles="styles"/>
+    <div class="alerts-block o-container" v-show="use_alerts">
+      <save-alert :searchparams="{topic: topic.name}" />
+    </div>
 
     <div id="topic" class="o-container o-section">
       <div class="o-grid">
@@ -25,7 +28,7 @@
           <h4 class="u-margin-bottom-4">Entidades colaboradoras</h4>
         </div>
         <div class="o-grid__col u-12 u-12@sm u-margin-bottom-4">
-            <img v-for= "logo in this.styles[topic.name].orgs_logos" v-bind:key="collab" class="u-padding-right-4" :src="'/img/collaborators/' + logo" style="height:100px;" />
+            <img v-for= "logo in this.styles[topic.name].orgs_logos" :key="logo" class="u-padding-right-4" :src="'/img/collaborators/' + logo" style="height:100px;" />
         </div>
       </div>
     </div>
@@ -49,6 +52,7 @@
 <script>
 
 import { TipiHeader, TipiResults, TipiTopicCard, TipiText, TipiLoader } from 'tipi-uikit'
+import SaveAlert from '@/components/save-alert';
 import api from '@/api';
 import config from '@/config';
 import { mapState } from 'vuex';
@@ -61,6 +65,7 @@ export default {
     TipiTopicCard,
     TipiText,
     TipiLoader,
+    SaveAlert,
   },
   data: function() {
     return {
@@ -70,6 +75,7 @@ export default {
       parliamentarygroups: null,
       latestInitiatives: null,
       styles: config.STYLES.topics,
+      use_alerts: config.USE_ALERTS,
       loaded: false,
     }
   },
