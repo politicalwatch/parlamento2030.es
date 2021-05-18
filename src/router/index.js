@@ -9,6 +9,7 @@ import Topic from '@/views/Topic.vue'
 import Deputy from '@/views/Deputy.vue'
 import Parliamentarygroup from '@/views/Parliamentarygroup.vue'
 import About from '@/views/About.vue'
+import Faq from '@/views/Faq.vue'
 import LegalNotice from '@/views/LegalNotice.vue'
 import PrivacyPolicy from '@/views/PrivacyPolicy.vue'
 import CookiePolicy from '@/views/CookiePolicy.vue'
@@ -266,6 +267,11 @@ const routes = [{
     path: "/alerts",
     name: "alerts",
     component: Alerts
+  },
+  {
+    path: "/faq",
+    name: "faq",
+    component: Faq
   },
   {
     path: "/*",
