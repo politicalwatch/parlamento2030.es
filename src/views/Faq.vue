@@ -4,7 +4,6 @@
       <tipi-header title="FAQ"/>
       <div class="o-grid">
         <div class="o-grid__col u-8@sm u-offset-2@sm">
-          <router-link class="c-button c-button--compact u-padding-left-0" :to="{name: 'faq-en'}">Read this page in English</router-link>
           <h4>¿Si ya existe un buscador en la web del Congreso de los Diputados, para qué necesito la herramienta Parlamento 2030?</h4>
           <p>El buscador de Parlamento 2030 ofrece las mismas posibilidades de búsqueda que el de la web del Congreso de los Diputados (fecha, lugar, autor, tipo de acto parlamentario, etc.) pero ofrece algunos importantes servicios añadidos: la clasificación por en función de los ODS, el servicio de alertas personalizadas o la posibilidad de descargarte en formatos reutilizables (Excel, csv, etc.) la información que te interese.</p>
           <h4>La categoría “ODS 1” de Parlamento 2030 resulta demasiado amplia y genérica para serme útil en mi trabajo, ¿qué puedo hacer?</h4>
@@ -32,7 +31,7 @@
 import { TipiHeader } from 'tipi-uikit';
 
 export default {
-  name: 'about',
+  name: 'faq',
   components: {
     TipiHeader,
   },
