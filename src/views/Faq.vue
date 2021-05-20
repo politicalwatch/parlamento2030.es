@@ -1,7 +1,7 @@
 <template>
   <div>
     <div id="faq" class="o-container o-section u-margin-bottom-10">
-      <tipi-header title="FAQ"/>
+      <tipi-header title="Preguntas frecuentes"/>
       <div class="o-grid">
         <div class="o-grid__col u-8@sm u-offset-2@sm">
           <h4>¿Si ya existe un buscador en la web del Congreso de los Diputados, para qué necesito la herramienta Parlamento 2030?</h4>
