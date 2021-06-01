@@ -1,12 +1,5 @@
 <template>
   <div>
-    <tipi-splash>
-      <img src="/img/logo.png">
-      <p><strong>Parlamento 2030</strong> te ofrece toda la información sobre la actividad del Congreso de los Diputados relacionada con los <strong>Objetivos de Desarrollo Sostenible (ODS)</strong>. Entra y descubre cómo trabajan los diputados españoles de cara al cumplimiento de la <strong>Agenda 2030</strong>.</p>
-      <p>
-        <router-link :to="{name: 'about-en'}">Learn more about this project in English</router-link>
-      </p>
-    </tipi-splash>
     <div id="search" class="o-container o-section u-margin-bottom-10">
 
       <tipi-header :title="'Buscar'" :subtitle="'Bucea en la actividad parlamentaria relacionada con los ODS con las múltiples opciones que te ofrece el buscador de Parlamento 2030'" />
@@ -45,7 +38,7 @@ import searchForm from '@/components/search-form';
 import SaveAlert from '@/components/save-alert';
 import config from '@/config'
 import api from '@/api'
-import { TipiHeader, TipiCsvDownload, TipiMessage, TipiResults, TipiSplash } from 'tipi-uikit'
+import { TipiHeader, TipiCsvDownload, TipiMessage, TipiResults } from 'tipi-uikit'
 import { mapGetters } from 'vuex';
 
 const qs = require('qs');
@@ -54,7 +47,6 @@ const VueScrollTo = require('vue-scrollto');
 export default {
   name: 'search',
   components: {
-    TipiSplash,
     SaveAlert,
     TipiResults,
     TipiMessage,
