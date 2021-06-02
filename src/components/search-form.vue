@@ -224,12 +224,12 @@ export default {
       deputies: 'allDeputiesName',
       places: 'allPlacesName',
       groups: 'allParliamentaryGroupsWithGoverment',
+      types: 'allTypesName',
       getDeputyByName: 'getDeputyByName',
       getParliamentaryGroupByName: 'getParliamentaryGroupByName',
     }),
     ...mapState({
       topics: 'allTopics',
-      types: 'allTypes',
       status: 'allStatus',
     })
   },
