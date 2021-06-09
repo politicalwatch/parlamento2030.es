@@ -255,7 +255,7 @@ export default {
         return []
       }
 
-      if (author != '') {
+      if (author) {
         const parliamentaryGroup = this.getParliamentaryGroupByName(author)
         const deputies = this.getDeputiesByParliamentaryGroup(parliamentaryGroup.shortname)
         return deputies.map(deputy => deputy.name)
