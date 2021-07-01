@@ -100,7 +100,7 @@ export default {
     left: 0;
     width: 250%;
     z-index: 99;
-    text-align: left;
+    text-align: center;
     display: none;
     pointer-events: none;
   }
@@ -122,7 +122,6 @@ export default {
   &__bar {
     height: 234px;
     margin-bottom: 8px;
-    background-color: #f4f6f8;
     display: flex;
     border-radius: 0;
   }
