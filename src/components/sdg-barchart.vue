@@ -3,7 +3,7 @@
     <div class="tipichart__row" v-for="d in rows" :key="d.topic">
 
       <div class="tipichart__tooltip" :style="{bottom: `${barHeight}px`}">
-        <div class="tipichart__tip">{{ d.topic }} {{ d.percent }}%</div>
+        <div class="tipichart__tip">{{ d.topic }}: {{ d.times }} iniciativas</div>
       </div>
 
       <div class="tipichart__bar">
@@ -50,15 +50,21 @@ export default {
     calculeRows() {
 
       const rows = [];
-      const totalTimes = this.ranking
-        .reduce((cnt, o) => (cnt + o.initiatives), 0);
 
+      const higherCount = this.ranking
+        .reduce((max, o) => {
+          if (max > o.initiatives) {
+            return max
+          }
+          return o.initiatives
+        }, 0);
+
+      console.log(higherCount)
       this.ranking.forEach(d => {
-        const percentage = (d.initiatives / totalTimes) * 100
+        const percentage = (d.initiatives / higherCount) * 100
         this.rows.push({
           topic: d.topic,
           times: d.initiatives,
-          percent: Math.ceil(percentage),
           iconStyle: {
             backgroundImage: `url(/img/topics/${this.styles[d.topic].image})`,
             backgroundColor: this.styles[d.topic].color,
@@ -92,7 +98,7 @@ export default {
   &__tooltip {
     position: absolute;
     left: 0;
-    width: 100%;
+    width: 250%;
     z-index: 99;
     text-align: left;
     display: none;
@@ -111,7 +117,7 @@ export default {
     height: 48px;
     background-repeat: no-repeat;
     background-position: center;
-    background-size: 65%;
+    background-size: 55%;
   }
   &__bar {
     height: 234px;
