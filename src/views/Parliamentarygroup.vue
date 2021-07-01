@@ -5,6 +5,12 @@
       <div class="alerts-block u-margin-top-1" v-show="use_alerts">
         <save-alert :searchparams="{author: parliamentarygroup.name}" />
       </div>
+
+      <div class="o-container o-zection u-margin-top-8 u-margin-bottom-4">
+        <h4 class="u-margin-bottom-4">Ranking de ODS</h4>
+        <SdgBarchart v-if="topicsRanking" :ranking="topicsRanking" :styles="topicsStyles"></SdgBarchart>
+      </div>
+
       <div v-if="latestInitiatives && latestInitiatives.length" class="o-container o-section u-margin-bottom-4">
         <h4 class="u-margin-bottom-4">Últimas iniciativas</h4>
         <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="topicsStyles"/>
@@ -36,6 +42,7 @@
 <script>
 
 import { TipiHeader, TipiMessage, TipiResults, TipiText } from 'tipi-uikit'
+import SdgBarchart from '@/components/sdg-barchart.vue';
 import SaveAlert from '@/components/save-alert';
 import api from '@/api';
 import config from '@/config'
@@ -49,11 +56,13 @@ export default {
     TipiResults,
     TipiText,
     SaveAlert,
+    SdgBarchart,
   },
   data: function() {
     return {
       parliamentarygroup: null,
       latestInitiatives: null,
+      topicsRanking: null,
       use_alerts: config.USE_ALERTS,
       topicsStyles: config.STYLES.topics,
     }
@@ -83,6 +92,7 @@ export default {
       api.getGroup(this.$route.params.id)
         .then(response => {
           this.parliamentarygroup = response;
+          this.getTopicsRanking();
           this.getLatestInitiatives();
         })
         .catch(error => {
@@ -92,11 +102,18 @@ export default {
     },
     getLatestInitiatives: function() {
       api.getInitiatives({'author': this.parliamentarygroup.name, 'per_page': 12 })
-         .then(response => {
-           if (response.initiatives) this.latestInitiatives = response.initiatives;
-          })
-         .catch(error => this.errors = error);
+        .then(response => {
+          if (response.initiatives) this.latestInitiatives = response.initiatives;
+        })
+        .catch(error => this.errors = error);
     },
+    getTopicsRanking: function() {
+      api.getTopicsByParliamentaryGroupRanking(this.parliamentarygroup.name)
+        .then(response => {
+          this.topicsRanking = response;
+        })
+        .catch(error => this.errors = error);
+    }
   },
   created: function() {
     this.getParliamentaryGroup()
