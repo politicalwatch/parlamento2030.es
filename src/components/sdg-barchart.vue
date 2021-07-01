@@ -59,7 +59,6 @@ export default {
           return o.initiatives
         }, 0);
 
-      console.log(higherCount)
       this.ranking.forEach(d => {
         const percentage = (d.initiatives / higherCount) * 100
         this.rows.push({
@@ -127,7 +126,7 @@ export default {
   }
   &__overbar {
     width: 100%;
-    transition: height 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95) 350ms;
+    transition: width 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95) 350ms;
     align-self: flex-end;
     position: inherit;
     border-radius: 0;
