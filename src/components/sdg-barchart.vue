@@ -125,10 +125,7 @@ export default {
     transition: height 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95) 350ms;
     align-self: flex-end;
     position: inherit;
-    border-bottom-left-radius:0px;
-    border-bottom-right-radius:0px;
-    border-top-left-radius:5px;
-    border-top-right-radius:5px;
+    border-radius: 0;
   }
 }
 
