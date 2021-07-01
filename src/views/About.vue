@@ -19,9 +19,6 @@
           <p>Parlamento 2030 es un proyecto de <a href="http://politicalwatch.es" target="_blank">Political Watch</a>, un think and do tank español. Nuestra misión es generar, allí donde trabajamos, unas condiciones favorables para el diseño, adopción e implementación de políticas públicas que promuevan una sociedad más justa, equitativa y sostenible. Desarrollamos tecnologías innovadoras que automáticamente rastrean la actividad relacionada con el desarrollo sostenible y que ofrecen acceso a esta información de forma pública, directa y gratuita.</p>
           <h4>¿De dónde venimos?</h4>
           <p>Parlamento 2030 es una adaptación de <a href="https://www.tipiciudadano.es?utm_source=Parlamento2030&utm_medium=direct&utm_campaign=engagement" target="_blank">TiPi Ciudadano</a>, una herramienta digital implementada en España desde 2015, que monitoriza toda la actividad parlamentaria de 22 temáticas relacionadas con la lucha contra la pobreza y la desigualdad. TiPi (que responde a las siglas de Transparencia + Información + Participación + Influencia) es otro innovador proyecto de Political Watch que genera datos abiertos y fomenta la transparencia, el acceso a información y la rendición de cuentas política a través de la monitorización parlamentaria de las 22 temáticas estratégicamente seleccionadas, a través del mismo avanzado sistema de escrapeo y etiquetado utilizado en Parlamento 2030.</p>
-          <div class="u-text-center">
-            <router-link class="c-button c-button--primary" :to="{name: 'mediakit'}">Visita nuestro Mediakit</router-link>
-          </div>
         </div>
       </div>
     </div>

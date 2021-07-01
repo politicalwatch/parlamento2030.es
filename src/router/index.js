@@ -14,7 +14,6 @@ import LegalNotice from '@/views/LegalNotice.vue'
 import PrivacyPolicy from '@/views/PrivacyPolicy.vue'
 import CookiePolicy from '@/views/CookiePolicy.vue'
 import AboutEnglish from '@/views/AboutEnglish.vue'
-import Mediakit from '@/views/Mediakit.vue'
 import Alerts from '@/views/Alerts.vue'
 import Page404 from '@/views/Page404.vue'
 import config from '@/config';
@@ -242,11 +241,6 @@ const routes = [{
     path: "/about-en",
     name: "about-en",
     component: AboutEnglish
-  },
-  {
-    path: "/mediakit",
-    name: "mediakit",
-    component: Mediakit
   },
   {
     path: "/legal-notice",
