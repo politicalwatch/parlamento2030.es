@@ -3,7 +3,7 @@
     <div class="tipichart__row" v-for="d in rows" :key="d.topic">
 
       <div class="tipichart__tooltip" :style="{bottom: `${barHeight}px`}">
-        <div class="tipichart__tip">{{ d.topic }}: {{ d.times }} iniciativas</div>
+        <div class="tipichart__tip">{{ d.topic }}<hr>{{ d.times }} iniciativas</div>
       </div>
 
       <div class="tipichart__bar">
@@ -132,6 +132,11 @@ export default {
     position: inherit;
     border-radius: 0;
   }
+}
+hr {
+  border-top: 2px solid #fff;
+  border-bottom: 0;
+  width: 50%;
 }
 
 </style>
