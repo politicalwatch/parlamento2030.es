@@ -1,20 +1,17 @@
 <template>
   <transition-group tag="div" class="tipichart" name="barfade">
-    <div class="tipichart__rowwrapper" v-for="d in rows" :key="d.topic" :style="rowStyle">
-      <div class="tipichart__row">
+    <div class="tipichart__row" v-for="d in rows" :key="d.topic">
 
-        <div class="tipichart__tooltip" :style="{bottom: `${barHeight}px`}">
-          <div class="tipichart__tip">{{ d.topic }} {{ d.percent }}%</div>
-        </div>
-
-        <div class="tipichart__bar">
-          <div class="tipichart__backbar" :style="d.backbarStyle"></div>
-          <div class="tipichart__overbar" :style="d.overbarStyle"></div>
-        </div>
-
-        <div class="tipichart__icon" :style="d.iconStyle"></div>
-
+      <div class="tipichart__tooltip" :style="{bottom: `${barHeight}px`}">
+        <div class="tipichart__tip">{{ d.topic }} {{ d.percent }}%</div>
       </div>
+
+      <div class="tipichart__bar">
+        <div class="tipichart__overbar" :style="d.overbarStyle"></div>
+      </div>
+
+      <div class="tipichart__icon" :style="d.iconStyle"></div>
+
     </div>
   </transition-group>
 </template>
@@ -45,32 +42,9 @@ export default {
       required: false,
       default: 24,
     },
-    barGap: {
-      type: Number,
-      required: false,
-      default: 12,
-    },
-    barColor: {
-      type: String,
-      required: false,
-      default: '#fbc239',
-    },
-    barBackgroundColor: {
-      type: String,
-      required: false,
-      default: '#f4f6f8',
-    },
   },
   mounted() {
     this.calculeRows();
-  },
-  computed: {
-    rowStyle() {
-      return {
-        height: `${this.barHeight}px`,
-        marginBottom: `${this.barGap}px`,
-      };
-    },
   },
   methods: {
     calculeRows() {
@@ -80,21 +54,17 @@ export default {
         .reduce((cnt, o) => (cnt + o.initiatives), 0);
 
       this.ranking.forEach(d => {
+        const percentage = (d.initiatives / totalTimes) * 100
         this.rows.push({
           topic: d.topic,
           times: d.initiatives,
-          percent: Math.ceil((d.initiatives/totalTimes)*100),
+          percent: Math.ceil(percentage),
           iconStyle: {
-            flex: `0 0 ${this.barHeight}px`,
             backgroundImage: `url(/img/topics/${this.styles[d.topic].image})`,
             backgroundColor: this.styles[d.topic].color,
-            backgroundSize: '65%',
-          },
-          backbarStyle: {
-            backgroundColor: this.barBackgroundColor,
           },
           overbarStyle: {
-            height: `${(d.initiatives/totalTimes)*100}%`,
+            height: `${percentage}%`,
             backgroundColor: this.styles[d.topic].color,
           },
         })
@@ -107,16 +77,14 @@ export default {
 
 <style lang="scss">
 .tipichart {
-  display: flex;
-  align-items: flex-end;
   justify-content: center;
-  height: 300px;
-  &__rowwrapper {
-    flex: 1 100%;
-  }
   &__row {
-    display: flex;
-    flex-direction: column;
+    display: inline-block;
+    width: 64px;
+    height: 100%;
+    padding-left: 6px;
+    padding-right: 6px;
+
     &:hover .tipichart__tooltip {
       display: block;
     }
@@ -139,46 +107,30 @@ export default {
     line-height: 1.5;
   }
   &__icon {
-    width: 100%;
-    height: 100%;
+    width: 52px;
+    height: 48px;
     background-repeat: no-repeat;
     background-position: center;
-    margin-right: 6px;
+    background-size: 65%;
   }
   &__bar {
-    /* flex: 1 1 auto; */
-    overflow: hidden;
-    /* position: relative; */
-  }
-  &__backbar {
-    height: 100%;
+    height: 234px;
+    margin-bottom: 8px;
+    background-color: #f4f6f8;
+    display: flex;
+    border-radius: 0;
   }
   &__overbar {
-    /* position: absolute; */
-    z-index: 9;
-    top: 0;
-    left: 0;
-    transition: width 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95) 350ms;
+    width: 100%;
+    transition: height 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95) 350ms;
+    align-self: flex-end;
+    position: inherit;
+    border-bottom-left-radius:0px;
+    border-bottom-right-radius:0px;
+    border-top-left-radius:5px;
+    border-top-right-radius:5px;
   }
 }
-
-/* Animation */
-/*.barfade {
-  &-enter-active,
-  &-leave-active,
-  &-move {
-    transition: 350ms cubic-bezier(0.59, 0.12, 0.34, 0.95);
-    transition-property: opacity, transform;
-    .tipichart__overbar {
-      width: 0 !important;
-    }
-  }
-  &-enter,
-  &-leave-to {
-    opacity: 0;
-    transform: translateX(50px);
-  }
-}*/
 
 </style>
 
