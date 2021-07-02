@@ -1,13 +1,14 @@
 <template>
   <div>
     <div id="group" class="o-container o-section u-margin-bottom-10">
+
       <tipi-header v-if="parliamentarygroup" :title="parliamentarygroup.name"/>
-      <div class="alerts-block u-margin-top-1" v-show="use_alerts">
+
+        <div class="alerts-block u-margin-top-1" v-show="use_alerts">
         <save-alert :searchparams="{author: parliamentarygroup.name}" />
       </div>
 
       <div class="o-container o-zection u-margin-top-8 u-margin-bottom-4">
-        <h4 class="u-margin-bottom-4">Ranking de ODS</h4>
         <SdgBarchart v-if="topicsRanking" :ranking="topicsRanking" :styles="topicsStyles"></SdgBarchart>
       </div>
 
