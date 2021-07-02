@@ -5,7 +5,12 @@
       <tipi-header v-if="parliamentarygroup" :title="parliamentarygroup.name"/>
 
       <div class="o-container o-zection u-margin-top-8 u-margin-bottom-4">
-        <SdgBarchart v-if="topicsRanking" :ranking="topicsRanking" :styles="topicsStyles"></SdgBarchart>
+        <SdgBarchart
+          v-if="topicsRanking"
+          :ranking="topicsRanking"
+          :styles="topicsStyles"
+          :linkToSearchField="'author'"
+          :linkToSearchValue="parliamentarygroup.name" />
       </div>
 
       <div v-if="latestInitiatives && latestInitiatives.length" class="o-container o-section u-margin-bottom-4">

@@ -1,17 +1,20 @@
 <template>
   <transition-group tag="div" class="tipichart" name="barfade">
     <div class="tipichart__row" v-for="d in rows" :key="d.topic">
+      <router-link
+        :to="{ name: 'results', params: { data: { topic: d.topic, [linkToSearchField]: linkToSearchValue } } }">
 
-      <div class="tipichart__tooltip">
-        <div class="tipichart__tip">{{ d.topic }}<hr>{{ d.times }} iniciativas ({{ ((d.times/totalInitiatives)*100).toFixed(2) }}%)</div>
-      </div>
+        <div class="tipichart__tooltip">
+          <div class="tipichart__tip">{{ d.topic }}<hr>{{ d.times }} iniciativas ({{ ((d.times/totalInitiatives)*100).toFixed(2) }}%)</div>
+        </div>
 
-      <div class="tipichart__bar">
-        <div class="tipichart__overbar" :style="d.overbarStyle"></div>
-      </div>
+        <div class="tipichart__bar">
+          <div class="tipichart__overbar" :style="d.overbarStyle"></div>
+        </div>
 
-      <div class="tipichart__icon" :style="d.iconStyle"></div>
+        <div class="tipichart__icon" :style="d.iconStyle"></div>
 
+      </router-link>
     </div>
   </transition-group>
 </template>
@@ -37,6 +40,16 @@ export default {
       type: Object,
       required: true,
       default: () => ({}),
+    },
+    linkToSearchField: {
+      type: String,
+      required: false,
+      default: 'author'
+    },
+    linkToSearchValue: {
+      type: String,
+      required: false,
+      default: ''
     },
   },
   mounted() {
