@@ -1,5 +1,5 @@
 <template>
-  <div id="group" class="o-container o-section u-margin-bottom-10">
+  <div v-if="parliamentarygroup" id="group" class="o-container o-section u-margin-bottom-10">
     <tipi-header v-if="parliamentarygroup" :title="parliamentarygroup.name"/>
 
       <div class="o-container o-zection u-margin-top-8 u-margin-bottom-4">
@@ -38,11 +38,14 @@
           </div>
         </div>
   </div>
+  <div v-else class="o-container o-section u-margin-bottom-10">
+    <tipi-loader title="Cargando datos" subtitle="Puede llevar unos segundos"/>
+  </div>
 </template>
 
 <script>
 
-import { TipiHeader, TipiMessage, TipiResults, TipiText } from 'tipi-uikit'
+import { TipiHeader, TipiMessage, TipiResults, TipiText, TipiLoader } from 'tipi-uikit'
 import SdgBarchart from '@/components/sdg-barchart.vue';
 import AlertBlock from '@/components/alert-block';
 import api from '@/api';
@@ -56,6 +59,7 @@ export default {
     TipiMessage,
     TipiResults,
     TipiText,
+    TipiLoader,
     SdgBarchart,
     AlertBlock,
   },
