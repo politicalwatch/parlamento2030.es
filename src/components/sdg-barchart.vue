@@ -2,8 +2,8 @@
   <transition-group tag="div" class="tipichart" name="barfade">
     <div class="tipichart__row" v-for="d in rows" :key="d.topic">
 
-      <div class="tipichart__tooltip" :style="{bottom: `${barHeight}px`}">
-        <div class="tipichart__tip">{{ d.topic }}<hr>{{ d.times }} iniciativas</div>
+      <div class="tipichart__tooltip">
+        <div class="tipichart__tip">{{ d.topic }}<hr>{{ d.times }} iniciativas ({{ ((d.times/totalInitiatives)*100).toFixed(2) }}%)</div>
       </div>
 
       <div class="tipichart__bar">
@@ -24,6 +24,7 @@ export default {
   data() {
     return {
       rows: [],
+      totalInitiatives: 0
     };
   },
   props: {
@@ -37,11 +38,6 @@ export default {
       required: true,
       default: () => ({}),
     },
-    barHeight: {
-      type: Number,
-      required: false,
-      default: 24,
-    },
   },
   mounted() {
     this.calculeRows();
@@ -50,6 +46,9 @@ export default {
     calculeRows() {
 
       const rows = [];
+
+      this.totalInitiatives = this.ranking
+        .reduce((cnt, o) => (cnt + o.initiatives), 0);
 
       const higherCount = this.ranking
         .reduce((max, o) => {
