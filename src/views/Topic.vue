@@ -1,9 +1,6 @@
 <template>
   <div v-if="loaded">
     <tipi-topic-card :topic="topic" :topicsStyles="styles"/>
-    <div class="alerts-block o-container" v-show="use_alerts">
-      <save-alert :searchparams="{topic: topic.name}" />
-    </div>
 
     <div id="topic" class="o-container o-section">
       <div class="o-grid">
@@ -22,6 +19,7 @@
         <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="styles"/>
       </div>
     </div>
+    <alert-block :text="'No te pierdas nada de la actividad parlamentaria relacionada con el '+topic.name" :searchparams="{topic: topic.name}" />
     <div id="topic" class="o-container o-section">
       <div class="o-grid">
         <div class="o-grid__col u-12 u-12@sm" v-if="this.styles[topic.name].orgs_logos.length != 0">
@@ -52,7 +50,7 @@
 <script>
 
 import { TipiHeader, TipiResults, TipiTopicCard, TipiText, TipiLoader } from 'tipi-uikit'
-import SaveAlert from '@/components/save-alert';
+import AlertBlock from '@/components/alert-block';
 import api from '@/api';
 import config from '@/config';
 import { mapState } from 'vuex';
@@ -65,7 +63,7 @@ export default {
     TipiTopicCard,
     TipiText,
     TipiLoader,
-    SaveAlert,
+    AlertBlock,
   },
   data: function() {
     return {
