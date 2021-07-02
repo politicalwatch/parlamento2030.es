@@ -242,6 +242,21 @@ export default {
       ].join('');
     }
   },
+  getTopicsByParliamentaryGroupRanking(group) {
+    let params = {'parliamentarygroup': group};
+    return axios
+      .get(getEndpoint(), {
+        params: params
+      })
+      .then(response => response.data);
+
+    function getEndpoint() {
+      return [
+        config.URL,
+        '/stats/topics-by-parliamentarygroup'
+      ].join('');
+    }
+  },
   annotate(text, file) {
     let formData = new FormData()
     formData.append('text', text)
