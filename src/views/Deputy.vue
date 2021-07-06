@@ -21,7 +21,7 @@
       </tipi-message>
     </div>
 
-    <alert-block :text="'No te pierdas nada de la actividad parlamentaria de '+deputy.name" :searchparams="{deputy: deputy.name}" />
+    <alert-block :text="'No te pierdas nada de la actividad parlamentaria de '+deputy.name" :searchparams="{deputy: deputy.name}" v-if="use_alerts" />
 
   </div>
   <div v-else class="o-container o-section u-margin-bottom-10">
