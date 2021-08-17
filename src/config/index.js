@@ -2,6 +2,7 @@ export default {
   SHORTNAME: process.env.VUE_APP_SHORTNAME || 'p2030',
   URL: process.env.VUE_APP_BACKEND_URL || 'http://localhost:5000',
   USE_ALERTS: process.env.VUE_APP_USE_ALERTS || false,
+  KNOWLEDGEBASE: process.env.KNOWLEDGEBASE || 'parlamento2030',
   MENU: [
     {
       route : 'search',

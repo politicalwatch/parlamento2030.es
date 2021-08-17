@@ -3,10 +3,14 @@ import axios from 'axios';
 
 const qs = require("qs");
 
+const kb = config.KNOWLEDGEBASE;
+const params = {
+  knowledgebase: kb
+}
 
 export default {
   getTopics() {
-    return axios.get(getEndpoint()).then(response => response.data);
+    return axios.get(getEndpoint(), {params}).then(response => response.data);
 
     function getEndpoint() {
       return [
@@ -16,7 +20,7 @@ export default {
     }
   },
   getTopic(topicId) {
-    return axios.get(getEndpoint(topicId)).then(response => response.data);
+    return axios.get(getEndpoint(topicId), {params}).then(response => response.data);
 
     function getEndpoint(topicId) {
       return [
@@ -29,6 +33,7 @@ export default {
   getGroups(params) {
     if (params === undefined) params = {};
     Object.keys(params).forEach(key => !params[key] && delete params[key]);
+    params['knowledgebase'] = kb
 
     return axios
       .get(getEndpoint(), {
@@ -47,7 +52,7 @@ export default {
     }
   },
   getGroup(parliamentarygroupId) {
-    return axios.get(getEndpoint(parliamentarygroupId)).then(response => response.data);
+    return axios.get(getEndpoint(parliamentarygroupId), {params}).then(response => response.data);
 
     function getEndpoint(parliamentarygroupId) {
       return [
@@ -60,6 +65,7 @@ export default {
   getDeputies(params) {
     if (params === undefined) params = {};
     Object.keys(params).forEach(key => !params[key] && delete params[key]);
+    params['knowledgebase'] = kb
 
     return axios
       .get(getEndpoint(), {
@@ -78,7 +84,7 @@ export default {
     }
   },
   getDeputy(deputyId) {
-    return axios.get(getEndpoint(deputyId)).then(response => response.data);
+    return axios.get(getEndpoint(deputyId), {params}).then(response => response.data);
 
     function getEndpoint(deputyId) {
       return [
@@ -89,7 +95,7 @@ export default {
     }
   },
   getPlaces() {
-    return axios.get(getEndpoint()).then(response => response.data);
+    return axios.get(getEndpoint(), {params}).then(response => response.data);
 
     function getEndpoint() {
       return [
@@ -99,7 +105,7 @@ export default {
     }
   },
   getStatus() {
-    return axios.get(getEndpoint()).then(response => response.data);
+    return axios.get(getEndpoint(), {params}).then(response => response.data);
 
     function getEndpoint() {
       return [
@@ -109,7 +115,7 @@ export default {
     }
   },
   getTypes() {
-    return axios.get(getEndpoint()).then(response => response.data);
+    return axios.get(getEndpoint(), {params}).then(response => response.data);
 
     function getEndpoint() {
       return [
@@ -120,6 +126,7 @@ export default {
   },
   getInitiatives(params) {
     Object.keys(params).forEach(key => !params[key] && delete params[key]);
+    params['knowledgebase'] = kb
 
     return axios
       .get(getEndpoint(), {
@@ -139,7 +146,7 @@ export default {
   },
   getInitiative(id) {
     return axios
-      .get(getEndpoint(id))
+      .get(getEndpoint(id), {params})
       .then(response => response.data);
 
     function getEndpoint(id) {
@@ -152,6 +159,7 @@ export default {
   },
   saveAlert(search) {
     Object.keys(search).forEach(key => !search[key] && delete search[key]);
+    search['knowledgebase'] = kb
 
     return axios
       .post(getEndpoint(), search)
@@ -165,7 +173,7 @@ export default {
   },
   getTags(topicId) {
     return axios
-      .get(getEndpoint(topicId))
+      .get(getEndpoint(topicId), {params})
       .then(response => response.data.tags);
 
     function getEndpoint(topicId) {
@@ -178,7 +186,7 @@ export default {
   },
   getOverallStats() {
     return axios
-      .get(getEndpoint())
+      .get(getEndpoint(), {params})
       .then(response => response.data);
 
     function getEndpoint() {
@@ -193,6 +201,7 @@ export default {
     if (subtopic) {
       params['subtopic'] = subtopic;
     }
+    params['knowledgebase'] = kb
     return axios
       .get(getEndpoint(), {
         params: params
@@ -208,6 +217,7 @@ export default {
   },
   getParliamentarygroupsRanking(topic, subtopic) {
     let params = {'topic': topic};
+    params['knowledgebase'] = kb
     if (subtopic) {
       params['subtopic'] = subtopic;
     }
@@ -226,6 +236,7 @@ export default {
   },
   getPlacesRanking(topic, subtopic) {
     let params = {'topic': topic};
+    params['knowledgebase'] = kb
     if (subtopic) {
       params['subtopic'] = subtopic;
     }
@@ -244,6 +255,7 @@ export default {
   },
   getTopicsByParliamentaryGroupRanking(group) {
     let params = {'parliamentarygroup': group};
+    params['knowledgebase'] = kb
     return axios
       .get(getEndpoint(), {
         params: params
@@ -264,6 +276,7 @@ export default {
 
     return axios.post(
       getEndpoint(),
+      {params},
       formData,
     )
 
@@ -276,7 +289,8 @@ export default {
   },
   getScannerResult(taskID) {
     return axios.get(
-      getEndpoint(taskID)
+      getEndpoint(taskID),
+      {params}
     )
 
     function getEndpoint(taskID) {
