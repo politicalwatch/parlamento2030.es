@@ -47,10 +47,14 @@ export default {
       Object.keys(this.styles.topics)
         .filter((k) => k !== 'no-topic')
         .forEach((k) => {
+          let tags = []
+          for (const tagged of this.initiative.tagged) {
+            tags = tags.concat(tagged.tags)
+          }
           datum.push({
             name: this.styles.topics[k].shortname,
             color: this.styles.topics[k].color,
-            value: this.initiative.tags
+            value: tags
               .filter(d => d.topic === k)
               .reduce((cnt, o) => (cnt + o.times), 0),
           });
