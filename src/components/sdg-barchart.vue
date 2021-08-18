@@ -73,18 +73,20 @@ export default {
 
       this.ranking.forEach(d => {
         const percentage = (d.initiatives / higherCount) * 100
-        this.rows.push({
-          topic: d.topic,
-          times: d.initiatives,
-          iconStyle: {
-            backgroundImage: `url(/img/topics/${this.styles[d.topic].image})`,
-            backgroundColor: this.styles[d.topic].color,
-          },
-          overbarStyle: {
-            height: `${percentage}%`,
-            backgroundColor: this.styles[d.topic].color,
-          },
-        })
+        if (d.topic in this.styles) {
+          this.rows.push({
+            topic: d.topic,
+            times: d.initiatives,
+            iconStyle: {
+              backgroundImage: `url(/img/topics/${this.styles[d.topic].image})`,
+              backgroundColor: this.styles[d.topic].color,
+            },
+            overbarStyle: {
+              height: `${percentage}%`,
+              backgroundColor: this.styles[d.topic].color,
+            },
+          })
+        }
       });
 
     },
