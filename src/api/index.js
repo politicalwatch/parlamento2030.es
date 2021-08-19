@@ -8,6 +8,15 @@ const params = {
   knowledgebase: kb
 }
 
+function mergeResults(response) {
+  const result = response.data
+  let output = []
+  for (const item in result) {
+    output = output.concat(result[item])
+  }
+  return output
+}
+
 export default {
   getTopics() {
     return axios.get(getEndpoint(), {params}).then(response => response.data);
@@ -206,7 +215,10 @@ export default {
       .get(getEndpoint(), {
         params: params
       })
-      .then(response => response.data.slice(0,limit));
+      .then(response => {
+        const result = mergeResults(response)
+        return result.slice(0,limit)
+      });
 
     function getEndpoint() {
       return [
@@ -225,7 +237,10 @@ export default {
       .get(getEndpoint(), {
         params: params
       })
-      .then(response => response.data.slice(0,5));
+      .then(response => {
+        const result = mergeResults(response)
+        return result.slice(0,5)
+      });
 
     function getEndpoint() {
       return [
@@ -244,7 +259,10 @@ export default {
       .get(getEndpoint(), {
         params: params
       })
-      .then(response => response.data);
+      .then(response => {
+        const result = mergeResults(response)
+        return result.slice(0,5)
+      });
 
     function getEndpoint() {
       return [
