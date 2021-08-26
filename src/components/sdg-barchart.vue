@@ -2,7 +2,7 @@
   <transition-group tag="div" class="tipichart" name="barfade">
     <div class="tipichart__row" v-for="d in rows" :key="d.topic">
       <router-link
-        :to="{ name: 'results', params: { data: { topic: d.topic, [linkToSearchField]: linkToSearchValue } } }">
+        :to="{ name: 'results', params: { data: 'topic=' + d.topic } }">
 
         <div class="tipichart__tooltip">
           <div class="tipichart__tip">{{ d.topic }}<hr>{{ d.times }} iniciativas ({{ ((d.times/totalInitiatives)*100).toFixed(2) }}%)</div>
