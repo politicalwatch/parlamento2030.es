@@ -16,7 +16,9 @@
             </div>
           </div>
           <div class="o-grid__col u-4@sm u-offset-1@sm u-margin-top-4">
-            <p class="u-text-overline">Contacto</p>
+            <p class="u-text-overline">Enlaces de interés</p>
+            <router-link :to="{name: 'faq'}" class="u-color-secondary-dark u-text-tbody2">Preguntas frecuentes</router-link>
+            <br>
             <tipi-icon icon="github" class="c-icon--secondary-dark" />&nbsp;<a class="u-color-secondary-dark u-text-tbody2" href="http://github.com/politicalwatch/" title="github.com/politicalwatch" target="_blank">Consulta nuestro código en Github</a>
             <br>
             <tipi-icon icon="mail" class="c-icon--secondary-dark" />&nbsp;<a class="u-color-secondary-dark u-text-tbody2" href="mailto:parlamento2030@politicalwatch.es" title="parlamento2030@politicalwatch.es" target="_blank">Escribe a parlamento2030@politicalwatch.es</a>
@@ -24,7 +26,7 @@
         </div>
         <div class="o-grid">
           <div class="o-grid__col u-12@sm u-margin-top-4">
-            <p class="u-color-secondary-dark u-text-tbody2">{{ (new Date()).getFullYear()  }} Political Watch - <router-link :to="{name: 'legalnotice'}" class="u-color-secondary-dark">Aviso legal</router-link> - <router-link :to="{name: 'privacypolicy'}" class="u-color-secondary-dark">Política de privacidad</router-link> - <router-link :to="{name: 'cookiepolicy'}" class="u-color-secondary-dark">Política de cookies</router-link> - <router-link :to="{name: 'faq'}" class="u-color-secondary-dark">Preguntas frecuentes</router-link></p>
+            <p class="u-color-secondary-dark u-text-tbody2">{{ (new Date()).getFullYear()  }} Political Watch - <router-link :to="{name: 'legalnotice'}" class="u-color-secondary-dark">Aviso legal</router-link> - <router-link :to="{name: 'privacypolicy'}" class="u-color-secondary-dark">Política de privacidad</router-link> - <router-link :to="{name: 'cookiepolicy'}" class="u-color-secondary-dark">Política de cookies</router-link></p>
           </div>
         </div>
       </div>
