@@ -19,7 +19,7 @@
         <tipi-results layout="tiny" :initiatives="latestInitiatives" :topicsStyles="styles"/>
       </div>
     </div>
-    <alert-block :text="'No te pierdas nada de la actividad parlamentaria relacionada con el '+topic.name" :searchparams="{topic: topic.name}" v-if="use_alerts" />
+      <alert-block :text="'No te pierdas nada de la actividad parlamentaria relacionada con el '" :value="topic.name" :searchparams="{topic: topic.name}" v-if="use_alerts" />
     <div id="topic" class="o-container o-section">
       <div class="o-grid">
         <div class="o-grid__col u-12 u-12@sm" v-if="this.styles[topic.name].orgs_logos.length != 0">

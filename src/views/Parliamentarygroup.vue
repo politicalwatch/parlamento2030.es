@@ -21,7 +21,7 @@
         </tipi-message>
       </div>
 
-      <alert-block :text="'No te pierdas nada de la actividad del '+parliamentarygroup.name" :searchparams="{author: parliamentarygroup.name}" v-if="use_alerts" />
+      <alert-block :text="'No te pierdas nada de la actividad del '" :value="parliamentarygroup.name" :searchparams="{author: parliamentarygroup.name}" v-if="use_alerts" />
 
         <div class="o-container o-section">
           <h4 class="u-margin-bottom-4">Diputados/as</h4>
