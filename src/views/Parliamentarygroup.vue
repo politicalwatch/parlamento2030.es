@@ -1,8 +1,6 @@
 <template>
-  <div>
-    <div id="group" class="o-container o-section u-margin-bottom-10">
-
-      <tipi-header v-if="parliamentarygroup" :title="parliamentarygroup.name"/>
+  <div v-if="parliamentarygroup" id="group" class="o-container o-section u-margin-bottom-10">
+    <tipi-header v-if="parliamentarygroup" :title="parliamentarygroup.name"/>
 
       <div class="o-container o-zection u-margin-top-8 u-margin-bottom-4">
         <SdgBarchart
@@ -23,29 +21,33 @@
         </tipi-message>
       </div>
 
-      <div class="o-container o-section">
-        <h4 class="u-margin-bottom-4">Diputados/as</h4>
-        <div class="o-grid">
-          <div class="o-grid__col u-12 u-4@sm">
-            <tipi-text meta="" :value="this.dividedDeputies[0]" type="deputy" :source="allDeputies" hideGroup/>
-          </div>
-          <div class="o-grid__col u-12 u-4@sm">
-            <tipi-text meta="" :value="this.dividedDeputies[1]" type="deputy" :source="allDeputies" hideGroup/>
-          </div>
-          <div class="o-grid__col u-12 u-4@sm">
-            <tipi-text meta="" :value="this.dividedDeputies[2]" type="deputy" :source="allDeputies" hideGroup/>
+      <alert-block :text="'No te pierdas nada de la actividad del '" :value="parliamentarygroup.name" :searchparams="{author: parliamentarygroup.name}" v-if="use_alerts" />
+
+        <div class="o-container o-section">
+          <h4 class="u-margin-bottom-4">Diputados/as</h4>
+          <div class="o-grid">
+            <div class="o-grid__col u-12 u-4@sm">
+              <tipi-text meta="" :value="this.dividedDeputies[0]" type="deputy" :source="allDeputies" hideGroup/>
+            </div>
+            <div class="o-grid__col u-12 u-4@sm">
+              <tipi-text meta="" :value="this.dividedDeputies[1]" type="deputy" :source="allDeputies" hideGroup/>
+            </div>
+            <div class="o-grid__col u-12 u-4@sm">
+              <tipi-text meta="" :value="this.dividedDeputies[2]" type="deputy" :source="allDeputies" hideGroup/>
+            </div>
           </div>
         </div>
-      </div>
-    </div>
+  </div>
+  <div v-else class="o-container o-section u-margin-bottom-10">
+    <tipi-loader title="Cargando datos" subtitle="Puede llevar unos segundos"/>
   </div>
 </template>
 
 <script>
 
-import { TipiHeader, TipiMessage, TipiResults, TipiText } from 'tipi-uikit'
+import { TipiHeader, TipiMessage, TipiResults, TipiText, TipiLoader } from 'tipi-uikit'
 import SdgBarchart from '@/components/sdg-barchart.vue';
-import SaveAlert from '@/components/save-alert';
+import AlertBlock from '@/components/alert-block';
 import api from '@/api';
 import config from '@/config'
 import { mapGetters, mapState } from  'vuex';
@@ -57,8 +59,9 @@ export default {
     TipiMessage,
     TipiResults,
     TipiText,
-    SaveAlert,
+    TipiLoader,
     SdgBarchart,
+    AlertBlock,
   },
   data: function() {
     return {
