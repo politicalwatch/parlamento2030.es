@@ -13,16 +13,10 @@
       <div v-else>
         <div class="o-grid o-grid--between">
           <div class="o-grid__col u-12 u-8@md">
-            <div class="o-grid">
-              <div class="o-grid__col u-12 u-6@md">
-                <tipi-topic-pill v-if="initiative.topics && initiative.topics.length" class="u-margin-bottom-2" :topicsStyles="styles.topics" :topics="initiative.topics" with-links/>
-              </div>
-              <div class="o-grid__col u-12 u-6@md u-text-right@md u-margin-bottom-2" v-if="initiative.related && initiative.related.length">
-                <a href="#related" class="c-button c-button--compact u-padding-left-0">Ver iniciativas relacionadas</a>
-              </div>
-            </div>
-            <p class="u-color-secondary u-margin-bottom-1 u-margin-top-0">Actualizado {{ moment(initiative.updated).fromNow() }}</p>
             <h1 class="u-text-th4 u-margin-bottom-4">{{ initiative.title }}</h1>
+            <tipi-initiative-meta :initiative="initiative" link-text="Ver en el Congreso de los Diputados" />
+
+            <a :href="initiative.url" target="_blank" title="Ver en el congreso.es">Ver en el congreso.es</a>
 
             <div class="o-grid u-padding-top-4 u-border-top u-border-bottom u-margin-bottom-4">
               <div class="o-grid__col o-grid__col--fill">
@@ -45,10 +39,6 @@
               </div>
           </div>
           <div class="o-grid__col u-12 u-3@md">
-            <div class="u-padding-bottom-4 u-border-bottom u-margin-bottom-4">
-              <tipi-initiative-meta :initiative="initiative" link-text="Ver en el Congreso de los Diputados" />
-            </div>
-
             <div class="u-padding-bottom-4 u-border-bottom u-margin-bottom-4">
               <InitiativeChart :initiative="initiative" :topics="allTopics" :styles="styles" v-if="dataLoaded"></InitiativeChart>
               <span class="u-text-tbody2">Relación de esta iniciativa con los ODS <sup title="El gráfico muestra los ODS relacionados con la iniciativa y el grado de relación con cada uno de ellos, cuya intensidad se refleja en la barra circular que los rodea.">?</sup></span>
