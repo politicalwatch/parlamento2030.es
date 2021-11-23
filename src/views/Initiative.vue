@@ -16,7 +16,7 @@
             <h1 class="u-text-th4 u-margin-bottom-4">{{ initiative.title }}</h1>
             <tipi-initiative-meta :initiative="initiative" link-text="Ver en el Congreso de los Diputados" />
 
-            <a :href="initiative.url" target="_blank" title="Ver en el congreso.es">Ver en el congreso.es</a>
+            <a :href="initiative.url" class="congress-link u-color-primary" target="_blank" title="Ver en el congreso.es"><tipi-icon icon="open-blank"></tipi-icon>Ver en el congreso.es</a>
 
             <div class="o-grid u-padding-top-4 u-border-top u-border-bottom u-margin-bottom-4">
               <div class="o-grid__col o-grid__col--fill">
@@ -67,7 +67,7 @@
 
 <script>
 
-  import { TipiHeader, TipiText, TipiTopics, TipiInitiativeMeta, TipiNeuron, TipiTopicPill, TipiResults, TipiLoader } from 'tipi-uikit'
+  import { TipiHeader, TipiIcon, TipiText, TipiTopics, TipiInitiativeMeta, TipiNeuron, TipiTopicPill, TipiResults, TipiLoader } from 'tipi-uikit'
   import api from '@/api';
   import config from '@/config';
   import { mapState } from 'vuex';
@@ -80,6 +80,7 @@
       name: 'initiative',
       components: {
           TipiHeader,
+          TipiIcon,
           TipiText,
           TipiTopics,
           TipiInitiativeMeta,
@@ -125,3 +126,23 @@
         }
     }
 </script>
+
+<style scoped lang="scss">
+.c-initiative-meta {
+  display: inline-block;
+  margin-bottom: 37px;
+}
+
+.congress-link {
+  font-weight: bold;
+  float: right;
+
+  .c-icon {
+    margin-right: 8px;
+
+    path {
+      fill: #ff6565;
+    }
+  }
+}
+</style>
