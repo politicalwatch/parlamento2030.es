@@ -1,7 +1,7 @@
 <template>
   <div v-if="deputy" id="deputy" class="u-margin-bottom-10">
     <tipi-deputy v-if="deputy" :deputy="deputy" :parliamentaryGroup="parliamentarygroup">
-      <a v-if="deputy.hasOwnProperty('url')" :href="deputy.url" target="_blank"><tipi-icon icon="building" /> Ver en el Congreso</a>
+      <tipi-congress-link v-if="deputy.hasOwnProperty('url')" url="deputy.url"></tipi-congress-link>
       <a v-if="deputy.hasOwnProperty('email')" :href="`mailto:${deputy.email}`" target="_blank"><tipi-icon icon="mail" /> {{deputy.email}}</a>
       <a v-if="deputy.hasOwnProperty('twitter')" :href="deputy.twitter" target="_blank"><tipi-icon icon="twitter" /> @{{ deputy.twitter.split('/').reverse()[0] }}</a>
     </tipi-deputy>
@@ -30,7 +30,7 @@
 
 <script>
 
-import { TipiHeader, TipiDeputy, TipiMessage, TipiResults, TipiIcon, TipiLoader } from 'tipi-uikit'
+import { TipiHeader, TipiCongressLink, TipiDeputy, TipiMessage, TipiResults, TipiIcon, TipiLoader } from 'tipi-uikit'
 import AlertBlock from '@/components/alert-block';
 import api from '@/api';
 import config from '@/config';
@@ -39,6 +39,7 @@ import { mapState } from 'vuex';
 export default {
   name: 'deputy',
   components: {
+    TipiCongressLink,
     TipiHeader,
     TipiDeputy,
     TipiMessage,
