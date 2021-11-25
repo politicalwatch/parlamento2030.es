@@ -127,7 +127,7 @@
     }
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
 .c-initiative-meta {
   display: inline-block;
   margin-bottom: 37px;
