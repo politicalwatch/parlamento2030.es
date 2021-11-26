@@ -14,8 +14,14 @@
         <div class="o-grid o-grid--between">
           <div class="o-grid__col u-12 u-8@md">
             <h1 class="u-text-th4 u-margin-bottom-4">{{ initiative.title }}</h1>
-            <tipi-initiative-meta :initiative="initiative" />
-            <tipi-congress-link url="initiative.url"></tipi-congress-link>
+            <div class="o-grid">
+              <div class="o-grid__col u-12 u-6@sm">
+                <tipi-initiative-meta :initiative="initiative" />
+              </div>
+              <div class="o-grid__col u-12 u-6@sm u-text-left u-text-right@sm">
+                <tipi-congress-link url="initiative.url"></tipi-congress-link>
+              </div>
+            </div>
 
             <div class="o-grid u-padding-top-4 u-border-top u-border-bottom u-margin-bottom-4">
               <div class="o-grid__col o-grid__col--fill">
@@ -127,7 +133,7 @@
 </script>
 
 <style lang="scss">
-.c-initiative-meta {
+.c-initiative-meta, .c-congress-link {
   display: inline-block;
   margin-bottom: 37px;
 }
