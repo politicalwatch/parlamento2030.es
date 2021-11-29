@@ -15,10 +15,10 @@
           <div class="o-grid__col u-12 u-8@md">
             <h1 class="u-text-th4 u-margin-bottom-4">{{ initiative.title }}</h1>
             <div class="o-grid">
-              <div class="o-grid__col u-12 u-6@sm">
+              <div class="o-grid__col u-12 u-6@sm u-text-center u-text-left@sm">
                 <tipi-initiative-meta :initiative="initiative" />
               </div>
-              <div class="o-grid__col u-12 u-6@sm u-text-left u-text-right@sm">
+              <div class="o-grid__col u-12 u-6@sm u-text-left u-text-center u-text-right@sm">
                 <tipi-congress-link url="initiative.url"></tipi-congress-link>
               </div>
             </div>
