@@ -14,9 +14,14 @@
         <div class="o-grid o-grid--between">
           <div class="o-grid__col u-12 u-8@md">
             <h1 class="u-text-th4 u-margin-bottom-4">{{ initiative.title }}</h1>
-            <tipi-initiative-meta :initiative="initiative" link-text="Ver en el Congreso de los Diputados" />
-
-            <a :href="initiative.url" target="_blank" title="Ver en el congreso.es">Ver en el congreso.es</a>
+            <div class="o-grid">
+              <div class="o-grid__col u-12 u-6@sm u-text-center u-text-left@sm">
+                <tipi-initiative-meta :initiative="initiative" />
+              </div>
+              <div class="o-grid__col u-12 u-6@sm u-text-left u-text-center u-text-right@sm">
+                <tipi-congress-link url="initiative.url"></tipi-congress-link>
+              </div>
+            </div>
 
             <div class="o-grid u-padding-top-4 u-border-top u-border-bottom u-margin-bottom-4">
               <div class="o-grid__col o-grid__col--fill">
@@ -67,7 +72,7 @@
 
 <script>
 
-  import { TipiHeader, TipiText, TipiTopics, TipiInitiativeMeta, TipiNeuron, TipiTopicPill, TipiResults, TipiLoader } from 'tipi-uikit'
+  import { TipiHeader, TipiCongressLink, TipiText, TipiTopics, TipiInitiativeMeta, TipiNeuron, TipiTopicPill, TipiResults, TipiLoader } from 'tipi-uikit'
   import api from '@/api';
   import config from '@/config';
   import { mapState } from 'vuex';
@@ -79,6 +84,7 @@
   export default {
       name: 'initiative',
       components: {
+          TipiCongressLink,
           TipiHeader,
           TipiText,
           TipiTopics,
@@ -139,3 +145,10 @@
         }
     }
 </script>
+
+<style lang="scss">
+.c-initiative-meta, .c-congress-link {
+  display: inline-block;
+  margin-bottom: 37px;
+}
+</style>

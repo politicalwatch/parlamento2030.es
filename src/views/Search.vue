@@ -8,7 +8,7 @@
 
       <div class="o-grid o-grid--align-center u-margin-bottom-4" id="results">
         <div class="o-grid__col o-grid__col--fill">
-          <tipi-message v-if="this.query_meta.page" :type="message.type" :icon="message.icon">{{ message.message }}</tipi-message>
+          <h4 v-if="this.query_meta.page">{{ message.message }}</h4>
           <tipi-message v-if="!canDownloadCSV" icon type="info">Se ha superado el número máximo de datos para descargar</tipi-message>
         </div>
         <div class="o-grid__col o-grid__col--right">
@@ -88,9 +88,9 @@ export default {
         return { icon: true, type: 'error', message: this.errors }
       }
       if (this.query_meta.total) {
-        return { icon: true, type: 'success', message: `Se han encontrado ${this.query_meta.total} iniciativas.` }
+        return { icon: true, type: 'success', message: `Se han encontrado ${this.query_meta.total} iniciativas` }
       } else {
-        return { icon: true, type: 'error', message: `No se han encontrado iniciativas que cumplan los criterios.` }
+        return { icon: true, type: 'error', message: `No se han encontrado iniciativas que cumplan los criterios` }
       }
     }
   },
