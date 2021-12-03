@@ -19,7 +19,7 @@
                 <tipi-initiative-meta :initiative="initiative" />
               </div>
               <div class="o-grid__col u-12 u-6@sm u-text-left u-text-center u-text-right@sm">
-                <tipi-congress-link url="initiative.url"></tipi-congress-link>
+                <tipi-congress-link :url="initiative.url"></tipi-congress-link>
               </div>
             </div>
 
