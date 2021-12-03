@@ -1,7 +1,7 @@
 <template>
   <div v-if="deputy" id="deputy" class="u-margin-bottom-10">
     <tipi-deputy v-if="deputy" :deputy="deputy" :parliamentaryGroup="parliamentarygroup">
-      <tipi-congress-link v-if="deputy.hasOwnProperty('url')" url="deputy.url"></tipi-congress-link>
+      <tipi-congress-link v-if="deputy.hasOwnProperty('url')" :url="deputy.url"></tipi-congress-link>
       <a v-if="deputy.hasOwnProperty('email')" :href="`mailto:${deputy.email}`" target="_blank"><tipi-icon icon="mail" /> {{deputy.email}}</a>
       <a v-if="deputy.hasOwnProperty('twitter')" :href="deputy.twitter" target="_blank"><tipi-icon icon="twitter" /> @{{ deputy.twitter.split('/').reverse()[0] }}</a>
     </tipi-deputy>
