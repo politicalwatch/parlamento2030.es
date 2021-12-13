@@ -34,7 +34,7 @@
                 <tipi-text meta="Registro" :value="moment(initiative.created).format('DD/MM/Y')" />
               </div>
             </div>
-            <tipi-topics class="u-hide u-block@md" meta="ODS tratados" :topics="getTopics(initiative)" :tags="getTags(initiative)" :topicsStyles="styles.topics" />
+            <tipi-topics class="u-hide u-block@md" meta="ODS tratados" :topics="getTopics()" :tags="getTags()" :topicsStyles="styles.topics" />
 
               <div class="o-grid u-margin-top-4 u-padding-top-4 u-border-top u-hide u-block@md" v-if="initiative.related && initiative.related.length">
                 <div class="o-grid__col o-grid__col--fill">
@@ -55,7 +55,7 @@
           </div>
         </div>
         <div class="u-hide@md">
-          <tipi-topics meta="ODS tratados" :topics="initiative.topics" :tags="initiative.tags" :topicsStyles="styles.topics" />
+          <tipi-topics meta="ODS tratados" :topics="getTopics()" :tags="getTags()" :topicsStyles="styles.topics" />
 
             <div class="u-margin-top-4 u-padding-top-4 u-border-top" v-if="initiative.related && initiative.related.length">
               <h4 id="related" class="u-margin-bottom-4">Iniciativas relacionadas</h4>
@@ -122,16 +122,16 @@
             this.loaded = true;
           });
         },
-        getTopics: function(initiative) {
+        getTopics: function() {
           let topics = []
-          for (const tagged of initiative['tagged']) {
+          for (const tagged of this.initiative['tagged']) {
             topics = topics.concat(tagged['topics'])
           }
           return topics
         },
-        getTags: function(initiative) {
+        getTags: function() {
           let tags = []
-          for (const tagged of initiative['tagged']) {
+          for (const tagged of this.initiative['tagged']) {
             tags = tags.concat(tagged['tags'])
           }
           return tags

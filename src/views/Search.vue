@@ -89,9 +89,9 @@ export default {
       }
       if (this.query_meta.total) {
         return { icon: true, type: 'success', message: `Se han encontrado ${this.query_meta.total} iniciativas` }
-      } else {
-        return { icon: true, type: 'error', message: `No se han encontrado iniciativas que cumplan los criterios` }
       }
+
+      return { icon: true, type: 'error', message: `No se han encontrado iniciativas que cumplan los criterios` }
     }
   },
   methods: {
