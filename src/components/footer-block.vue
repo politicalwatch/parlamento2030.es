@@ -26,7 +26,7 @@
         </div>
         <div class="o-grid">
           <div class="o-grid__col u-12@sm u-margin-top-4">
-            <p class="u-color-secondary-dark u-text-tbody2">{{ (new Date()).getFullYear()  }} Political Watch - <router-link :to="{name: 'legalnotice'}" class="u-color-secondary-dark">Aviso legal</router-link> - <router-link :to="{name: 'privacypolicy'}" class="u-color-secondary-dark">Política de privacidad</router-link> - <router-link :to="{name: 'cookiepolicy'}" class="u-color-secondary-dark">Política de cookies</router-link></p>
+            <p class="u-color-secondary-dark u-text-tbody2">&copy; 2018-{{ (new Date()).getFullYear()  }} Political Watch - <router-link :to="{name: 'legalnotice'}" class="u-color-secondary-dark">Aviso legal</router-link> - <router-link :to="{name: 'privacypolicy'}" class="u-color-secondary-dark">Política de privacidad</router-link> - <router-link :to="{name: 'cookiepolicy'}" class="u-color-secondary-dark">Política de cookies</router-link></p>
           </div>
         </div>
       </div>
