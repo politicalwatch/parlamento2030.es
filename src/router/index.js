@@ -45,7 +45,7 @@ const routes = [{
     }
   },
   {
-    path: "/results/:data?",
+    path: "/resultados/:data?",
     name: "results",
     component: Search,
     meta: {
@@ -63,7 +63,7 @@ const routes = [{
     }
   },
   {
-    path: "/initiatives/:id",
+    path: "/iniciativa/:id",
     name: "initiative",
     component: Initiative,
     meta: {
@@ -82,6 +82,12 @@ const routes = [{
           content: 'Test Iniciativa'
         }, ...config.DEFAULT_METATAGS
       ]
+    }
+  },
+  {
+    path: '/initiatives/:id',
+    redirect: to => {
+      return {name: 'initiative', params: { id: to.params.id }}
     }
   },
   {
@@ -219,12 +225,12 @@ const routes = [{
     component: Topic
   },
   {
-    path: "/deputies/:id",
+    path: "/diputados/:id",
     name: "deputy",
     component: Deputy
   },
   {
-    path: "/parliamentarygroups/:id",
+    path: "/grupos/:id",
     name: "parliamentarygroup",
     component: Parliamentarygroup
   },
@@ -233,7 +239,7 @@ const routes = [{
     name: "scanner",
   },
   {
-    path: "/about",
+    path: "/acerca",
     name: "about",
     component: About
   },
@@ -243,22 +249,22 @@ const routes = [{
     component: AboutEnglish
   },
   {
-    path: "/legal-notice",
+    path: "/aviso-legal",
     name: "legalnotice",
     component: LegalNotice
   },
   {
-    path: "/privacy-policy",
+    path: "/politica-de-privacidad",
     name: "privacypolicy",
     component: PrivacyPolicy
   },
   {
-    path: "/cookie-policy",
+    path: "/politica-de-cookies",
     name: "cookiepolicy",
     component: CookiePolicy
   },
   {
-    path: "/alerts",
+    path: "/alertas",
     name: "alerts",
     component: Alerts
   },
