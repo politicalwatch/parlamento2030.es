@@ -63,7 +63,7 @@ const routes = [{
     }
   },
   {
-    path: "/iniciativa/:id",
+    path: "/iniciativas/:id",
     name: "initiative",
     component: Initiative,
     meta: {
