@@ -121,6 +121,7 @@ export default {
       const currentTopic = this.topics.find(topic => topic.name === selectedTopic);
       this.getSubtopics(currentTopic.id);
     },
+
     getSubtopics: function(topicID) {
       api.getTags(topicID)
         .then(tags => {
@@ -128,41 +129,44 @@ export default {
         })
         .catch(error => this.errors = error);
     },
+
     getResults: function() {
       api.getOverallStats()
         .then(overall => {
           if (this.data.subtopic) {
             if (this.data.selection === null) this.data.selection = {};
-            this.data.selection.selected = overall.subtopics.find(el => el._id === this.data.subtopic);
+            this.data.selection.selected = overall.subtopics[config.KNOWLEDGEBASE].find(el => el._id === this.data.subtopic);
             if (this.data.selection.selected === undefined) {
               this.data.selection.selected = {};
               this.data.selection.selected._id = this.data.subtopic;
               this.data.selection.selected.initiatives = 0;
             }
-            let compareswith_posibilities = overall.subtopics.filter(el => el._id.startsWith(this.data.selection.selected._id.split('.')[0]));
+            let compareswith_posibilities = overall[config.KNOWLEDGEBASE].subtopics.filter(el => el._id.startsWith(this.data.selection.selected._id.split('.')[0]));
             this.data.selection.compareswith = compareswith_posibilities[0];
             this.data.isSelected = true;
             this.data.selectedTarget = true;
           } else {
             if (this.data.selection === null) this.data.selection = {};
-            this.data.selection.selected = overall.topics.find(el => el._id === this.data.topic);
+            this.data.selection.selected = overall[config.KNOWLEDGEBASE].topics.find(el => el._id === this.data.topic);
             if (this.data.selection.selected === undefined) {
               this.data.selection.selected = {};
               this.data.selection.selected._id = this.data.topic;
               this.data.selection.selected.initiatives = 0;
             }
-            this.data.selection.compareswith = overall.topics[0];
+            this.data.selection.compareswith = overall[config.KNOWLEDGEBASE].topics[0];
             this.data.isSelected = true;
             this.data.selectedTarget = false;
           }
           this.data.sameSelection = (this.data.selection.selected._id == this.data.selection.compareswith._id) ? true : false;
         })
         .catch(error => this.errors = error);
+
       api.getParliamentarygroupsRanking(this.data.topic, this.data.subtopic)
         .then(ranking => {
           this.data.parliamentarygroups = ranking;
         })
         .catch(error => this.errors = error);
+
       api.getPlacesRanking(this.data.topic, this.data.subtopic)
         .then(ranking => {
           this.data.places = ranking;
