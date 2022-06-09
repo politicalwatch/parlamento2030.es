@@ -69,7 +69,7 @@
         <router-link
           class="u-text-tbody2"
           v-if="getParliamentaryGroupByName(form.author)"
-          :to="{ path: `/parliamentarygroups/${getParliamentaryGroupByName(form.author).id}` }">
+          :to="{ path: `/grupos/${getParliamentaryGroupByName(form.author).id}` }">
           ¿Quieres ver el perfil del {{ form.author }}?
         </router-link>
       </div>
@@ -89,7 +89,7 @@
         <router-link
           class="u-text-tbody2"
           v-if="getDeputyByName(form.deputy)"
-          :to="{ path: `/deputies/${getDeputyByName(form.deputy).id}` }">
+          :to="{ path: `/diputados/${getDeputyByName(form.deputy).id}` }">
           ¿Quieres ver el perfil de {{ form.deputy }}?
         </router-link>
       </div>
