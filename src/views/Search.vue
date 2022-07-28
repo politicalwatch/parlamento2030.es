@@ -109,6 +109,7 @@ export default {
         this.scrollToID = '#results';
         event.preventDefault();
       }
+      this.data['ignoretagless'] = 1
 
       Object.keys(urlParams).forEach(
         key => (!urlParams[key] || key === "page") && delete urlParams[key])
