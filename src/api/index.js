@@ -136,6 +136,7 @@ export default {
   getInitiatives(params) {
     Object.keys(params).forEach(key => !params[key] && delete params[key]);
     params['knowledgebase'] = kb
+    params['ignoretagless'] = 1
 
     return axios
       .get(getEndpoint(), {
