@@ -1,5 +1,5 @@
 <template>
-<router-link :to="{name: 'initiative', params: { id: getId() }}" class="c-congress-link u-uppercase u-border-link" :title="getName()"><tipi-icon class="u-filling-primary" icon="document" />{{ getName() }}</router-link>
+<router-link :to="{name: 'initiative', params: { id: getId() }}" class="c-congress-link u-uppercase u-border-link" :title="getName()"><tipi-icon class="u-filling-primary" icon="conversation" />{{ getName() }}</router-link>
 </template>
 
 <script>
