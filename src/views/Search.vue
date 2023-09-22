@@ -40,9 +40,8 @@ import config from '@/config'
 import api from '@/api'
 import { TipiHeader, TipiCsvDownload, TipiMessage, TipiResults } from 'tipi-uikit'
 import { mapGetters } from 'vuex';
-
-const qs = require('qs');
-const VueScrollTo = require('vue-scrollto');
+import qs from 'qs';
+import VueScrollTo from 'vue-scrollto'
 
 export default {
   name: 'search',

@@ -101,6 +101,8 @@
           <datepicker
             v-model="form.startdate"
             @cleared="clearStartDate"
+            monday-first="true"
+            :language="es"
             placeholder="dd/mm/YYYY" format="dd/MM/yyyy" name="startdate">
           </datepicker>
         </div>
@@ -111,6 +113,9 @@
           <datepicker
             v-model="form.enddate"
             @cleared="clearEndDate"
+            monday-first="true"
+            :language="es"
+            :disabledDates="disabled_dates"
             placeholder="dd/mm/YYYY" format="dd/MM/yyyy" name="enddate">
           </datepicker>
         </div>
@@ -189,6 +194,7 @@
 
 <script>
 import Datepicker from 'vuejs-datepicker';
+import { es } from 'vuejs-datepicker/dist/locale';
 import Multiselect from 'vue-multiselect'
 import { TipiIcon, Utils } from 'tipi-uikit';
 import api from '@/api'
@@ -215,6 +221,10 @@ export default {
       form: {},
       errors: null,
       moment: moment,
+      es: es,
+      disabled_dates: {
+        from: new Date()
+      },
       selectedSubtopics: [],
       filteredTags: [],
       advanced: this.formData && (this.formData.startdate || this.formData.enddate || this.formData.status || this.formData.place || this.formData.type || this.formData.reference || this.formData.text),
@@ -237,18 +247,20 @@ export default {
   },
   methods: {
     cleanForm: function() {
-      this.form.topic =
-      this.form.subtopics =
-      this.form.tags =
-      this.form.author =
-      this.form.deputy =
-      this.form.status =
-      this.form.place =
-      this.form.type =
-      this.form.reference =
-      this.form.enddate =
-      this.form.startdate =
+      this.form.topic = '';
+      this.form.subtopics = [];
+      this.form.tags = [];
+      this.form.author = '';
+      this.form.deputy = '';
+      this.form.status = '';
+      this.form.place = '';
+      this.form.type = '';
+      this.form.reference = '';
+      this.form.enddate = '';
+      this.form.startdate = '';
       this.form.text = '';
+      // //clear url
+      this.$router.push({name: 'search'});
     },
     getTypes: function() {
       const options = []
