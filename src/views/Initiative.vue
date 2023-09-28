@@ -62,10 +62,7 @@
                 <tipi-text meta="Referencia" :value="initiative.reference" />
               </div>
               <div class="o-grid__col u-12 u-3@sm">
-                <tipi-text
-                  meta="Registro"
-                  :value="moment(initiative.created).format('DD/MM/Y')"
-                />
+                <tipi-text meta="Registro" :value="formattedDate" />
               </div>
             </div>
             <tipi-topics
@@ -170,11 +167,9 @@ import {
 import api from '@/api';
 import config from '@/config';
 import { mapState } from 'vuex';
+import format from 'date-fns/format';
 import InitiativeChart from '@/components/initiative-chart.vue';
 import ConversationLink from '@/components/conversation-link.vue';
-
-import moment from 'moment';
-moment.locale('es');
 
 export default {
   name: 'initiative',
@@ -194,7 +189,6 @@ export default {
   data: function () {
     return {
       initiative: {},
-      moment: moment,
       styles: config.STYLES,
       loaded: false,
     };
@@ -203,6 +197,9 @@ export default {
     ...mapState(['allDeputies', 'allTopics', 'allParliamentaryGroups']),
     dataLoaded: function () {
       return Object.keys(this.initiative).length && this.allTopics.length > 0;
+    },
+    formattedDate: function () {
+      return format(new Date(this.initiative.created), 'dd/MM/Y');
     },
   },
   methods: {

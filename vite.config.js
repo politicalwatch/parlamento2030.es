@@ -28,9 +28,9 @@ export default defineConfig({
       additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
     }),
     vitePluginRequire(),
-    // createSvgPlugin({
-    //   svgoConfig,
-    // }),
+    createSvgPlugin({
+      svgoConfig,
+    }),
   ],
   optimizeDeps: {
     include: [
@@ -39,7 +39,6 @@ export default defineConfig({
       'vue-csv-downloader',
       'save-svg-as-png',
       'pluralize',
-      'moment',
       'd3',
       'd3-cloud',
       'd3-dispatch',

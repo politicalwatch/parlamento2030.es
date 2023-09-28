@@ -270,7 +270,7 @@ import { TipiIcon, Utils } from 'tipi-uikit';
 import api from '@/api';
 import { mapGetters, mapState } from 'vuex';
 
-import moment from 'moment';
+import format from 'date-fns/format';
 
 export default {
   name: 'searchForm',
@@ -288,7 +288,6 @@ export default {
       tags: [],
       form: {},
       errors: null,
-      moment: moment,
       es: es,
       disabled_dates: {
         from: new Date(),
@@ -423,10 +422,11 @@ export default {
     },
     getResults: function (event) {
       this.form.enddate = this.form.enddate
-        ? moment(this.form.enddate).format('YYYY-MM-DD')
+        ? format(new Date(this.form.enddate), 'yyyy-MM-dd')
         : undefined;
+
       this.form.startdate = this.form.startdate
-        ? moment(this.form.startdate).format('YYYY-MM-DD')
+        ? format(new Date(this.form.startdate), 'yyyy-MM-dd')
         : undefined;
       this.$emit('getResults', event, this.form);
     },
