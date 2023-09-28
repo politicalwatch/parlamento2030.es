@@ -10,7 +10,7 @@ import * as Integrations from '@sentry/integrations'
 import './registerServiceWorker'
 
 
-let SENTRY_DSN = process.env.VUE_APP_SENTRY_DSN
+let SENTRY_DSN = import.meta.env.VUE_APP_SENTRY_DSN
 if (SENTRY_DSN) {
   Sentry.init({
     dsn: SENTRY_DSN,

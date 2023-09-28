@@ -1,8 +1,8 @@
 export default {
-  SHORTNAME: process.env.VUE_APP_SHORTNAME || 'p2030',
-  URL: process.env.VUE_APP_BACKEND_URL || 'http://localhost:5000',
-  USE_ALERTS: process.env.VUE_APP_USE_ALERTS || false,
-  KNOWLEDGEBASE: process.env.KNOWLEDGEBASE || 'ods',
+  SHORTNAME: import.meta.env.VUE_APP_SHORTNAME || 'p2030',
+  URL: import.meta.env.VUE_APP_BACKEND_URL || 'http://localhost:5000',
+  USE_ALERTS: import.meta.env.VUE_APP_USE_ALERTS || false,
+  KNOWLEDGEBASE: import.meta.env.KNOWLEDGEBASE || 'ods',
   MENU: [
     {
       route : 'search',

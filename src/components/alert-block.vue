@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import SaveAlert from '@/components/save-alert';
+import SaveAlert from '@/components/save-alert.vue';
 
 export default {
   name: "alert-block",

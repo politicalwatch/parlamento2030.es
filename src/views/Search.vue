@@ -34,8 +34,8 @@
 
 <script>
 import Vue from 'vue'
-import searchForm from '@/components/search-form';
-import SaveAlert from '@/components/save-alert';
+import searchForm from '@/components/search-form.vue';
+import SaveAlert from '@/components/save-alert.vue';
 import config from '@/config'
 import api from '@/api'
 import { TipiHeader, TipiCsvDownload, TipiMessage, TipiResults } from 'tipi-uikit'
