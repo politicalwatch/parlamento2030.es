@@ -101,7 +101,7 @@
           <datepicker
             v-model="form.startdate"
             @cleared="clearStartDate"
-            monday-first="true"
+            :monday-first="true"
             :language="es"
             placeholder="dd/mm/YYYY" format="dd/MM/yyyy" name="startdate">
           </datepicker>
@@ -113,7 +113,7 @@
           <datepicker
             v-model="form.enddate"
             @cleared="clearEndDate"
-            monday-first="true"
+            :monday-first="true"
             :language="es"
             :disabledDates="disabled_dates"
             placeholder="dd/mm/YYYY" format="dd/MM/yyyy" name="enddate">
