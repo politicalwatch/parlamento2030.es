@@ -127,6 +127,27 @@ export default {
         .catch((error) => (this.errors = error));
     },
   },
+  metaInfo() {
+    const title = this.deputy?.name
+      ? `${this.deputy.name} - Parlamento2030`
+      : '- Parlamento2030';
+
+    return {
+      title,
+      meta: [
+        {
+          property: 'og:title',
+          content: title,
+          vmid: 'og:title',
+        },
+        {
+          property: 'twitter:title',
+          content: title,
+          vmid: 'twitter:title',
+        },
+      ],
+    };
+  },
   created: function () {
     this.getDeputy();
   },

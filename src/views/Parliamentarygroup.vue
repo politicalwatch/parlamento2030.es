@@ -169,6 +169,22 @@ export default {
         .catch((error) => (this.errors = error));
     },
   },
+  metaInfo() {
+    const title = this.parliamentarygroup?.name
+      ? `${this.parliamentarygroup.name} - Qué hacen los diputados`
+      : '- Qué hacen los diputados';
+
+    return {
+      title,
+      meta: [
+        {
+          property: 'og:title',
+          content: title,
+          vmid: 'og:title',
+        },
+      ],
+    };
+  },
   created: function () {
     this.getParliamentaryGroup();
   },

@@ -26,6 +26,7 @@
     "tipi-uikit": "github:politicalwatch/tipi-uikit",
     "vue": "^2.5.16",
     "vue-cookie-law": "^1.6.0",
+    "vue-meta": "^2.4.0",
     "vue-multiselect": "^2.1.0",
     "vue-router": "^3.0.1",
     "vue-scrollto": "^2.15.0",
