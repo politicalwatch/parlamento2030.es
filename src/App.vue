@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { TipiNavbar } from 'tipi-uikit';
+import { TipiNavbar } from '@politicalwatch/tipi-uikit';
 import FooterBlock from '@/components/footer-block.vue';
 import config from '@/config';
 import { mapActions } from 'vuex';

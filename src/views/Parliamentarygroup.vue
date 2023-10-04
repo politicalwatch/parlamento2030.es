@@ -86,7 +86,7 @@ import {
   TipiResults,
   TipiText,
   TipiLoader,
-} from 'tipi-uikit';
+} from '@politicalwatch/tipi-uikit';
 import SdgBarchart from '@/components/sdg-barchart.vue';
 import AlertBlock from '@/components/alert-block.vue';
 import api from '@/api';

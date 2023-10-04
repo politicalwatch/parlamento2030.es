@@ -163,7 +163,7 @@ import {
   TipiTopicPill,
   TipiResults,
   TipiLoader,
-} from 'tipi-uikit';
+} from '@politicalwatch/tipi-uikit';
 import api from '@/api';
 import config from '@/config';
 import { mapState } from 'vuex';

@@ -71,7 +71,7 @@ import {
   TipiResults,
   TipiIcon,
   TipiLoader,
-} from 'tipi-uikit';
+} from '@politicalwatch/tipi-uikit';
 import AlertBlock from '@/components/alert-block.vue';
 import api from '@/api';
 import config from '@/config';

@@ -3,7 +3,7 @@ import App from './App.vue';
 import VueMeta from 'vue-meta';
 import router from '@/router';
 import store from '@/store';
-import '../node_modules/tipi-uikit/src/styles/main.scss';
+import '@politicalwatch/tipi-uikit/src/styles/main.scss';
 
 import * as Sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';

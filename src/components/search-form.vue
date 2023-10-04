@@ -266,7 +266,7 @@
 import Datepicker from 'vuejs-datepicker';
 import { es } from 'vuejs-datepicker/dist/locale';
 import Multiselect from 'vue-multiselect';
-import { TipiIcon, Utils } from 'tipi-uikit';
+import { TipiIcon, Utils } from '@politicalwatch/tipi-uikit';
 import api from '@/api';
 import { mapGetters, mapState } from 'vuex';
 

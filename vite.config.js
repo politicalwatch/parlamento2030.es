@@ -34,7 +34,7 @@ export default defineConfig({
   ],
   optimizeDeps: {
     include: [
-      'tipi-uikit',
+      '@politicalwatch/tipi-uikit',
       'masonry-layout',
       'vue-csv-downloader',
       'save-svg-as-png',

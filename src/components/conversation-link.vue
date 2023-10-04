@@ -1,9 +1,16 @@
 <template>
-<router-link :to="{name: 'initiative', params: { id: getId() }}" class="c-congress-link u-uppercase u-border-link" :title="getName()"><tipi-icon class="u-filling-primary" icon="conversation" />{{ getName() }}</router-link>
+  <router-link
+    :to="{ name: 'initiative', params: { id: getId() } }"
+    class="c-congress-link u-uppercase u-border-link"
+    :title="getName()"
+    ><tipi-icon class="u-filling-primary" icon="conversation" />{{
+      getName()
+    }}</router-link
+  >
 </template>
 
 <script>
-import { TipiIcon } from 'tipi-uikit';
+import { TipiIcon } from '@politicalwatch/tipi-uikit';
 
 export default {
   name: 'ConversationLink',
@@ -13,24 +20,24 @@ export default {
   props: {
     id: {
       type: String,
-      required: true
+      required: true,
     },
     isAnswer: {
       type: Boolean,
-      required: true
-    }
+      required: true,
+    },
   },
   methods: {
-    getId: function() {
-     if (this.isAnswer) return this.id.replace('-respuesta', '')
-       return this.id + "-respuesta"
-     },
-     getName: function() {
-       if (this.isAnswer) return "Ver pregunta"
-         return "Ver respuesta"
-     }
-  }
-}
+    getId: function () {
+      if (this.isAnswer) return this.id.replace('-respuesta', '');
+      return this.id + '-respuesta';
+    },
+    getName: function () {
+      if (this.isAnswer) return 'Ver pregunta';
+      return 'Ver respuesta';
+    },
+  },
+};
 </script>
 
 <style>
