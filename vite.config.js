@@ -1,10 +1,9 @@
 import { fileURLToPath, URL } from 'node:url';
-
 import { defineConfig } from 'vite';
-import vue2 from '@vitejs/plugin-vue2';
+import vue from '@vitejs/plugin-vue';
 import legacy from '@vitejs/plugin-legacy';
 import vitePluginRequire from 'vite-plugin-require';
-import { createSvgPlugin } from 'vite-plugin-vue2-svg';
+import svgLoader from 'vite-svg-loader';
 
 const svgoConfig = {
   plugins: [
@@ -22,19 +21,18 @@ const svgoConfig = {
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [
-    vue2(),
+    vue(),
     legacy({
       targets: ['ie >= 11'],
       additionalLegacyPolyfills: ['regenerator-runtime/runtime'],
     }),
     vitePluginRequire(),
-    createSvgPlugin({
+    svgLoader({
       svgoConfig,
     }),
   ],
   optimizeDeps: {
     include: [
-      '@politicalwatch/tipi-uikit',
       'masonry-layout',
       'vue-csv-downloader',
       'save-svg-as-png',

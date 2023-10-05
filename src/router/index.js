@@ -1,5 +1,4 @@
-import Vue from 'vue'
-import VueRouter from 'vue-router'
+import { createRouter, createWebHistory } from "vue-router";
 import sha1 from 'js-sha1';
 import Search from '@/views/Search.vue'
 import Initiative from '@/views/Initiative.vue'
@@ -17,10 +16,6 @@ import AboutEnglish from '@/views/AboutEnglish.vue'
 import Alerts from '@/views/Alerts.vue'
 import Page404 from '@/views/Page404.vue'
 import config from '@/config';
-// eslint-disable-next-line no-unused-vars
-import from from "core-js/features/array/from";
-
-Vue.use(VueRouter);
 
 const routes = [{
     path: "/",
@@ -235,8 +230,9 @@ const routes = [{
     component: Parliamentarygroup
   },
   {
-    path: "https://escaner2030.es",
+    path: "/scanner",
     name: "scanner",
+    beforeEnter() { location.href = 'https://escaner2030.es'; }
   },
   {
     path: "/acerca",
@@ -280,8 +276,8 @@ const routes = [{
   },
 ];
 
-const router = new VueRouter({
-  mode: "history",
+const router = new createRouter({
+  history: createWebHistory(import.meta.env.BASE_URL),
   scrollBehavior() {
     return {
       x: 0,

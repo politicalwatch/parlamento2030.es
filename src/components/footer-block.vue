@@ -86,26 +86,54 @@
       style="background-image: url('/img/multicolor.jpg')"
     ></div>
 
-    <cookie-law
-      theme="base"
-      buttonText="Entendido"
-      buttonClass="btn btn-custom"
-      message="Este sitio usa cookies para asegurarte la mejor experiencia web."
-    ></cookie-law>
+    <vue-cookie-accept-decline
+      :debug="false"
+      :disableDecline="true"
+      :showPostponeButton="false"
+      elementId="cookiePanel"
+      ref="cookiePanel"
+      transitionName="slideFromBottom"
+      type="floating"
+    >
+      <template #message>
+        Este sitio usa cookies para asegurarte la mejor experiencia web.
+      </template>
+      <template #acceptContent>Entendido</template>
+    </vue-cookie-accept-decline>
   </div>
 </template>
 
 <script>
-import CookieLaw from 'vue-cookie-law';
+import VueCookieAcceptDecline from "vue-cookie-accept-decline";
 import { TipiIcon } from '@politicalwatch/tipi-uikit';
 
 export default {
   name: 'footer-block',
   components: {
-    CookieLaw,
+    VueCookieAcceptDecline,
     TipiIcon,
   },
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.cookie {
+  position: fixed;
+  overflow: hidden;
+  box-sizing: border-box;
+  z-index: 9999;
+  background: #f1f1f1;
+  color: #232323;
+  padding: 1.25em;
+  bottom: 0;
+  left: 0;
+  right: 0;
+}
+.cookie__floating__wrap {
+  display: flex;
+  width: 100%;
+  justify-content: space-between;
+  align-items: baseline;
+  flex-direction: row;
+}
+</style>

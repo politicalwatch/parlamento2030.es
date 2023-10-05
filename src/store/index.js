@@ -1,8 +1,5 @@
-import Vue from 'vue';
-import Vuex from 'vuex';
+import { createStore } from "vuex";
 import api from '@/api';
-
-Vue.use(Vuex);
 
 const types = {
   GET_DEPUTIES: 'GET_DEPUTIES',
@@ -119,7 +116,7 @@ const mutations = {
   },
 };
 
-export default new Vuex.Store({
+export default createStore({
   state,
   getters,
   actions,

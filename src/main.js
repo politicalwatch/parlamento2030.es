@@ -1,14 +1,13 @@
-import Vue from 'vue';
+import { createApp } from 'vue';
 import App from './App.vue';
-import VueMeta from 'vue-meta';
+import { createMetaManager } from 'vue-meta';
 import router from '@/router';
 import store from '@/store';
+import VueScrollTo from 'vue-scrollto';
 import '@politicalwatch/tipi-uikit/src/styles/main.scss';
 
 import * as Sentry from '@sentry/browser';
 import * as Integrations from '@sentry/integrations';
-
-import './registerServiceWorker';
 
 let SENTRY_DSN = import.meta.env.VUE_APP_SENTRY_DSN;
 if (SENTRY_DSN) {
@@ -18,11 +17,12 @@ if (SENTRY_DSN) {
   });
 }
 
-Vue.config.productionTip = false;
-Vue.use(VueMeta);
+const app = createApp(App);
 
-new Vue({
-  router,
-  store,
-  render: (h) => h(App),
-}).$mount('#app');
+app.use(router);
+app.use(store);
+app.use(createMetaManager());
+
+app.directive('scroll-to', VueScrollTo);
+
+app.mount('#app');

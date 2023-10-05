@@ -131,32 +131,30 @@
       <div class="o-grid__col u-12 u-4@sm u-padding-bottom-4">
         <div class="c-datepicker-label u-block">
           <label for="startdate">Desde</label>
-          <datepicker
+          <VueDatePicker
             v-model="form.startdate"
+            locale="es"
+            :format="formatDatepickerDate"
+            placeholder="dd-mm-yyyy"
+            hide-input-icon
             @cleared="clearStartDate"
-            :monday-first="true"
-            :language="es"
-            placeholder="dd/mm/YYYY"
-            format="dd/MM/yyyy"
             name="startdate"
-          >
-          </datepicker>
+          />
         </div>
       </div>
       <div class="o-grid__col u-12 u-4@sm u-padding-bottom-4">
         <div class="c-datepicker-label u-block">
           <label for="enddate">Hasta</label>
-          <datepicker
+          <VueDatePicker
             v-model="form.enddate"
+            locale="es"
+            :format="formatDatepickerDate"
+            placeholder="dd-mm-yyyy"
+            :max-date="new Date()"
+            hide-input-icon
             @cleared="clearEndDate"
-            :monday-first="true"
-            :language="es"
-            :disabledDates="disabled_dates"
-            placeholder="dd/mm/YYYY"
-            format="dd/MM/yyyy"
             name="enddate"
-          >
-          </datepicker>
+          />
         </div>
       </div>
       <div class="o-grid__col u-12 u-4@sm u-padding-bottom-4">
@@ -263,8 +261,8 @@
 </template>
 
 <script>
-import Datepicker from 'vuejs-datepicker';
-import { es } from 'vuejs-datepicker/dist/locale';
+import VueDatePicker from "@vuepic/vue-datepicker";
+import "@vuepic/vue-datepicker/dist/main.css";
 import Multiselect from 'vue-multiselect';
 import { TipiIcon, Utils } from '@politicalwatch/tipi-uikit';
 import api from '@/api';
@@ -275,7 +273,7 @@ import format from 'date-fns/format';
 export default {
   name: 'searchForm',
   components: {
-    Datepicker,
+    VueDatePicker,
     Multiselect,
     TipiIcon,
   },
@@ -288,10 +286,6 @@ export default {
       tags: [],
       form: {},
       errors: null,
-      es: es,
-      disabled_dates: {
-        from: new Date(),
-      },
       selectedSubtopics: [],
       filteredTags: [],
       advanced:
@@ -383,6 +377,9 @@ export default {
     },
     clearEndDate: function () {
       this.form.enddate = '';
+    },
+    formatDatepickerDate: function (date) {
+      return format(new Date(date), "dd-MM-yyyy");
     },
     getSubtopicsAndTags: function (topicID) {
       api

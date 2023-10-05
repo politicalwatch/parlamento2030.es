@@ -41,7 +41,6 @@
 </template>
 
 <script>
-import Vue from 'vue';
 import searchForm from '@/components/search-form.vue';
 import SaveAlert from '@/components/save-alert.vue';
 import config from '@/config';
@@ -52,9 +51,9 @@ import {
   TipiMessage,
   TipiResults,
 } from '@politicalwatch/tipi-uikit';
+import { ref, nextTick } from "vue";
 import { mapGetters } from 'vuex';
 import qs from 'qs';
-import VueScrollTo from 'vue-scrollto';
 
 export default {
   name: 'search',
@@ -154,9 +153,9 @@ export default {
           }
           this.query_meta = response.query_meta;
           this.loadingResults = false;
-          Vue.nextTick().then(() => {
-            VueScrollTo.scrollTo(this.scrollToID, 1500);
-          });
+          // nextTick().then(() => {
+          //   scrollTo(this.scrollToID, 1500);
+          // });
         })
         .catch((error) => (this.errors = error));
     },
