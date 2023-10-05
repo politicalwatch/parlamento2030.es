@@ -104,7 +104,7 @@
 </template>
 
 <script>
-import VueCookieAcceptDecline from "vue-cookie-accept-decline";
+import VueCookieAcceptDecline from 'vue-cookie-accept-decline';
 import { TipiIcon } from '@politicalwatch/tipi-uikit';
 
 export default {

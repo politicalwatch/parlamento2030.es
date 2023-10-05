@@ -51,9 +51,10 @@ import {
   TipiMessage,
   TipiResults,
 } from '@politicalwatch/tipi-uikit';
-import { ref, nextTick } from "vue";
+import { nextTick } from 'vue';
 import { mapGetters } from 'vuex';
 import qs from 'qs';
+import VueScrollTo from 'vue-scrollto';
 
 export default {
   name: 'search',
@@ -153,9 +154,9 @@ export default {
           }
           this.query_meta = response.query_meta;
           this.loadingResults = false;
-          // nextTick().then(() => {
-          //   scrollTo(this.scrollToID, 1500);
-          // });
+          nextTick().then(() => {
+            VueScrollTo(this.scrollToID, 1500);
+          });
         })
         .catch((error) => (this.errors = error));
     },
