@@ -75,7 +75,7 @@ import {
 import AlertBlock from '@/components/alert-block.vue';
 import api from '@/api';
 import config from '@/config';
-import { mapState } from 'vuex';
+import { useParliamentStore } from '@/stores/parliament';
 
 export default {
   name: 'deputy',
@@ -89,6 +89,10 @@ export default {
     TipiLoader,
     AlertBlock,
   },
+  setup() {
+    const store = useParliamentStore();
+    return { store };
+  },
   data: function () {
     return {
       deputy: null,
@@ -98,16 +102,13 @@ export default {
       styles: config.STYLES,
     };
   },
-  computed: {
-    ...mapState(['allParliamentaryGroups']),
-  },
   methods: {
     getDeputy: function () {
       api
         .getDeputy(this.$route.params.id)
         .then((response) => {
           this.deputy = response;
-          this.parliamentarygroup = this.allParliamentaryGroups.find(
+          this.parliamentarygroup = this.store.allParliamentaryGroups.find(
             (allPG) => allPG.shortname === this.deputy.parliamentarygroup
           );
           this.getLatestInitiatives();

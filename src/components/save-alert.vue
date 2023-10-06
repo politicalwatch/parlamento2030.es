@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import swal from 'sweetalert2';
+import Swal from 'sweetalert2';
 import api from '@/api';
 import { TipiIcon } from '@politicalwatch/tipi-uikit';
 
@@ -36,7 +36,7 @@ export default {
             ? [search_params.tags]
             : search_params.tags;
 
-      const { value: email } = await swal({
+      const { value: email } = await Swal.fire({
         title: 'Crea una alerta personalizada',
         text: 'Te enviaremos un correo electrónico cada vez que haya alguna novedad en el Congreso de los Diputados relacionada con los criterios seleccionados',
         input: 'email',

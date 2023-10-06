@@ -9,7 +9,7 @@
             meta="Diputadas/os más activas/os"
             :value="deputies"
             type="deputy"
-            :source="allDeputies"
+            :source="this.store.allDeputies"
           />
         </div>
         <div class="o-grid__col u-12 u-4@sm" v-if="parliamentarygroups">
@@ -95,7 +95,7 @@ import {
 import AlertBlock from '@/components/alert-block.vue';
 import api from '@/api';
 import config from '@/config';
-import { mapState } from 'vuex';
+import { useParliamentStore } from '@/stores/parliament';
 
 export default {
   name: 'topic',
@@ -106,6 +106,10 @@ export default {
     TipiText,
     TipiLoader,
     AlertBlock,
+  },
+  setup() {
+    const store = useParliamentStore();
+    return { store };
   },
   data: function () {
     return {
@@ -118,9 +122,6 @@ export default {
       use_alerts: config.USE_ALERTS,
       loaded: false,
     };
-  },
-  computed: {
-    ...mapState(['allDeputies', 'allParliamentaryGroups']),
   },
   methods: {
     getTopic: function () {
@@ -144,7 +145,7 @@ export default {
         .then((response) => {
           this.deputies = response;
           this.deputies.forEach((deputy, index) => {
-            let foundDeputy = this.allDeputies.find(
+            let foundDeputy = this.store.allDeputies.find(
               (allD) => allD.name === deputy._id
             );
             this.deputies[index] = this.deputies[index]._id;
@@ -167,7 +168,7 @@ export default {
         .then((response) => {
           this.parliamentarygroups = response;
           this.parliamentarygroups.forEach((group, index) => {
-            let foundGroup = this.allParliamentaryGroups.find(
+            let foundGroup = this.store.allParliamentaryGroups.find(
               (allPG) => allPG.name === group._id
             );
             this.parliamentarygroups[index].name =

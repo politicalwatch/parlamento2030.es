@@ -49,7 +49,7 @@
             meta=""
             :value="this.dividedDeputies[0]"
             type="deputy"
-            :source="allDeputies"
+            :source="this.store.allDeputies"
             hideGroup
           />
         </div>
@@ -58,7 +58,7 @@
             meta=""
             :value="this.dividedDeputies[1]"
             type="deputy"
-            :source="allDeputies"
+            :source="this.store.allDeputies"
             hideGroup
           />
         </div>
@@ -67,7 +67,7 @@
             meta=""
             :value="this.dividedDeputies[2]"
             type="deputy"
-            :source="allDeputies"
+            :source="this.store.allDeputies"
             hideGroup
           />
         </div>
@@ -91,7 +91,7 @@ import SdgBarchart from '@/components/sdg-barchart.vue';
 import AlertBlock from '@/components/alert-block.vue';
 import api from '@/api';
 import config from '@/config';
-import { mapGetters, mapState } from 'vuex';
+import { useParliamentStore } from '@/stores/parliament';
 
 export default {
   name: 'parliamentarygroup',
@@ -104,6 +104,10 @@ export default {
     SdgBarchart,
     AlertBlock,
   },
+  setup() {
+    const store = useParliamentStore();
+    return { store };
+  },
   data: function () {
     return {
       parliamentarygroup: null,
@@ -114,13 +118,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(['allDeputies']),
-    ...mapGetters(['getDeputiesByParliamentaryGroup']),
     deputies: function () {
       if (this.parliamentarygroup) {
-        return this.getDeputiesByParliamentaryGroup(
-          this.parliamentarygroup.shortname
-        )
+        return this.store
+          .getDeputiesByParliamentaryGroup(this.parliamentarygroup.shortname)
           .filter((deputy) => deputy.active)
           .map((deputy) => deputy.name);
       }

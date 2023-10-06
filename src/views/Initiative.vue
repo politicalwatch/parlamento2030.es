@@ -92,7 +92,7 @@
             <div class="u-padding-bottom-4 u-border-bottom u-margin-bottom-4">
               <InitiativeChart
                 :initiative="initiative"
-                :topics="allTopics"
+                :topics="this.store.allTopics"
                 :styles="styles"
                 v-if="dataLoaded"
               ></InitiativeChart>
@@ -109,13 +109,13 @@
                 meta="Autor"
                 :value="initiative.authors"
                 type="parliamentarygroup"
-                :source="allParliamentaryGroups"
+                :source="this.store.allParliamentaryGroups"
               />
               <tipi-text
                 meta="Diputada/o"
                 :value="initiative.deputies"
                 type="deputy"
-                :source="allDeputies"
+                :source="this.store.allDeputies"
               />
             </div>
           </div>
@@ -166,7 +166,7 @@ import {
 } from '@politicalwatch/tipi-uikit';
 import api from '@/api';
 import config from '@/config';
-import { mapState } from 'vuex';
+import { useParliamentStore } from '@/stores/parliament';
 import format from 'date-fns/format';
 import InitiativeChart from '@/components/initiative-chart.vue';
 import ConversationLink from '@/components/conversation-link.vue';
@@ -186,6 +186,10 @@ export default {
     InitiativeChart,
     TipiLoader,
   },
+  setup() {
+    const store = useParliamentStore();
+    return { store };
+  },
   data: function () {
     return {
       initiative: {},
@@ -194,9 +198,10 @@ export default {
     };
   },
   computed: {
-    ...mapState(['allDeputies', 'allTopics', 'allParliamentaryGroups']),
     dataLoaded: function () {
-      return Object.keys(this.initiative).length && this.allTopics.length > 0;
+      return (
+        Object.keys(this.initiative).length && this.store.allTopics.length > 0
+      );
     },
     formattedDate: function () {
       return format(new Date(this.initiative.created), 'dd/MM/Y');

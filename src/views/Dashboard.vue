@@ -15,7 +15,7 @@
                   <multiselect
                     @select="fillSubtopics"
                     v-model="data.topic"
-                    :options="topics.map((topic) => topic.name)"
+                    :options="this.store.allTopics.map((topic) => topic.name)"
                     name="topic"
                     id="topic"
                     placeholder="Todos"
@@ -119,7 +119,7 @@
                   )
                 "
                 type="parliamentarygroups"
-                :source="allParliamentaryGroups"
+                :source="this.store.allParliamentaryGroups"
               />
             </div>
             <div
@@ -160,7 +160,7 @@ import {
 import Multiselect from 'vue-multiselect';
 import api from '@/api';
 import config from '@/config';
-import { mapState } from 'vuex';
+import { useParliamentStore } from '@/stores/parliament';
 
 export default {
   name: 'dashboard',
@@ -170,6 +170,10 @@ export default {
     TipiTwoCircles,
     Multiselect,
     TipiMessage,
+  },
+  setup() {
+    const store = useParliamentStore();
+    return { store };
   },
   data: function () {
     return {
@@ -197,16 +201,10 @@ export default {
       loadingResults: false,
     };
   },
-  computed: {
-    ...mapState({
-      allParliamentaryGroups: 'allParliamentaryGroups',
-      topics: 'allTopics',
-    }),
-  },
   methods: {
     fillSubtopics: function (selectedTopic, clearValues) {
       this.data.subtopic = clearValues ? '' : this.data.subtopic;
-      const currentTopic = this.topics.find(
+      const currentTopic = this.store.allTopics.find(
         (topic) => topic.name === selectedTopic
       );
       this.getSubtopics(currentTopic.id);
@@ -289,7 +287,7 @@ export default {
       }
     },
     getPgIdFromName: function (name) {
-      return this.allParliamentaryGroups.find((s) => s.name == name).id;
+      return this.store.allParliamentaryGroups.find((s) => s.name == name).id;
     },
   },
   created: function () {
