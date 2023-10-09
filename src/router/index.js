@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import sha1 from 'js-sha1';
+import sha1 from 'crypto-js/sha1';
 import Search from '@/views/Search.vue';
 import Initiative from '@/views/Initiative.vue';
 import Dashboard from '@/views/Dashboard.vue';
