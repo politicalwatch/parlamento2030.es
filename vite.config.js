@@ -34,7 +34,6 @@ export default defineConfig({
   optimizeDeps: {
     include: [
       'masonry-layout',
-      'vue-csv-downloader',
       'save-svg-as-png',
       'pluralize',
       'd3',

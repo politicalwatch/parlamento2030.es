@@ -58,7 +58,7 @@ export default {
         api
           .saveAlert(params)
           .then(() => {
-            swal({
+            Swal.fire({
               title: 'Alerta creada',
               text: 'Recibirá en breve un correo de confirmación',
               focusConfirm: false,
@@ -68,7 +68,7 @@ export default {
           .catch((error) => {
             this.errors = error.response;
             const limited = error.response.status === 429;
-            swal({
+            Swal.fire({
               title: limited
                 ? 'Limite excedido por hora'
                 : 'Error al crear la alerta',
