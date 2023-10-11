@@ -111,6 +111,7 @@
 <script>
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline';
 import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css';
+import { bootstrap } from 'vue-gtag';
 import { TipiIcon } from '@politicalwatch/tipi-uikit';
 
 export default {
@@ -119,24 +120,35 @@ export default {
     VueCookieAcceptDecline,
     TipiIcon,
   },
+  mounted() {
+    this.$refs.cookiePanel.removeCookie();
+    this.$refs.cookiePanel.init();
+  },
   methods: {
     cookieStatus: (val) => {
+      console.log('Cookie status: ' + val);
       if (val === 'decline' || val == null) {
-        gtag('consent', 'default', {
-          ad_storage: 'denied',
-          analytics_storage: 'denied',
-        });
+        if (gtag) {
+          gtag('consent', 'default', {
+            ad_storage: 'denied',
+            analytics_storage: 'denied',
+          });
+        }
       } else if (val === 'accept') {
-        gtag('consent', 'update', {
-          ad_storage: 'granted',
-          analytics_storage: 'granted',
+        bootstrap().then(() => {
+          gtag('consent', 'update', {
+            ad_storage: 'granted',
+            analytics_storage: 'granted',
+          });
         });
       }
     },
     cookieClickedAccept: () => {
-      gtag('consent', 'update', {
-        ad_storage: 'granted',
-        analytics_storage: 'granted',
+      bootstrap().then(() => {
+        gtag('consent', 'update', {
+          ad_storage: 'granted',
+          analytics_storage: 'granted',
+        });
       });
     },
     cookieClickedDecline: () => {
