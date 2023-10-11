@@ -121,12 +121,12 @@ export default {
     TipiIcon,
   },
   mounted() {
-    this.$refs.cookiePanel.removeCookie();
-    this.$refs.cookiePanel.init();
+    // this.$refs.cookiePanel.removeCookie();
+    // this.$refs.cookiePanel.init();
   },
   methods: {
     cookieStatus: (val) => {
-      console.log('Cookie status: ' + val);
+      // console.log('Cookie status: ' + val);
       if (val === 'decline' || val == null) {
         if (gtag) {
           gtag('consent', 'default', {
