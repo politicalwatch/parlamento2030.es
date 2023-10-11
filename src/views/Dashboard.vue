@@ -220,9 +220,11 @@ export default {
     },
 
     getResults: function () {
+      console.log('Get results:', config.KNOWLEDGEBASE);
       api
         .getOverallStats()
         .then((overall) => {
+          // If a subtopic is selected
           if (this.data.subtopic) {
             if (this.data.selection === null) this.data.selection = {};
             this.data.selection.selected = overall.subtopics[
@@ -241,7 +243,9 @@ export default {
             this.data.selection.compareswith = compareswith_posibilities[0];
             this.data.isSelected = true;
             this.data.selectedTarget = true;
-          } else {
+          }
+          // If no subtopic is selected
+          else {
             if (this.data.selection === null) this.data.selection = {};
             this.data.selection.selected = overall.topics[
               config.KNOWLEDGEBASE
@@ -251,8 +255,12 @@ export default {
               this.data.selection.selected._id = this.data.topic;
               this.data.selection.selected.initiatives = 0;
             }
-            this.data.selection.compareswith =
-              overall.topics[config.KNOWLEDGEBASE][0];
+            //get the topic with more initiatives in overall.topics[config.KNOWLEDGEBASE]
+            this.data.selection.compareswith = overall.topics[
+              config.KNOWLEDGEBASE
+            ].reduce((max, topic) =>
+              max.initiatives > topic.initiatives ? max : topic
+            );
             this.data.isSelected = true;
             this.data.selectedTarget = false;
           }
