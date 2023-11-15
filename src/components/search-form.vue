@@ -83,7 +83,11 @@
             selectLabel=""
             deselectLabel="Pulsa para deseleccionar"
             v-model="form.author"
-            :options="this.store.getAllParliamentaryGroupsWithGoverment.map((group) => group.name || group)"
+            :options="
+              this.store.getAllParliamentaryGroupsWithGoverment.map(
+                (group) => group.name || group
+              )
+            "
             :allow-empty="true"
             name="author"
             id="author"
@@ -95,7 +99,9 @@
           class="u-text-tbody2"
           v-if="this.store.getParliamentaryGroupByName(form.author)"
           :to="{
-            path: `/grupos/${this.store.getParliamentaryGroupByName(form.author).id}`,
+            path: `/grupos/${
+              this.store.getParliamentaryGroupByName(form.author).id
+            }`,
           }"
         >
           ¿Quieres ver el perfil del {{ form.author }}?
@@ -120,7 +126,9 @@
         <router-link
           class="u-text-tbody2"
           v-if="this.store.getDeputyByName(form.deputy)"
-          :to="{ path: `/diputados/${this.store.getDeputyByName(form.deputy).id}` }"
+          :to="{
+            path: `/diputados/${this.store.getDeputyByName(form.deputy).id}`,
+          }"
         >
           ¿Quieres ver el perfil de {{ form.deputy }}?
         </router-link>
@@ -261,12 +269,12 @@
 </template>
 
 <script>
-import VueDatePicker from "@vuepic/vue-datepicker";
-import "@vuepic/vue-datepicker/dist/main.css";
+import VueDatePicker from '@vuepic/vue-datepicker';
+import '@vuepic/vue-datepicker/dist/main.css';
 import Multiselect from 'vue-multiselect';
 import { TipiIcon, Utils } from '@politicalwatch/tipi-uikit';
 import api from '@/api';
-import { useParliamentStore } from "@/stores/parliament";
+import { useParliamentStore } from '@/stores/parliament';
 
 import format from 'date-fns/format';
 
@@ -334,7 +342,8 @@ export default {
       }
 
       if (author) {
-        const parliamentaryGroup = this.store.getParliamentaryGroupByName(author);
+        const parliamentaryGroup =
+          this.store.getParliamentaryGroupByName(author);
         const deputies = this.store.getDeputiesByParliamentaryGroup(
           parliamentaryGroup.shortname
         );
@@ -368,7 +377,7 @@ export default {
       this.form.enddate = '';
     },
     formatDatepickerDate: function (date) {
-      return format(new Date(date), "dd-MM-yyyy");
+      return format(new Date(date), 'dd-MM-yyyy');
     },
     getSubtopicsAndTags: function (topicID) {
       api
@@ -433,3 +442,15 @@ export default {
   },
 };
 </script>
+
+<style scoped lang="scss">
+.c-select-label
+  .multiselect.multiselect--active
+  .multiselect__element
+  .multiselect__option {
+  &:hover,
+  &.multiselect__option--highlight {
+    color: #fff;
+  }
+}
+</style>
