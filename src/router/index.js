@@ -279,6 +279,11 @@ const routes = [
     component: () => import('@/views/AboutEnglish.vue'),
   },
   {
+    path: '/huella',
+    name: 'footprint',
+    component: () => import('@/views/Footprint.vue'),
+  },
+  {
     path: '/aviso-legal',
     name: 'legalnotice',
     // component: LegalNotice,

@@ -7,13 +7,14 @@
     <tipi-header v-if="parliamentarygroup" :title="parliamentarygroup.name" />
 
     <div class="o-container o-zection u-margin-top-8 u-margin-bottom-4">
-      <SdgBarchart
-        v-if="topicsRanking"
-        :ranking="topicsRanking"
+      <SdgBarchartFootprint
+        v-if="footprintByTopics.length > 0"
+        :footprint="footprintByTopics"
         :styles="topicsStyles"
         :linkToSearchField="'author'"
         :linkToSearchValue="parliamentarygroup.name"
       />
+      <footprint-info />
     </div>
 
     <div
@@ -87,7 +88,8 @@ import {
   TipiText,
   TipiLoader,
 } from '@politicalwatch/tipi-uikit';
-import SdgBarchart from '@/components/sdg-barchart.vue';
+import SdgBarchartFootprint from '@/components/sdg-barchart-footprint.vue';
+import FootprintInfo from '@/components/FootprintInfo.vue';
 import AlertBlock from '@/components/alert-block.vue';
 import api from '@/api';
 import config from '@/config';
@@ -101,7 +103,8 @@ export default {
     TipiResults,
     TipiText,
     TipiLoader,
-    SdgBarchart,
+    SdgBarchartFootprint,
+    FootprintInfo,
     AlertBlock,
   },
   setup() {
@@ -136,6 +139,14 @@ export default {
       }
 
       return results;
+    },
+    footprintByTopics: function () {
+      if (this.parliamentarygroup) {
+        return this.parliamentarygroup.footprint_by_topics.filter((item) =>
+          this.store.allTopics.some((topic) => topic.name === item.name)
+        );
+      }
+      return [];
     },
   },
   methods: {

@@ -32,6 +32,17 @@
         Causó baja en el Congreso de los Diputados
       </tipi-message>
     </div>
+    <div class="o-container o-section">
+      <h4 class="u-margin-bottom-4">Huella parlamentaria</h4>
+      <SdgBarchartFootprint
+        v-if="footprintByTopics.length > 0"
+        :footprint="footprintByTopics"
+        :styles="topicsStyles"
+        :linkToSearchField="'deputy'"
+        :linkToSearchValue="deputy.name"
+      />
+      <footprint-info />
+    </div>
     <div
       v-if="latestInitiatives && latestInitiatives.length"
       class="o-container o-section"
@@ -73,6 +84,8 @@ import {
   TipiLoader,
 } from '@politicalwatch/tipi-uikit';
 import AlertBlock from '@/components/alert-block.vue';
+import SdgBarchartFootprint from '@/components/sdg-barchart-footprint.vue';
+import FootprintInfo from '@/components/FootprintInfo.vue';
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
@@ -88,6 +101,8 @@ export default {
     TipiIcon,
     TipiLoader,
     AlertBlock,
+    SdgBarchartFootprint,
+    FootprintInfo,
   },
   setup() {
     const store = useParliamentStore();
@@ -98,9 +113,21 @@ export default {
       deputy: null,
       parliamentarygroup: null,
       latestInitiatives: null,
+      topicsRanking: null,
       use_alerts: config.USE_ALERTS,
+      topicsStyles: config.STYLES.topics,
       styles: config.STYLES,
     };
+  },
+  computed: {
+    footprintByTopics: function () {
+      if (this.deputy) {
+        return this.deputy.footprint_by_topics.filter((item) =>
+          this.store.allTopics.some((topic) => topic.name === item.name)
+        );
+      }
+      return [];
+    },
   },
   methods: {
     getDeputy: function () {
@@ -124,6 +151,14 @@ export default {
         .then((response) => {
           if (response.initiatives)
             this.latestInitiatives = response.initiatives;
+        })
+        .catch((error) => (this.errors = error));
+    },
+    getTopicsRanking: function () {
+      api
+        .getTopicsByParliamentaryGroupRanking(this.parliamentarygroup.name)
+        .then((response) => {
+          this.topicsRanking = response;
         })
         .catch((error) => (this.errors = error));
     },

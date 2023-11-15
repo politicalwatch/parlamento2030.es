@@ -37,6 +37,12 @@
               >Preguntas frecuentes</router-link
             >
             <br />
+            <router-link
+              :to="{ name: 'footprint' }"
+              class="u-color-secondary-dark u-text-tbody2"
+              >Huella</router-link
+            >
+            <br />
             <tipi-icon icon="github" class="c-icon--secondary-dark" />&nbsp;<a
               class="u-color-secondary-dark u-text-tbody2"
               href="http://github.com/politicalwatch/"
