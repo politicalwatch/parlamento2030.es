@@ -114,6 +114,7 @@
             selectedLabel="Seleccionado"
             selectLabel=""
             deselectLabel="Pulsa para deseleccionar"
+            maxHeight="300"
             v-model="form.deputy"
             :options="getDeputies()"
             :allow-empty="true"
@@ -443,7 +444,16 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style lang="scss">
+.c-select-label .multiselect__content {
+  max-height: 300px;
+  overflow-y: scroll;
+}
+
+.c-select-label::after {
+  top: 1rem;
+}
+
 .c-select-label
   .multiselect.multiselect--active
   .multiselect__element
