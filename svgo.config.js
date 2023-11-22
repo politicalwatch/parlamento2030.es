@@ -1,14 +1,14 @@
-module.exports = {
+export default {
   js2svg: {
     indent: 2,
-    pretty: true
+    pretty: true,
   },
   plugins: [
     {
       name: 'preset-default',
       params: {
         overrides: {
-          removeViewBox: false
+          removeViewBox: false,
         },
       },
     },
