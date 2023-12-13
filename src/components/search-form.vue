@@ -144,9 +144,10 @@
             v-model="form.startdate"
             locale="es"
             :format="formatDatepickerDate"
-            placeholder="dd-mm-yyyy"
+            placeholder="dd/mm/yyyy"
             hide-input-icon
             @cleared="clearStartDate"
+            :text-input="textInputOptions"
             name="startdate"
           />
         </div>
@@ -158,10 +159,11 @@
             v-model="form.enddate"
             locale="es"
             :format="formatDatepickerDate"
-            placeholder="dd-mm-yyyy"
+            placeholder="dd/mm/yyyy"
             :max-date="new Date()"
             hide-input-icon
             @cleared="clearEndDate"
+            :text-input="textInputOptions"
             name="enddate"
           />
         </div>
@@ -291,7 +293,13 @@ export default {
   },
   setup() {
     const store = useParliamentStore();
-    return { store };
+    const textInputOptions = {
+      enterSubmit: true,
+      tabSubmit: true,
+      selectOnFocus: true,
+      format: 'dd/MM/yyyy',
+    };
+    return { store, textInputOptions };
   },
   data: function () {
     return {
@@ -332,7 +340,7 @@ export default {
     getTypes: function () {
       const options = [];
       for (const type of this.store.getAllTypesName) {
-        options.push("'" + type + "'");
+        options.push(type);
       }
       return options;
     },
@@ -378,7 +386,7 @@ export default {
       this.form.enddate = '';
     },
     formatDatepickerDate: function (date) {
-      return format(new Date(date), 'dd-MM-yyyy');
+      return format(new Date(date), 'dd/MM/yyyy');
     },
     getSubtopicsAndTags: function (topicID) {
       api
