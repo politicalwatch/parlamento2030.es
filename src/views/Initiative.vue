@@ -121,6 +121,15 @@
           </div>
         </div>
         <div class="u-hide@md">
+          <InitiativeFlow
+            :initiative="initiative"
+            :topics="this.store.allTopics"
+            :styles="styles"
+            v-if="dataLoaded">
+          
+
+          </InitiativeFlow>
+
           <tipi-topics
             meta="ODS tratados"
             :topics="getTopics()"
@@ -170,6 +179,8 @@ import { useParliamentStore } from '@/stores/parliament';
 import format from 'date-fns/format';
 import InitiativeChart from '@/components/initiative-chart.vue';
 import ConversationLink from '@/components/conversation-link.vue';
+import InitiativeFlow from '@/components/InitiativeFlow.vue';
+
 
 export default {
   name: 'initiative',
@@ -185,6 +196,7 @@ export default {
     TipiResults,
     InitiativeChart,
     TipiLoader,
+    InitiativeFlow,
   },
   setup() {
     const store = useParliamentStore();
