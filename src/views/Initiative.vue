@@ -30,6 +30,16 @@
         </div>
       </div>
       <div v-else>
+        <div>
+          <InitiativeFlow
+            :initiative="initiative"
+            :topics="this.store.allTopics"
+            :styles="styles"
+            v-if="dataLoaded">
+          
+
+          </InitiativeFlow>
+        </div>
         <div class="o-grid o-grid--between">
           <div class="o-grid__col u-12 u-8@md">
             <h1 class="u-text-th4 u-margin-bottom-4">{{ initiative.title }}</h1>
@@ -120,15 +130,8 @@
             </div>
           </div>
         </div>
-        <div class="u-hide@md">
-          <InitiativeFlow
-            :initiative="initiative"
-            :topics="this.store.allTopics"
-            :styles="styles"
-            v-if="dataLoaded">
-          
 
-          </InitiativeFlow>
+        <div class="u-hide@md">
 
           <tipi-topics
             meta="ODS tratados"
@@ -150,6 +153,7 @@
             />
           </div>
         </div>
+ 
       </div>
     </div>
     <div v-else class="o-container o-section u-margin-bottom-10">
