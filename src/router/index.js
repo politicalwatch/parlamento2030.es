@@ -248,6 +248,11 @@ const routes = [
     component: () => import('@/views/Topic.vue'),
   },
   {
+    path: '/diputados',
+    name: 'deputies',
+    component: () => import('@/views/Deputies.vue'),
+  },
+  {
     path: '/diputados/:id',
     name: 'deputy',
     // component: Deputy,
