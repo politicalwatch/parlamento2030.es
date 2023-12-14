@@ -39,8 +39,7 @@
 </template>
 
 <script>
-import { TipiIcon } from '@politicalwatch/tipi-uikit';
-import PartyLogoIcon from '@/components/PartyLogoIcon.vue';
+import { TipiIcon, PartyLogoIcon } from '@politicalwatch/tipi-uikit';
 import Footprint from '@/components/Footprint.vue';
 import { useParliamentStore } from '@/stores/parliament';
 
