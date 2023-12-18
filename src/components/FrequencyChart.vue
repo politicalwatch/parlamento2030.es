@@ -40,13 +40,21 @@
             @mouseover="activeBar = bar"
             @mouseout="activeBar = null"
           ></rect>
-          <!-- visible rect -->
-          <transition name="fade">
+          <!-- visible rect :height="height - yScale(bar.count)" -->
           <rect
-            :x="xScale(bar.initDate)"
             :y="yScale(bar.count)"
+            :x="xScale(bar.initDate)"
             :width="barWidth"
-            :height="height - yScale(bar.count)"
+            v-tr3nsition:init="{
+              height: 0,
+            }"
+            v-tr3nsition:mounted="{
+              height: height - yScale(bar.count),
+              transition: {
+                duration: 500,
+                delay: index *10,
+              },
+            }"
             :class="{
               active: activeBar && activeBar.initDate === bar.initDate,
             }"
@@ -56,7 +64,6 @@
               stroke: currentStyle.color,
             }"
           />
-            </transition>
 
           <!-- a line above the rect on its top side-->
           <line
@@ -121,7 +128,8 @@
 // test at http://localhost:5173/ods/ods-2
 import { ref, computed, onMounted } from 'vue';
 import * as d3 from 'd3';
-
+import { el } from 'date-fns/locale';
+import vTr3nsition from './vTr3nsition.js';
 const props = defineProps({
   availableWidth: {
     type: Number,
@@ -133,11 +141,33 @@ const props = defineProps({
   },
   topicsStyles: {
     type: Object,
-    default: () => ({}),
+    default: () => ({
+      'ODS 1 Fin de la pobreza': {
+        shortname: 'ODS 1',
+        color: '#eb1c2d',
+        image: 'ods-1.svg',
+        orgs_logos: ['caritas.png'],
+      },
+      'ODS 2 Hambre cero': {
+        shortname: 'ODS 2',
+        color: '#d3a029',
+        image: 'ods-2.svg',
+        orgs_logos: ['fao.png'],
+      },
+      'no-topic': { shortname: 'Sin relación con la Agenda2030' },
+    }),
   },
   topic: {
     type: Object,
-    default: () => ({}),
+    default: () => ({
+      knowledgebase: 'ods',
+      name: 'ODS 2 Hambre cero',
+      shortname: 'ODS 2',
+      id: 'ods-2',
+      description: [
+        'Poner fin al hambre, lograr la seguridad alimentaria y la mejora de la nutrición y promover la agricultura sostenible',
+      ],
+    }),
   },
 });
 
@@ -204,7 +234,6 @@ const yScale = computed(() =>
     .range([height.value, 0])
 );
 
-
 const barWidth = computed(() => xScale.value.bandwidth());
 
 const bars = computed(() =>
@@ -219,6 +248,8 @@ const activeBar = ref(null);
 onMounted(() => {
   // Code to fetch data and update the 'data' ref can be added here
 });
+
+
 </script>
 
 <style lang="scss" scoped>
@@ -240,14 +271,5 @@ onMounted(() => {
 .bar-background.active {
   fill: #f8f8f8;
   transition: 0.3s;
-}
-
-.fade-enter-active,
-.fade-leave-active {
-  transition: opacity 0.5s;
-}
-.fade-enter-from,
-.fade-leave-to {
-  opacity: 0;
 }
 </style>
