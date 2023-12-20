@@ -25,78 +25,30 @@
           </tspan>
         </text>
       </g>
-      <g class="rects" :transform="`translate(${margin.left}, ${margin.top})`">
-        <g v-for="(bar, index) in bars" :key="index">
-          <!-- a "background rect" invisible ocupying full height above each one of the previous rects useful only for interaction-->
-          <rect
-            :x="xScale(bar.initDate)"
-            :y="0"
-            :width="barWidth"
-            :height="height"
-            class="bar-background"
-            :class="{
-              active: activeBar && activeBar.initDate === bar.initDate,
-            }"
-            @mouseover="activeBar = bar"
-            @mouseout="activeBar = null"
-          ></rect>
-          <!-- visible rect :height="height - yScale(bar.count)" -->
-          <rect
-            :y="yScale(bar.count)"
-            :x="xScale(bar.initDate)"
-            :width="barWidth"
-            v-tr3nsition:init="{
-              height: 0,
-            }"
-            v-tr3nsition:mounted="{
-              height: height - yScale(bar.count),
-              transition: {
-                duration: 500,
-                delay: index *10,
-              },
-            }"
-            :class="{
-              active: activeBar && activeBar.initDate === bar.initDate,
-            }"
-            class="bar"
-            :style="{
-              fill: currentStyle.color,
-              stroke: currentStyle.color,
-            }"
-          />
-
-          <!-- a line above the rect on its top side-->
-          <line
-            :x1="xScale(bar.initDate)"
-            :y1="yScale(bar.count)"
-            :x2="xScale(bar.initDate) + barWidth"
-            :y2="yScale(bar.count)"
-            :stroke="currentStyle.color"
-            stroke-width="3"
-          ></line>
-        </g>
-      </g>
-
+      <!--  axis -->
       <g
-        class="y-axis"
+        class="axis yaxis"
         :transform="`translate(${margin.left - MARGIN_AXIS}, ${margin.top})`"
       >
         <!-- vertical line for y axis-->
-        <line x1="0" x2="0" :y1="height" :y2="0" stroke="currentColor" />
+        <line x1="0" x2="0" :y1="height" :y2="0" />
         <g
           class="tick"
           v-for="(tick, index) in yScale.nice().ticks(5)"
           :key="index"
           :transform="`translate(0, ${yScale(tick)})`"
         >
-          <line x1="-6" x2="0" stroke="currentColor" />
-          <text x="-9" dy=".32em" text-anchor="end" fill="`currentColor`">
+          <line x1="-6" :x2="width" class="ticks" />
+          <text x="-9" dy=".32em" text-anchor="end">
             {{ tick }}
           </text>
         </g>
       </g>
 
-      <g class="x-axis" :transform="`translate(${margin.left},${margin.top})`">
+      <g
+        class="axis xaxis"
+        :transform="`translate(${margin.left},${margin.top})`"
+      >
         <!-- horizontal line for x axis-->
         <line
           :y1="height"
@@ -114,10 +66,73 @@
             xScaleTimeForAxis(xScaleTicksPositions[index]) + barWidth / 2
           }, ${height + 20})`"
         >
-          <line y2="6" stroke="currentColor" />
-          <text y="9" dy=".71em" text-anchor="'middle'" fill="`currentColor`">
+          <line y2="6" />
+          <text y="9" dy=".71em" text-anchor="'middle'">
             {{ tick }}
           </text>
+        </g>
+      </g>
+      <!-- bars -->
+      <g class="rects" :transform="`translate(${margin.left}, ${margin.top})`">
+        <g v-for="(bar, index) in bars" :key="index">
+          <!-- a "background rect" invisible ocupying full height above each one of the previous rects useful only for interaction-->
+          <rect
+            :x="xScale(bar.initDate)"
+            :y="0"
+            :width="barWidth"
+            :height="height"
+            class="bar-background"
+            :class="{
+              active: activeBar && activeBar.initDate === bar.initDate,
+            }"
+            @mouseover="activeBar = bar"
+            @mouseout="activeBar = null"
+          ></rect>
+          <!-- visible-->
+          <rect
+            :x="xScale(bar.initDate)"
+            :width="barWidth"
+            v-tr3nsition:init="{
+              height: 0,
+              y: height,
+            }"
+            v-tr3nsition:mounted="{
+              height: height - yScale(bar.count),
+              y: yScale(bar.count),
+              transition: {
+                duration: 500,
+                delay: index * 10,
+              },
+            }"
+            :class="{
+              active: activeBar && activeBar.initDate === bar.initDate,
+            }"
+            class="bar"
+            :style="{
+              fill: currentStyle.color,
+              stroke: currentStyle.color,
+            }"
+          />
+
+          <!-- a line above the rect on its top side-->
+          <line
+            :x1="xScale(bar.initDate)"
+            :x2="xScale(bar.initDate) + barWidth"
+            v-tr3nsition:init="{
+              y1: height,
+              y2: height,
+            }"
+            v-tr3nsition:mounted="{
+              y1: yScale(bar.count),
+              y2: yScale(bar.count),
+              transition: {
+                duration: 500,
+                delay: index * 10,
+              },
+            }"
+            :stroke="currentStyle.color"
+            stroke-width="3"
+          ></line>
         </g>
       </g>
     </svg>
@@ -128,7 +143,6 @@
 // test at http://localhost:5173/ods/ods-2
 import { ref, computed, onMounted } from 'vue';
 import * as d3 from 'd3';
-import { el } from 'date-fns/locale';
 import vTr3nsition from './vTr3nsition.js';
 const props = defineProps({
   availableWidth: {
@@ -176,7 +190,7 @@ const data = computed(() =>
   // generate data points for a full year one for each week:
   {
     const arr = [];
-    for (let i = 0; i < 52; i++) {
+    for (let i = 0; i < 90; i++) {
       arr.push({
         initDate: d3.timeFormat('%Y-%m-%d')(
           d3.timeWeek.offset(new Date('2022-01-01'), i)
@@ -248,16 +262,17 @@ const activeBar = ref(null);
 onMounted(() => {
   // Code to fetch data and update the 'data' ref can be added here
 });
-
-
+const theme = ref({
+  lightGray: '#9cb0bf',
+});
 </script>
 
-<style lang="scss" scoped>
+<style scoped>
 .bar {
   fill-opacity: 0.1;
   stroke-opacity: 0.05;
   pointer-events: none;
-  transition: 0.3s;
+  transition: 0.1s;
 }
 .bar:hover,
 .bar.active {
@@ -270,6 +285,18 @@ onMounted(() => {
 }
 .bar-background.active {
   fill: #f8f8f8;
-  transition: 0.3s;
+  transition: 0.1s;
+}
+
+.axis text {
+  font-size: 0.8rem;
+  font-weight: light;
+  fill: v-bind('theme.lightGray');
+}
+.axis line {
+  stroke: v-bind('theme.lightGray');
+}
+.axis line.ticks {
+  stroke-opacity: 0.2;
 }
 </style>
