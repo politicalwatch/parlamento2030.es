@@ -1,5 +1,10 @@
 <template>
-  <transition-group tag="div" class="tipichart" name="barfade">
+  <transition-group
+    tag="div"
+    class="tipichart"
+    name="barfade"
+    v-if="totalFootprint > 0"
+  >
     <div class="tipichart__row" v-for="d in rows" :key="d.topic">
       <router-link
         :to="{
