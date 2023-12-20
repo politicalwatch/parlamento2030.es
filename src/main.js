@@ -5,7 +5,6 @@ import { createMetaManager } from 'vue-meta';
 import router from '@/router';
 import VueGtag from 'vue-gtag';
 import VueScrollTo from 'vue-scrollto';
-import '@politicalwatch/tipi-uikit/src/styles/main.scss';
 
 const app = createApp(App);
 

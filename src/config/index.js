@@ -15,6 +15,11 @@ export default {
       condition: true,
     },
     {
+      route: 'deputies',
+      name: 'Diputados',
+      condition: true,
+    },
+    {
       route: 'dashboard',
       name: 'Métricas',
       condition: true,
