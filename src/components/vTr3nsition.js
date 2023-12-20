@@ -17,7 +17,7 @@ const vTr3nsition = {
     }
   },
   mounted: (el, binding) => {
-    if (binding.arg === 'mounted') {
+    if (binding.arg === 'to') {
       const duration = binding.value.transition?.duration ?? 1000;
       const delay = binding.value.transition?.delay ?? 0;
       const ease = binding.value.transition?.ease ?? 'easeCubic';
@@ -36,9 +36,31 @@ const vTr3nsition = {
           if (elapsed > duration) t.stop();
         }, delay);
       });
-    }
-    // Code to fetch data and update the 'data' ref can be added here
+    }    
+   
   },
+  updated: (el, binding) => {
+    if (binding.arg === 'to') {
+      const duration = binding.value.transition?.duration ?? 1000;
+      const delay = binding.value.transition?.delay ?? 0;
+      const ease = binding.value.transition?.ease ?? 'easeCubic';
+      Object.keys(binding.value).forEach((key) => {
+        if (key === 'transition') return;
+        // el.setAttribute(key, binding.value[key]);
+        const interpolator = interpolate(
+          binding.oldValue[key],
+          binding.value[key]
+        );
+        const te = easing[ease] ?? easing.easeCubic;
+
+        const t = timer((elapsed) => {
+          const normalizedTime = elapsed / duration;
+          el.setAttribute(key, interpolator(te(normalizedTime)));
+          if (elapsed > duration) t.stop();
+        }, delay);
+      });
+    }    
+  }
 };
 
 export default vTr3nsition;

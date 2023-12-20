@@ -262,4 +262,16 @@ export default {
       return [config.URL, '/tagger/result/', taskID].join('');
     }
   },
+
+  getTopicsByWeek(topic) {
+    const params = { topic };
+    params['knowledgebase'] = kb;
+    console.log(params);
+    return axios.get(getEndpoint(), { params });
+
+    function getEndpoint() {
+      return [config.URL, '/stats/topics-by-week'].join('');
+    }
+  }
+  
 };

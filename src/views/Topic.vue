@@ -24,6 +24,18 @@
           <tipi-text meta="Dónde se trata más" :value="places" />
         </div>
       </div>
+      <div>
+        <h4 class="u-margin-bottom-4" v-if="latestInitiatives">
+          Frecuencia de las iniciativas
+        </h4>
+        <frequency-chart
+          :topicsStyles="styles"
+          :topic="topic"
+          :dataset="topicsByWeek"
+          v-if="topicsByWeek != null"
+        ></frequency-chart>
+      </div>
+
       <div class="u-border-top u-padding-top-4" v-if="latestInitiatives">
         <h4 class="u-margin-bottom-4" v-if="latestInitiatives">
           Últimas iniciativas
@@ -96,6 +108,7 @@ import AlertBlock from '@/components/alert-block.vue';
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
+import FrequencyChart from '../components/FrequencyChart.vue';
 
 export default {
   name: 'topic',
@@ -106,6 +119,7 @@ export default {
     TipiText,
     TipiLoader,
     AlertBlock,
+    FrequencyChart,
   },
   setup() {
     const store = useParliamentStore();
@@ -118,6 +132,7 @@ export default {
       places: null,
       parliamentarygroups: null,
       latestInitiatives: null,
+      topicsByWeek: null,
       styles: config.STYLES.topics,
       use_alerts: config.USE_ALERTS,
       loaded: false,
@@ -133,6 +148,7 @@ export default {
           this.getParliamentarygroupsRanking(this.topic.name);
           this.getDeputiesRanking(this.topic.name);
           this.getPlacesRanking(this.topic.name);
+          this.getTopicsByWeek(this.topic.name);
         })
         .catch((error) => {
           this.errors = error;
@@ -184,6 +200,15 @@ export default {
         .then((response) => {
           if (response.initiatives)
             this.latestInitiatives = response.initiatives;
+        })
+        .catch((error) => (this.errors = error));
+    },
+    getTopicsByWeek: function (topic) {
+      console.log('getTopicsByWeek');
+      api
+        .getTopicsByWeek(topic)
+        .then((response) => {
+          this.topicsByWeek = response.data;
         })
         .catch((error) => (this.errors = error));
     },

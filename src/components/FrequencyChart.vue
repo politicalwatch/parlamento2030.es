@@ -5,23 +5,24 @@
         <text
           v-if="activeBar"
           text-anchor="middle"
-          font-size="0.9rem"
+          font-size="0.8rem"
           font-weight="light"
+          fill="#9cb0bf"
         >
           <tspan
             text-anchor="middle"
-            :x="xScale(activeBar.initDate)"
+            :x="xScale(activeBar.week)"
             :y="margin.top / 2"
           >
-            {{ activeBar.initDate }}
+            Semana {{activeBar.week.split('-')[1]  }} ({{ getFirstDayOfWeek(activeBar.week).toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })  }})
           </tspan>
           <tspan
             text-anchor="middle"
             dy="0.9rem"
-            :x="xScale(activeBar.initDate)"
+            :x="xScale(activeBar.week)"
             :y="margin.top / 2"
           >
-            {{ activeBar.count }}
+            Iniciativas: <tspan font-weight="bold">{{ activeBar.initiatives }}</tspan>
           </tspan>
         </text>
       </g>
@@ -67,45 +68,49 @@
           }, ${height + 20})`"
         >
           <line y2="6" />
-          <text y="9" dy=".71em" text-anchor="'middle'">
+          <text y="9" dy=".71em" text-anchor="middle">
             {{ tick }}
           </text>
         </g>
       </g>
+
       <!-- bars -->
       <g class="rects" :transform="`translate(${margin.left}, ${margin.top})`">
         <g v-for="(bar, index) in bars" :key="index">
           <!-- a "background rect" invisible ocupying full height above each one of the previous rects useful only for interaction-->
           <rect
-            :x="xScale(bar.initDate)"
+            :x="xScale(bar.week)"
             :y="0"
             :width="barWidth"
             :height="height"
             class="bar-background"
             :class="{
-              active: activeBar && activeBar.initDate === bar.initDate,
+              active: activeBar && activeBar.week === bar.week,
             }"
             @mouseover="activeBar = bar"
             @mouseout="activeBar = null"
           ></rect>
           <!-- visible-->
           <rect
-            :x="xScale(bar.initDate)"
+            :x="xScale(bar.week)"
             :width="barWidth"
             v-tr3nsition:init="{
               height: 0,
               y: height,
             }"
-            v-tr3nsition:mounted="{
-              height: height - yScale(bar.count),
-              y: yScale(bar.count),
+            v-tr3nsition:to="{
+              height:
+                height - yScale(bar.initiatives) <= 0
+                  ? 0.00001
+                  : height - yScale(bar.initiatives),
+              y: yScale(bar.initiatives),
               transition: {
-                duration: 500,
-                delay: index * 10,
+                duration: 60,
+                delay: index * 15,
               },
             }"
             :class="{
-              active: activeBar && activeBar.initDate === bar.initDate,
+              active: activeBar && activeBar.week === bar.week,
             }"
             class="bar"
             :style="{
@@ -116,18 +121,18 @@
 
           <!-- a line above the rect on its top side-->
           <line
-            :x1="xScale(bar.initDate)"
-            :x2="xScale(bar.initDate) + barWidth"
+            :x1="xScale(bar.week)"
+            :x2="xScale(bar.week) + barWidth"
             v-tr3nsition:init="{
               y1: height,
               y2: height,
             }"
-            v-tr3nsition:mounted="{
-              y1: yScale(bar.count),
-              y2: yScale(bar.count),
+            v-tr3nsition:to="{
+              y1: yScale(bar.initiatives),
+              y2: yScale(bar.initiatives),
               transition: {
-                duration: 500,
-                delay: index * 10,
+                duration: 600,
+                delay: index * 15,
               },
             }"
             :stroke="currentStyle.color"
@@ -136,12 +141,27 @@
         </g>
       </g>
     </svg>
+
+    <div class="yearSelectors">
+      <a
+        href="#"
+        class="c-button c-button--compact"
+        :class="{
+          'c-button--secondary': activeYear != year,
+          'c-button--primary': activeYear == year,
+        }"
+        v-for="year in datasetAnalytics.allYears"
+        :key="year"
+        @click.prevent="activeYear = year"
+        >{{ year }}</a
+      >
+    </div>
   </div>
 </template>
 
 <script setup>
 // test at http://localhost:5173/ods/ods-2
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, nextTick } from 'vue';
 import * as d3 from 'd3';
 import vTr3nsition from './vTr3nsition.js';
 const props = defineProps({
@@ -183,25 +203,69 @@ const props = defineProps({
       ],
     }),
   },
+  dataset: {
+    type: Array,
+    default: () => [[]],
+  },
 });
 
 const currentStyle = computed(() => props.topicsStyles[props.topic.name]);
-const data = computed(() =>
-  // generate data points for a full year one for each week:
-  {
+const data = computed(() => {
+  if (props.dataset.length > 0) {
+    // props .dataset.weeks is a string with the format YYYY-WW where WW is the week number
+    return props.dataset;
+    // generate data points for a full year one for each week:
+  } else {
     const arr = [];
     for (let i = 0; i < 90; i++) {
       arr.push({
-        initDate: d3.timeFormat('%Y-%m-%d')(
+        week: d3.timeFormat('%Y-%W')(
           d3.timeWeek.offset(new Date('2022-01-01'), i)
         ),
-        count: Math.floor(Math.random() * 100),
+        initiatives: Math.floor(Math.random() * 100),
       });
     }
     console.log(arr);
     return arr;
   }
-);
+});
+
+const datasetAnalytics = computed(() => {
+  // data.value contais the an array of objects with the format {week: '2021-01', initiatives: 10}
+  const a= {
+    initDate: d3.min(data.value, (d) => d.week),
+    endDate: d3.max(data.value, (d) => d.week),
+    firstYear: d3.min(data.value, (d) => d.week).split('-')[0],
+    lastYear: d3.max(data.value, (d) => d.week).split('-')[0],
+    maxInitiatives: d3.max(data.value, (d) => d.initiatives),
+    minInitiatives: d3.min(data.value, (d) => d.initiatives),
+  };
+  // allyears is an array going from firstYear to lastYear (both included)
+    a.countYears = parseInt(a.lastYear)- parseInt(a.firstYear)
+    console.log(a.countYears)
+    a.allYears = d3.range(parseInt(a.firstYear), parseInt(a.lastYear)+1)
+    return a
+});
+
+const activeData = computed(() => {
+  if (multiYearMode.value === true)
+    return data.value.filter((d) => d.week.split('-')[0] == activeYear.value);
+  else return data.value;
+});
+
+const activeDataAnalytics = computed(() => {
+  if (multiYearMode.value === true && activeData.value!=null && activeData.value.length>0) {
+    return {
+      initDate: d3.min(activeData.value, (d) => d.week),
+      endDate: d3.max(activeData.value, (d) => d.week),
+      firstYear: d3.min(activeData.value, (d) => d.week).split('-')[0],
+      lastYear: d3.max(activeData.value, (d) => d.week).split('-')[0],
+      maxInitiatives: d3.max(activeData.value, (d) => d.initiatives),
+      minInitiatives: d3.min(activeData.value, (d) => d.initiatives),
+    };
+  } else return datasetAnalytics.value;
+});
+
 const margin = { top: 40, right: 40, bottom: 60, left: 50 };
 const MARGIN_AXIS = 10;
 
@@ -213,58 +277,85 @@ const height = computed(
 const xScale = computed(() =>
   d3
     .scaleBand()
-    .domain(data.value.map((d) => d.initDate))
+    .domain(activeData.value.map((d) => d.week))
     .range([0, width.value])
     .padding(0)
 );
 
 const xScaleTimeForAxis = computed(() => {
+  // const initDate = d.datasetAnalytics.countYears>1 ?
+  //   new Date(`${datasetAnalytics.firstYear}-01-01`) // first day of the year
+  //   : d3.timeWeek.offset(new Date(`${datasetAnalytics.firstYear}`), datasetAnalytics.initDate.split('-')[1] ) // first
+  // console.log(initDate)
+  // const endDate = d.datasetAnalytics.countYears>1 ?
+  //   new Date(`${datasetAnalytics.lastYear}-12-31`) // last day of the year
+  //   : d3.timeWeek.offset(new Date(`${datasetAnalytics.lastYear}`), datasetAnalytics.endDate.split('-')[1] ) // first
+
   const scale = d3
     .scaleTime()
     .domain([
-      d3.timeWeek.offset(new Date('2022-01-01'), 0),
-      d3.timeWeek.offset(new Date('2022-01-01'), 52),
+      new Date(`${activeDataAnalytics.value.firstYear}-01-01`),
+      new Date(`${activeDataAnalytics.value.lastYear}-12-31`),
     ])
-    .range([margin.left, width.value - margin.right]);
+    .range([0, width.value ]);
 
   return scale;
 });
 const xScaleTicks = computed(() => {
-  const format = d3.timeFormat('%b %Y'); // short version of the date
+  const format = d3.timeFormat('%V %Y'); // short version of the date
+  console.log(
+        xScaleTimeForAxis.value.domain()[0],
+        xScaleTimeForAxis.value.domain()[1]
+      )
   return xScaleTimeForAxis.value
     .nice()
-    .ticks(d3.timeMonth.every(3))
+    .ticks(
+      d3.timeMonth.every(3)
+    )
     .map(format); // ticks every 3 months
 });
 
 const xScaleTicksPositions = computed(() =>
-  xScaleTimeForAxis.value.ticks(d3.timeMonth.every(3))
+  xScaleTimeForAxis.value.nice().ticks(d3.timeMonth.every(3))
 );
 
 const yScale = computed(() =>
   d3
     .scaleLinear()
-    .domain([0, d3.max(data.value, (d) => d.count)])
+    .domain([0, d3.max(activeData.value, (d) => d.initiatives)])
     .range([height.value, 0])
 );
-
 const barWidth = computed(() => xScale.value.bandwidth());
-
 const bars = computed(() =>
-  data.value.map((d) => ({
-    initDate: d.initDate,
-    count: d.count,
-  }))
+  activeData.value
 );
 
 //** interaction */
 const activeBar = ref(null);
+const activeYear = ref(null);
+const multiYearMode = computed(() => datasetAnalytics.value.countYears > 1);
+
 onMounted(() => {
   // Code to fetch data and update the 'data' ref can be added here
+  nextTick(() => {
+    activeYear.value = datasetAnalytics.value.lastYear;
+  });
+
 });
 const theme = ref({
   lightGray: '#9cb0bf',
 });
+
+
+// utils
+function getFirstDayOfWeek (yearWeek) {
+    const [year, week] = yearWeek.split('-');
+    const date = new Date(year, 0, 1 + (week - 1) * 7);
+    const day = date.getDay();
+    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+    return new Date(date.setDate(diff));
+  }
+  
 </script>
 
 <style scoped>
@@ -298,5 +389,22 @@ const theme = ref({
 }
 .axis line.ticks {
   stroke-opacity: 0.2;
+}
+
+.yearSelectors {
+  display: flex;
+  justify-content: center;
+  margin-top: 1rem;
+  gap: 2px;
+  margin-bottom: 1rem;
+}
+.yearSelectors a:first-child {
+  border-radius: 0.4rem 0 0 0.4rem;
+}
+.yearSelectors a:last-child {
+  border-radius: 0 0.4rem 0.4rem 0;
+}
+.yearSelectors a {
+  border-radius: 0;
 }
 </style>
