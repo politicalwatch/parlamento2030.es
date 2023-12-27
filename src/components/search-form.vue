@@ -114,7 +114,7 @@
             selectedLabel="Seleccionado"
             selectLabel=""
             deselectLabel="Pulsa para deseleccionar"
-            maxHeight="300"
+            :maxHeight="300"
             v-model="form.deputy"
             :options="getDeputies()"
             :allow-empty="true"
@@ -279,7 +279,7 @@ import { TipiIcon, Utils } from '@politicalwatch/tipi-uikit';
 import api from '@/api';
 import { useParliamentStore } from '@/stores/parliament';
 
-import format from 'date-fns/format';
+import { format } from 'date-fns/format';
 
 export default {
   name: 'searchForm',
