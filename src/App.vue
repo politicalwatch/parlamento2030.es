@@ -19,7 +19,7 @@
 import { TipiNavbar } from '@politicalwatch/tipi-uikit';
 import FooterBlock from '@/components/footer-block.vue';
 import config from '@/config';
-import { useParliamentStore } from "@/stores/parliament";
+import { useParliamentStore } from '@/stores/parliament';
 
 export default {
   name: 'app',
@@ -57,5 +57,9 @@ export default {
       height: auto !important;
     }
   }
+}
+
+input[type='email'].swal2-input {
+  width: auto;
 }
 </style>
