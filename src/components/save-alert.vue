@@ -41,6 +41,12 @@ export default {
         text: 'Te enviaremos un correo electrónico cada vez que haya alguna novedad en el Congreso de los Diputados relacionada con los criterios seleccionados',
         input: 'email',
         inputPlaceholder: 'nombre@dominio.com',
+        showCancelButton: true,
+        inputValidator: (value) => {
+          if (!value) {
+            return 'Debes introducir un correo electrónico';
+          }
+        },
         imageUrl: '/img/email-alert-icon.svg',
         imageWidth: 64,
         imageHeight: 56,
@@ -77,6 +83,8 @@ export default {
               type: 'error',
             });
           });
+      } else {
+        console.log('No email provided, alert not saved.');
       }
     },
   },
