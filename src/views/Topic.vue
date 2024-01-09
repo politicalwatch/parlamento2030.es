@@ -32,6 +32,8 @@
           :topicsStyles="styles"
           :topic="topic"
           :dataset="topicsByWeek"
+          :globalDataset="allTopicsByWeek"
+          @update:showRelativeMode="getAllTopicsByWeek()"
           v-if="topicsByWeek != null"
         ></frequency-chart>
       </div>
@@ -133,6 +135,7 @@ export default {
       parliamentarygroups: null,
       latestInitiatives: null,
       topicsByWeek: null,
+      allTopicsByWeek: null,
       styles: config.STYLES.topics,
       use_alerts: config.USE_ALERTS,
       loaded: false,
@@ -204,7 +207,6 @@ export default {
         .catch((error) => (this.errors = error));
     },
     getTopicsByWeek: function (topic) {
-      console.log('getTopicsByWeek');
       api
         .getTopicsByWeek(topic)
         .then((response) => {
@@ -212,6 +214,17 @@ export default {
         })
         .catch((error) => (this.errors = error));
     },
+
+    getAllTopicsByWeek: function () {
+      console.log('getTopicsByWeek All');
+      api
+        .getAllTopicsByWeek(topic)
+        .then((response) => {
+          this.allTopicsByWeek = response.data;
+        })
+        .catch((error) => (this.errors = error));
+    },
+
   },
   metaInfo() {
     const title = this.topic?.name

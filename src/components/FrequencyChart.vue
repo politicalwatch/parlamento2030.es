@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="chart-wrapper" ref="chartWrapper">
     <svg :width="availableWidth" :height="availableHeight">
       <g class="top-text" :transform="`translate(${margin.left}, 0)`">
         <text
@@ -14,7 +14,12 @@
             :x="xScale(activeBar.week)"
             :y="margin.top / 2"
           >
-            Semana {{activeBar.week.split('-')[1]  }} ({{ getFirstDayOfWeek(activeBar.week).toLocaleDateString('es-ES', { day: '2-digit', month: 'long' })  }})
+            Semana {{ activeBar.week.split('-')[1] }} ({{
+              getFirstDayOfWeek(activeBar.week).toLocaleDateString('es-ES', {
+                day: '2-digit',
+                month: 'long',
+              })
+            }})
           </tspan>
           <tspan
             text-anchor="middle"
@@ -22,7 +27,8 @@
             :x="xScale(activeBar.week)"
             :y="margin.top / 2"
           >
-            Iniciativas: <tspan font-weight="bold">{{ activeBar.initiatives }}</tspan>
+            Iniciativas:
+            <tspan font-weight="bold">{{ activeBar.initiatives }}</tspan>
           </tspan>
         </text>
       </g>
@@ -139,6 +145,34 @@
             stroke-width="3"
           ></line>
         </g>
+        <g v-if="isRelativeModeReady">
+          <g v-for="(bar, index) in globalBars" :key="index">
+            <rect
+              :x="xScale(bar.week)"
+              :width="barWidth"
+              v-tr3nsition:init="{
+                height: 0,
+                y: height,
+              }"
+              v-tr3nsition:to="{
+                height:
+                  height - yScale(bar.initiatives) <= 0
+                    ? 0.00001
+                    : height - yScale(bar.initiatives),
+                y: yScale(bar.initiatives),
+                transition: {
+                  duration: 60,
+                  delay: index * 15,
+                },
+              }"
+              class="bar"
+              :style="{
+                fill: '#999',
+                stroke:'#000'
+              }"
+            />
+          </g>
+        </g>
       </g>
     </svg>
 
@@ -156,23 +190,28 @@
         >{{ year }}</a
       >
     </div>
+    <div>
+      <UiSwitch
+        label="Mostrar Evolución relativa"
+        :checked="showRelativeMode"
+        @update:checked="showRelativeMode = $event"
+      ></UiSwitch>
+    </div>
   </div>
 </template>
 
 <script setup>
 // test at http://localhost:5173/ods/ods-2
-import { ref, computed, onMounted, nextTick } from 'vue';
+import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue';
 import * as d3 from 'd3';
 import vTr3nsition from './vTr3nsition.js';
+import UiSwitch from './UiSwitch.vue';
 const props = defineProps({
-  availableWidth: {
-    type: Number,
-    default: 700,
-  },
-  availableHeight: {
+  defaultHeight: {
     type: Number,
     default: 400,
   },
+
   topicsStyles: {
     type: Object,
     default: () => ({
@@ -207,7 +246,31 @@ const props = defineProps({
     type: Array,
     default: () => [[]],
   },
+  globalDataset: {
+    type: Array,
+    default: () => [[]],
+  },
 });
+
+//*** set responsive width and  heights */
+const chartWrapper = ref(null);
+const availableWidth = ref(800);
+const availableHeight = ref(props.defaultHeight);
+// adjust on resize
+
+onMounted(() => {
+  availableWidth.value = chartWrapper.value.clientWidth;
+  window.addEventListener('resize', () => {
+    availableWidth.value = chartWrapper.value.clientWidth;
+  });
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', () => {
+    availableWidth.value = chartWrapper.value.clientWidth;
+  });
+});
+//*******/
 
 const currentStyle = computed(() => props.topicsStyles[props.topic.name]);
 const data = computed(() => {
@@ -225,14 +288,14 @@ const data = computed(() => {
         initiatives: Math.floor(Math.random() * 100),
       });
     }
-    console.log(arr);
+
     return arr;
   }
 });
 
 const datasetAnalytics = computed(() => {
   // data.value contais the an array of objects with the format {week: '2021-01', initiatives: 10}
-  const a= {
+  const a = {
     initDate: d3.min(data.value, (d) => d.week),
     endDate: d3.max(data.value, (d) => d.week),
     firstYear: d3.min(data.value, (d) => d.week).split('-')[0],
@@ -241,10 +304,26 @@ const datasetAnalytics = computed(() => {
     minInitiatives: d3.min(data.value, (d) => d.initiatives),
   };
   // allyears is an array going from firstYear to lastYear (both included)
-    a.countYears = parseInt(a.lastYear)- parseInt(a.firstYear)
-    console.log(a.countYears)
-    a.allYears = d3.range(parseInt(a.firstYear), parseInt(a.lastYear)+1)
-    return a
+  a.countYears = parseInt(a.lastYear) - parseInt(a.firstYear);
+
+  a.allYears = d3.range(parseInt(a.firstYear), parseInt(a.lastYear) + 1);
+  return a;
+});
+
+const globalDatasetAnalytics = computed(() => {
+  const a = {
+    initDate: d3.min(props.globalDataset, (d) => d.week),
+    endDate: d3.max(props.globalDataset, (d) => d.week),
+    firstYear: d3.min(props.globalDataset, (d) => d.week).split('-')[0],
+    lastYear: d3.max(props.globalDataset, (d) => d.week).split('-')[0],
+    maxInitiatives: d3.max(props.globalDataset, (d) => d.initiatives),
+    minInitiatives: d3.min(props.globalDataset, (d) => d.initiatives),
+  };
+  // allyears is an array going from firstYear to lastYear (both included)
+  a.countYears = parseInt(a.lastYear) - parseInt(a.firstYear);
+
+  a.allYears = d3.range(parseInt(a.firstYear), parseInt(a.lastYear) + 1);
+  return a;
 });
 
 const activeData = computed(() => {
@@ -253,8 +332,20 @@ const activeData = computed(() => {
   else return data.value;
 });
 
+const activeDataGlobal = computed(() => {
+  if (multiYearMode.value === true)
+    return props.globalDataset.filter(
+      (d) => d.week.split('-')[0] == activeYear.value
+    );
+  else return props.globalDataset;
+});
+
 const activeDataAnalytics = computed(() => {
-  if (multiYearMode.value === true && activeData.value!=null && activeData.value.length>0) {
+  if (
+    multiYearMode.value === true &&
+    activeData.value != null &&
+    activeData.value.length > 0
+  ) {
     return {
       initDate: d3.min(activeData.value, (d) => d.week),
       endDate: d3.max(activeData.value, (d) => d.week),
@@ -266,12 +357,29 @@ const activeDataAnalytics = computed(() => {
   } else return datasetAnalytics.value;
 });
 
+const activeDataAnalyticsGlobal = computed(() => {
+  if (
+    multiYearMode.value === true &&
+    activeDataGlobal.value != null &&
+    activeDataGlobal.value.length > 0
+  ) {
+    return {
+      initDate: d3.min(activeDataGlobal.value, (d) => d.week),
+      endDate: d3.max(activeDataGlobal.value, (d) => d.week),
+      firstYear: d3.min(activeDataGlobal.value, (d) => d.week).split('-')[0],
+      lastYear: d3.max(activeDataGlobal.value, (d) => d.week).split('-')[0],
+      maxInitiatives: d3.max(activeDataGlobal.value, (d) => d.initiatives),
+      minInitiatives: d3.min(activeDataGlobal.value, (d) => d.initiatives),
+    };
+  } else return globalDatasetAnalytics.value;
+});
+
 const margin = { top: 40, right: 40, bottom: 60, left: 50 };
 const MARGIN_AXIS = 10;
 
-const width = computed(() => props.availableWidth - margin.left - margin.right);
+const width = computed(() => availableWidth.value - margin.left - margin.right);
 const height = computed(
-  () => props.availableHeight - margin.top - margin.bottom
+  () => availableHeight.value - margin.top - margin.bottom
 );
 
 const xScale = computed(() =>
@@ -297,21 +405,15 @@ const xScaleTimeForAxis = computed(() => {
       new Date(`${activeDataAnalytics.value.firstYear}-01-01`),
       new Date(`${activeDataAnalytics.value.lastYear}-12-31`),
     ])
-    .range([0, width.value ]);
+    .range([0, width.value]);
 
   return scale;
 });
 const xScaleTicks = computed(() => {
   const format = d3.timeFormat('%V %Y'); // short version of the date
-  console.log(
-        xScaleTimeForAxis.value.domain()[0],
-        xScaleTimeForAxis.value.domain()[1]
-      )
   return xScaleTimeForAxis.value
     .nice()
-    .ticks(
-      d3.timeMonth.every(3)
-    )
+    .ticks(d3.timeMonth.every(3))
     .map(format); // ticks every 3 months
 });
 
@@ -320,15 +422,19 @@ const xScaleTicksPositions = computed(() =>
 );
 
 const yScale = computed(() =>
-  d3
-    .scaleLinear()
-    .domain([0, d3.max(activeData.value, (d) => d.initiatives)])
-    .range([height.value, 0])
+  isRelativeModeReady.value
+    ? d3
+        .scaleLinear()
+        .domain([0, activeDataAnalyticsGlobal.value.maxInitiatives])
+        .range([height.value, 0])
+    : d3
+        .scaleLinear()
+        .domain([0, activeDataAnalytics.value.maxInitiatives])
+        .range([height.value, 0])
 );
 const barWidth = computed(() => xScale.value.bandwidth());
-const bars = computed(() =>
-  activeData.value
-);
+const bars = computed(() => activeData.value);
+const globalBars = computed(() => activeDataGlobal.value);
 
 //** interaction */
 const activeBar = ref(null);
@@ -340,22 +446,33 @@ onMounted(() => {
   nextTick(() => {
     activeYear.value = datasetAnalytics.value.lastYear;
   });
-
 });
 const theme = ref({
   lightGray: '#9cb0bf',
 });
 
+// relative view
+
+const emit = defineEmits(['update:showRelativeMode']);
+
+const showRelativeMode = ref(false);
+watch(showRelativeMode, (newValue, oldValue) => {
+  console.log('emit update:showRelativeMode', newValue);
+  emit('update:showRelativeMode', newValue);
+});
+
+const isRelativeModeReady = computed(
+  () => showRelativeMode.value === true && props.globalDataset?.length > 0
+);
 
 // utils
-function getFirstDayOfWeek (yearWeek) {
-    const [year, week] = yearWeek.split('-');
-    const date = new Date(year, 0, 1 + (week - 1) * 7);
-    const day = date.getDay();
-    const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-    return new Date(date.setDate(diff));
-  }
-  
+function getFirstDayOfWeek(yearWeek) {
+  const [year, week] = yearWeek.split('-');
+  const date = new Date(year, 0, 1 + (week - 1) * 7);
+  const day = date.getDay();
+  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
+  return new Date(date.setDate(diff));
+}
 </script>
 
 <style scoped>
