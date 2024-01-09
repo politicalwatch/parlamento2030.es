@@ -15,7 +15,7 @@
             :y="margin.top / 2"
           >
             Semana {{ activeBar.week.split('-')[1] }} ({{
-              getFirstDayOfWeek(activeBar.week).toLocaleDateString('es-ES', {
+              getMondayOfISOWeek(activeBar.week).toLocaleDateString('es-ES', {
                 day: '2-digit',
                 month: 'long',
               })
@@ -69,11 +69,11 @@
           class="tick"
           v-for="(tick, index) in xScaleTicks"
           :key="index"
-          :transform="`translate(${
-            xScaleTimeForAxis(xScaleTicksPositions[index]) + barWidth / 2
-          }, ${height + 20})`"
+          :transform="`translate(${xScaleTimeForAxis(
+            xScaleTicksPositions[index]
+          )}, ${height + 20})`"
         >
-          <line y2="6" />
+          <line x1="0" x2="0" y1="0" y2="6" />
           <text y="9" dy=".71em" text-anchor="middle">
             {{ tick }}
           </text>
@@ -82,7 +82,7 @@
 
       <!-- bars -->
       <g class="rects" :transform="`translate(${margin.left}, ${margin.top})`">
-        <g v-for="(bar, index) in bars" :key="index">
+        <g v-for="(bar, index) in bars" :key="bar.week.split('-')[1]">
           <!-- a "background rect" invisible ocupying full height above each one of the previous rects useful only for interaction-->
           <rect
             :x="xScale(bar.week)"
@@ -168,7 +168,7 @@
               class="bar"
               :style="{
                 fill: '#999',
-                stroke:'#000'
+                stroke: '#000',
               }"
             />
           </g>
@@ -374,7 +374,7 @@ const activeDataAnalyticsGlobal = computed(() => {
   } else return globalDatasetAnalytics.value;
 });
 
-const margin = { top: 40, right: 40, bottom: 60, left: 50 };
+const margin = { top: 40, right: 60, bottom: 60, left: 50 };
 const MARGIN_AXIS = 10;
 
 const width = computed(() => availableWidth.value - margin.left - margin.right);
@@ -382,7 +382,14 @@ const height = computed(
   () => availableHeight.value - margin.top - margin.bottom
 );
 
-const xScale = computed(() =>
+const xScale = computed(() => 
+  multiYearMode.value === true?
+  d3
+    .scaleBand()
+    .domain(d3.range(52).map((d)=>activeDataAnalytics.value.firstYear + '-'+ ("0" + (d+1)).slice(-2)) )
+    .range([0, width.value])
+    .padding(0)
+  :
   d3
     .scaleBand()
     .domain(activeData.value.map((d) => d.week))
@@ -398,27 +405,28 @@ const xScaleTimeForAxis = computed(() => {
   // const endDate = d.datasetAnalytics.countYears>1 ?
   //   new Date(`${datasetAnalytics.lastYear}-12-31`) // last day of the year
   //   : d3.timeWeek.offset(new Date(`${datasetAnalytics.lastYear}`), datasetAnalytics.endDate.split('-')[1] ) // first
-
+  // get first week of the xScale
+  const week0 = xScale.value?.domain()[0]
+  const week1 = xScale.value?.domain()[xScale.value?.domain().length-1]
   const scale = d3
     .scaleTime()
     .domain([
-      new Date(`${activeDataAnalytics.value.firstYear}-01-01`),
-      new Date(`${activeDataAnalytics.value.lastYear}-12-31`),
+      getMondayOfISOWeek(week0),
+      getSundayFromYearWeek(week1),
     ])
     .range([0, width.value]);
 
   return scale;
 });
 const xScaleTicks = computed(() => {
-  const format = d3.timeFormat('%V %Y'); // short version of the date
+  const format = d3.timeFormat('%b %Y'); // short version of the date
   return xScaleTimeForAxis.value
-    .nice()
     .ticks(d3.timeMonth.every(3))
     .map(format); // ticks every 3 months
 });
 
 const xScaleTicksPositions = computed(() =>
-  xScaleTimeForAxis.value.nice().ticks(d3.timeMonth.every(3))
+  xScaleTimeForAxis.value.ticks(d3.timeMonth.every(3))
 );
 
 const yScale = computed(() =>
@@ -473,6 +481,39 @@ function getFirstDayOfWeek(yearWeek) {
   const diff = date.getDate() - day + (day === 0 ? -6 : 1);
   return new Date(date.setDate(diff));
 }
+
+function getDateFromYearWeek(yearWeek) {
+  let [year, week] = yearWeek.split('-').map(Number);
+  let date = new Date(year, 0, 1 + (week - 1) * 7);
+  let day = date.getDay();
+  let diff = date.getDate() - day + (day == 0 ? -6 : 1); // adjust if the first day of the year is later than Monday
+  return new Date(date.setDate(diff));
+}
+
+function getMondayOfISOWeek(yearWeek) {
+    const [year, week] = yearWeek.split('-');
+    let date = new Date(Date.UTC(year, 0, 1 + (week - 1) * 7));
+    let day = date.getUTCDay();
+
+    // If the day is not Monday (1), adjust the date
+    if (day !== 1) {
+        date.setUTCDate(date.getUTCDate() + (day <= 4 ? - (day - 1) : 8 - day));
+    }
+
+    return date;
+}
+
+function getSundayFromYearWeek(yearWeek) {
+  let [year, week] = yearWeek.split('-').map(Number);
+  let date = new Date(year, 0, 1 + (week - 1) * 7);
+  let day = date.getDay();
+  let diff = date.getDate() - day + (day == 0 ? -6 : 1); // adjust if the first day of the year is later than Monday
+  date = new Date(date.setDate(diff));
+  date.setDate(date.getDate() + 6); // add 6 days to get to Sunday
+  return date;
+}
+
+
 </script>
 
 <style scoped>
