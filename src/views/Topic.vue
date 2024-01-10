@@ -32,7 +32,7 @@
           :topicsStyles="styles"
           :topic="topic"
           :dataset="topicsByWeek"
-          :globalDataset="allTopicsByWeek"
+          :aggreagatedDataset="allTopicsByWeek"
           @update:showRelativeMode="getAllTopicsByWeek()"
           v-if="topicsByWeek != null"
         ></frequency-chart>

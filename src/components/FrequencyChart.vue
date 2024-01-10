@@ -214,21 +214,7 @@ const props = defineProps({
 
   topicsStyles: {
     type: Object,
-    default: () => ({
-      'ODS 1 Fin de la pobreza': {
-        shortname: 'ODS 1',
-        color: '#eb1c2d',
-        image: 'ods-1.svg',
-        orgs_logos: ['caritas.png'],
-      },
-      'ODS 2 Hambre cero': {
-        shortname: 'ODS 2',
-        color: '#d3a029',
-        image: 'ods-2.svg',
-        orgs_logos: ['fao.png'],
-      },
-      'no-topic': { shortname: 'Sin relación con la Agenda2030' },
-    }),
+    required: true,
   },
   topic: {
     type: Object,
@@ -242,20 +228,42 @@ const props = defineProps({
       ],
     }),
   },
+  /* 
+  dataset is an array of objects with the format {week: '2021-01', initiatives: 10}
+  It is the dataset for the selected topic
+  if dataset is provided as null value, component might fail
+  if dataset is provided as an empty array, component will generate a random dataset
+  */
   dataset: {
     type: Array,
     default: () => [[]],
   },
-  globalDataset: {
-    type: Array,
+  /*
+  aggreagatedDataset is an array of objects with the format {week: '2021-01', initiatives: 10} 
+  It is the dataset for the aggregation of all topics. 
+  It can be provided later on, when the user clicks on the relative mode switch
+  */
+  aggreagatedDataset: {
+    type: [null, Array],
     default: () => [[]],
   },
 });
 
 //*** set responsive width and  heights */
 const chartWrapper = ref(null);
+/* svg size */
 const availableWidth = ref(800);
 const availableHeight = ref(props.defaultHeight);
+
+const margin = { top: 40, right: 60, bottom: 60, left: 50 };
+const MARGIN_AXIS = 10;
+
+/* chart size inside the axis*/
+const width = computed(() => availableWidth.value - margin.left - margin.right);
+const height = computed(
+  () => availableHeight.value - margin.top - margin.bottom
+);
+
 // adjust on resize
 
 onMounted(() => {
@@ -270,15 +278,15 @@ onUnmounted(() => {
     availableWidth.value = chartWrapper.value.clientWidth;
   });
 });
-//*******/
+//**** end of size block ***/
 
 const currentStyle = computed(() => props.topicsStyles[props.topic.name]);
 const data = computed(() => {
   if (props.dataset.length > 0) {
     // props .dataset.weeks is a string with the format YYYY-WW where WW is the week number
     return props.dataset;
-    // generate data points for a full year one for each week:
   } else {
+    // if dataset is empty generate data points for a full year one for each week:
     const arr = [];
     for (let i = 0; i < 90; i++) {
       arr.push({
@@ -293,6 +301,9 @@ const data = computed(() => {
   }
 });
 
+/*** blcoks analyze the different datasets and compute analytics */
+
+/* analytics for all years ****/
 const datasetAnalytics = computed(() => {
   // data.value contais the an array of objects with the format {week: '2021-01', initiatives: 10}
   const a = {
@@ -310,14 +321,17 @@ const datasetAnalytics = computed(() => {
   return a;
 });
 
-const globalDatasetAnalytics = computed(() => {
+/* analytics for the aggreagated dataset ****/
+const aggreagatedDatasetAnalytics = computed(() => {
+  if (props.aggreagatedDataset == null || props.aggreagatedDataset.length == 0)
+    return null;
   const a = {
-    initDate: d3.min(props.globalDataset, (d) => d.week),
-    endDate: d3.max(props.globalDataset, (d) => d.week),
-    firstYear: d3.min(props.globalDataset, (d) => d.week).split('-')[0],
-    lastYear: d3.max(props.globalDataset, (d) => d.week).split('-')[0],
-    maxInitiatives: d3.max(props.globalDataset, (d) => d.initiatives),
-    minInitiatives: d3.min(props.globalDataset, (d) => d.initiatives),
+    initDate: d3.min(props.aggreagatedDataset, (d) => d.week),
+    endDate: d3.max(props.aggreagatedDataset, (d) => d.week),
+    firstYear: d3.min(props.aggreagatedDataset, (d) => d.week).split('-')[0],
+    lastYear: d3.max(props.aggreagatedDataset, (d) => d.week).split('-')[0],
+    maxInitiatives: d3.max(props.aggreagatedDataset, (d) => d.initiatives),
+    minInitiatives: d3.min(props.aggreagatedDataset, (d) => d.initiatives),
   };
   // allyears is an array going from firstYear to lastYear (both included)
   a.countYears = parseInt(a.lastYear) - parseInt(a.firstYear);
@@ -326,6 +340,7 @@ const globalDatasetAnalytics = computed(() => {
   return a;
 });
 
+/* active data is the data for the selected year or the full datawset depenending on multiYearMode */
 const activeData = computed(() => {
   if (multiYearMode.value === true)
     return data.value.filter((d) => d.week.split('-')[0] == activeYear.value);
@@ -334,12 +349,18 @@ const activeData = computed(() => {
 
 const activeDataGlobal = computed(() => {
   if (multiYearMode.value === true)
-    return props.globalDataset.filter(
+    return props.aggreagatedDataset.filter(
       (d) => d.week.split('-')[0] == activeYear.value
     );
-  else return props.globalDataset;
+  else return props.aggreagatedDataset;
 });
 
+
+/*
+ * activeDataAnalytics are the analytics for the activeData: i
+ if multiYearMode is true, activeDataAnalytics is the analytics for the selected year
+  if multiYearMode is false, activeDataAnalytics is the analytics for the full dataset
+ */
 const activeDataAnalytics = computed(() => {
   if (
     multiYearMode.value === true &&
@@ -357,7 +378,7 @@ const activeDataAnalytics = computed(() => {
   } else return datasetAnalytics.value;
 });
 
-const activeDataAnalyticsGlobal = computed(() => {
+const aggregatedActiveDataAnalytics = computed(() => {
   if (
     multiYearMode.value === true &&
     activeDataGlobal.value != null &&
@@ -371,58 +392,52 @@ const activeDataAnalyticsGlobal = computed(() => {
       maxInitiatives: d3.max(activeDataGlobal.value, (d) => d.initiatives),
       minInitiatives: d3.min(activeDataGlobal.value, (d) => d.initiatives),
     };
-  } else return globalDatasetAnalytics.value;
+  } else return aggreagatedDatasetAnalytics.value;
 });
 
-const margin = { top: 40, right: 60, bottom: 60, left: 50 };
-const MARGIN_AXIS = 10;
+/*** scales for charts 
+ * To set the domains we take into account the mode (multiYearMode) and if aggregated data is also on the chart
+ */
 
-const width = computed(() => availableWidth.value - margin.left - margin.right);
-const height = computed(
-  () => availableHeight.value - margin.top - margin.bottom
+ // xScale is a band scale with the weeks as domain
+const xScale = computed(() =>
+  multiYearMode.value === true
+    ? d3
+        .scaleBand()
+        .domain(
+          d3
+            .range(52)
+            .map(
+              (d) =>
+                activeDataAnalytics.value.firstYear +
+                '-' +
+                ('0' + (d + 1)).slice(-2)
+            )
+        )
+        .range([0, width.value])
+        .padding(0)
+    : d3
+        .scaleBand()
+        .domain(activeData.value.map((d) => d.week))
+        .range([0, width.value])
+        .padding(0)
 );
 
-const xScale = computed(() => 
-  multiYearMode.value === true?
-  d3
-    .scaleBand()
-    .domain(d3.range(52).map((d)=>activeDataAnalytics.value.firstYear + '-'+ ("0" + (d+1)).slice(-2)) )
-    .range([0, width.value])
-    .padding(0)
-  :
-  d3
-    .scaleBand()
-    .domain(activeData.value.map((d) => d.week))
-    .range([0, width.value])
-    .padding(0)
-);
-
+// xScaleTimeForAxis is used to plot the ticks on the x axis. We define a continuous scale based on the first and last week of the dataset
 const xScaleTimeForAxis = computed(() => {
-  // const initDate = d.datasetAnalytics.countYears>1 ?
-  //   new Date(`${datasetAnalytics.firstYear}-01-01`) // first day of the year
-  //   : d3.timeWeek.offset(new Date(`${datasetAnalytics.firstYear}`), datasetAnalytics.initDate.split('-')[1] ) // first
-  // console.log(initDate)
-  // const endDate = d.datasetAnalytics.countYears>1 ?
-  //   new Date(`${datasetAnalytics.lastYear}-12-31`) // last day of the year
-  //   : d3.timeWeek.offset(new Date(`${datasetAnalytics.lastYear}`), datasetAnalytics.endDate.split('-')[1] ) // first
-  // get first week of the xScale
-  const week0 = xScale.value?.domain()[0]
-  const week1 = xScale.value?.domain()[xScale.value?.domain().length-1]
+  const week0 = xScale.value?.domain()[0];
+  const week1 = xScale.value?.domain()[xScale.value?.domain().length - 1];
   const scale = d3
     .scaleTime()
-    .domain([
-      getMondayOfISOWeek(week0),
-      getSundayFromYearWeek(week1),
-    ])
+    .domain([getMondayOfISOWeek(week0), getSundayFromYearWeek(week1)])
     .range([0, width.value]);
 
   return scale;
 });
+// this are the actual ticks for the x axis, label and positions
 const xScaleTicks = computed(() => {
   const format = d3.timeFormat('%b %Y'); // short version of the date
-  return xScaleTimeForAxis.value
-    .ticks(d3.timeMonth.every(3))
-    .map(format); // ticks every 3 months
+  return xScaleTimeForAxis.value.ticks(d3.timeMonth.every(3)).map(format); // ticks every 3 months
 });
 
 const xScaleTicksPositions = computed(() =>
@@ -433,18 +448,19 @@ const yScale = computed(() =>
   isRelativeModeReady.value
     ? d3
         .scaleLinear()
-        .domain([0, activeDataAnalyticsGlobal.value.maxInitiatives])
+        .domain([0, aggreagatedDatasetAnalytics.value.maxInitiatives])
         .range([height.value, 0])
     : d3
         .scaleLinear()
-        .domain([0, activeDataAnalytics.value.maxInitiatives])
+        .domain([0, datasetAnalytics.value.maxInitiatives])
         .range([height.value, 0])
 );
+
 const barWidth = computed(() => xScale.value.bandwidth());
 const bars = computed(() => activeData.value);
 const globalBars = computed(() => activeDataGlobal.value);
 
-//** interaction */
+//** interaction block*/
 const activeBar = ref(null);
 const activeYear = ref(null);
 const multiYearMode = computed(() => datasetAnalytics.value.countYears > 1);
@@ -470,37 +486,22 @@ watch(showRelativeMode, (newValue, oldValue) => {
 });
 
 const isRelativeModeReady = computed(
-  () => showRelativeMode.value === true && props.globalDataset?.length > 0
+  () => showRelativeMode.value === true && props.aggreagatedDataset?.length > 0
 );
 
-// utils
-function getFirstDayOfWeek(yearWeek) {
-  const [year, week] = yearWeek.split('-');
-  const date = new Date(year, 0, 1 + (week - 1) * 7);
-  const day = date.getDay();
-  const diff = date.getDate() - day + (day === 0 ? -6 : 1);
-  return new Date(date.setDate(diff));
-}
 
-function getDateFromYearWeek(yearWeek) {
-  let [year, week] = yearWeek.split('-').map(Number);
-  let date = new Date(year, 0, 1 + (week - 1) * 7);
-  let day = date.getDay();
-  let diff = date.getDate() - day + (day == 0 ? -6 : 1); // adjust if the first day of the year is later than Monday
-  return new Date(date.setDate(diff));
-}
-
+// utils for time conversion beteween yearly-weeks and dates according to the iso standard
+// https://stackoverflow.com/questions/16590500/javascript-calculate-date-from-week-number
 function getMondayOfISOWeek(yearWeek) {
-    const [year, week] = yearWeek.split('-');
-    let date = new Date(Date.UTC(year, 0, 1 + (week - 1) * 7));
-    let day = date.getUTCDay();
+  const [year, week] = yearWeek.split('-');
+  let date = new Date(Date.UTC(year, 0, 1 + (week - 1) * 7));
+  let day = date.getUTCDay();
 
-    // If the day is not Monday (1), adjust the date
-    if (day !== 1) {
-        date.setUTCDate(date.getUTCDate() + (day <= 4 ? - (day - 1) : 8 - day));
-    }
-
-    return date;
+  // If the day is not Monday (1), adjust the date
+  if (day !== 1) {
+    date.setUTCDate(date.getUTCDate() + (day <= 4 ? -(day - 1) : 8 - day));
+  }
+  return date;
 }
 
 function getSundayFromYearWeek(yearWeek) {
@@ -512,8 +513,6 @@ function getSundayFromYearWeek(yearWeek) {
   date.setDate(date.getDate() + 6); // add 6 days to get to Sunday
   return date;
 }
-
-
 </script>
 
 <style scoped>
