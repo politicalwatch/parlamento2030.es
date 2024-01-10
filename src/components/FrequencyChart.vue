@@ -4,16 +4,18 @@
       <g class="top-text" :transform="`translate(${margin.left}, 0)`">
         <text
           v-if="activeBar"
-          text-anchor="middle"
           font-size="0.8rem"
           font-weight="light"
           fill="#9cb0bf"
+          :text-anchor="
+            xScale(activeBar.week) < 50
+              ? 'start'
+              : xScale(activeBar.week) > width - 20
+                ? 'end'
+                : 'middle'
+          "
         >
-          <tspan
-            text-anchor="middle"
-            :x="xScale(activeBar.week)"
-            :y="margin.top / 2"
-          >
+          <tspan :x="xScale(activeBar.week)" :y="margin.top / 2">
             Semana {{ activeBar.week.split('-')[1] }} ({{
               getMondayOfISOWeek(activeBar.week).toLocaleDateString('es-ES', {
                 day: '2-digit',
@@ -21,12 +23,7 @@
               })
             }})
           </tspan>
-          <tspan
-            text-anchor="middle"
-            dy="0.9rem"
-            :x="xScale(activeBar.week)"
-            :y="margin.top / 2"
-          >
+          <tspan dy="0.9rem" :x="xScale(activeBar.week)" :y="margin.top / 2">
             Iniciativas:
             <tspan font-weight="bold">{{ activeBar.initiatives }}</tspan>
           </tspan>
@@ -355,7 +352,6 @@ const activeDataGlobal = computed(() => {
   else return props.aggreagatedDataset;
 });
 
-
 /*
  * activeDataAnalytics are the analytics for the activeData: i
  if multiYearMode is true, activeDataAnalytics is the analytics for the selected year
@@ -395,11 +391,11 @@ const aggregatedActiveDataAnalytics = computed(() => {
   } else return aggreagatedDatasetAnalytics.value;
 });
 
-/*** scales for charts 
+/*** scales for charts
  * To set the domains we take into account the mode (multiYearMode) and if aggregated data is also on the chart
  */
 
- // xScale is a band scale with the weeks as domain
+// xScale is a band scale with the weeks as domain
 const xScale = computed(() =>
   multiYearMode.value === true
     ? d3
@@ -488,7 +484,6 @@ watch(showRelativeMode, (newValue, oldValue) => {
 const isRelativeModeReady = computed(
   () => showRelativeMode.value === true && props.aggreagatedDataset?.length > 0
 );
-
 
 // utils for time conversion beteween yearly-weeks and dates according to the iso standard
 // https://stackoverflow.com/questions/16590500/javascript-calculate-date-from-week-number
