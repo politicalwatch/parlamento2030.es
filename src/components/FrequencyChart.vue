@@ -36,6 +36,7 @@
       >
         <!-- vertical line for y axis-->
         <line x1="0" x2="0" :y1="height" :y2="0" />
+
         <g
           class="tick"
           v-for="(tick, index) in yScale.nice().ticks(5)"
@@ -46,6 +47,30 @@
           <text x="-9" dy=".32em" text-anchor="end">
             {{ tick }}
           </text>
+        </g>
+
+        <!-- vertical lines for double y axis upside down-->
+        <g v-if="isRelativeModeReady">
+          <line
+            x1="0"
+            x2="0"
+            :y1="height + 26"
+            :y2="height + 26 + height"
+            stroke="currentColor"
+            stroke-width="1"
+          ></line>
+
+          <g
+            class="tick"
+            v-for="(tick, index) in yScaleAggregated.nice().ticks(5)"
+            :key="index"
+            :transform="`translate(0, ${height + 26 + yScaleAggregated(tick)})`"
+          >
+            <line x1="-6" :x2="width" class="ticks" />
+            <text x="-9" dy=".32em" text-anchor="end">
+              {{ tick }}
+            </text>
+          </g>
         </g>
       </g>
 
@@ -68,12 +93,13 @@
           :key="index"
           :transform="`translate(${xScaleTimeForAxis(
             xScaleTicksPositions[index]
-          )}, ${height + 20})`"
+          )}, ${height})`"
         >
           <line x1="0" x2="0" y1="0" y2="6" />
           <text y="9" dy=".71em" text-anchor="middle">
             {{ tick }}
           </text>
+          <line x1="0" x2="0" y1="20" y2="26" />
         </g>
       </g>
 
@@ -152,11 +178,8 @@
                 y: height,
               }"
               v-tr3nsition:to="{
-                height:
-                  height - yScale(bar.initiatives) <= 0
-                    ? 0.00001
-                    : height - yScale(bar.initiatives),
-                y: yScale(bar.initiatives),
+                height: 26 + yScaleAggregated(bar.initiatives),
+                y: 26 + height,
                 transition: {
                   duration: 60,
                   delay: index * 15,
@@ -250,15 +273,21 @@ const props = defineProps({
 const chartWrapper = ref(null);
 /* svg size */
 const availableWidth = ref(800);
-const availableHeight = ref(props.defaultHeight);
+const availableHeight = computed(() => {
+  if (showRelativeMode.value === true && props.aggreagatedDataset?.length > 0)
+    return props.defaultHeight * 1.5;
+  else return props.defaultHeight;
+});
 
 const margin = { top: 40, right: 60, bottom: 60, left: 50 };
 const MARGIN_AXIS = 10;
 
 /* chart size inside the axis*/
 const width = computed(() => availableWidth.value - margin.left - margin.right);
-const height = computed(
-  () => availableHeight.value - margin.top - margin.bottom
+const height = computed(() =>
+  showRelativeMode.value
+    ? (availableHeight.value - margin.top - margin.bottom) / 2
+    : availableHeight.value - margin.top - margin.bottom
 );
 
 // adjust on resize
@@ -441,15 +470,17 @@ const xScaleTicksPositions = computed(() =>
 );
 
 const yScale = computed(() =>
-  isRelativeModeReady.value
-    ? d3
-        .scaleLinear()
-        .domain([0, aggreagatedDatasetAnalytics.value.maxInitiatives])
-        .range([height.value, 0])
-    : d3
-        .scaleLinear()
-        .domain([0, datasetAnalytics.value.maxInitiatives])
-        .range([height.value, 0])
+  d3
+    .scaleLinear()
+    .domain([0, datasetAnalytics.value.maxInitiatives])
+    .range([height.value, 0])
+);
+
+const yScaleAggregated = computed(() =>
+  d3
+    .scaleLinear()
+    .domain([0, aggreagatedDatasetAnalytics.value.maxInitiatives])
+    .range([0, height.value])
 );
 
 const barWidth = computed(() => xScale.value.bandwidth());
