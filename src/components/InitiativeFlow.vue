@@ -1,5 +1,10 @@
 <template>
-  <div class="sankey-chart-initiatives-flow ">
+  <div class="sankey-chart-initiatives-flow" ref="chartWrapper">
+    <div class="o-grid chart-titles" style="">
+      <div class="o-grid__col u-4"> ODS </div>
+      <div class="o-grid__col u-4"> META</div>
+      <div class="o-grid__col u-4"> ETIQUETA </div>
+    </div>
     <svg id="canvas" :height="height" :width="width">
       <g
         :transform="`translate(${SANKEY_GLOBAL_PADDING_X},${SANKEY_GLOBAL_PADDING_Y})`"
@@ -23,7 +28,7 @@
             <i v-html="selectedSubtopic.name"></i>
           </div>
 
-          <div style="margin-top:1rem">
+          <div style="margin-top: 1rem">
             Apariciones: <strong>{{ selectedSubtopic.value }} </strong>
           </div>
         </div>
@@ -33,14 +38,23 @@
 </template>
 
 <script setup>
-import * as d3 from 'd3';
+/*
+ * This component paints a sankey diagram with the tags of an initiative
+ * The sankey takes the whole width of the parent container
+ * for a smaller or larger sankey the parent container of ref="chartWrapper" should be resized accordingly
+ * Is relatively responsive, but the nodes are not resized. Since tags are long this requieres at least 960px
+ * This implementation is not reactive to changes in the data (not necessary since data is static), but it is reactive to changes in the width of the parent container
+ * canvas height is relative to the number of nodes
+ */
+import { select, selectAll, color } from 'd3';
 import * as d3sankey from 'd3-sankey';
 import slugify from 'slugify';
-import { textWrap } from 'd3plus-text';
+import { textWidth } from 'd3plus-text';
 // testing at: http://localhost:5173/iniciativas/162-001066
+// more complex: http://localhost:5173/iniciativas/162-000605
 
-import { computed, ref, onMounted } from 'vue';
-import { sub } from 'date-fns';
+import { computed, ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
+import { ca } from 'date-fns/locale';
 
 const props = defineProps({
   initiative: {
@@ -57,10 +71,6 @@ const props = defineProps({
     type: Object,
     required: true,
     default: () => ({}),
-  },
-  totalWidth: {
-    type: Number,
-    default: 1100,
   },
 });
 
@@ -79,7 +89,7 @@ const buildNodes = (allTags) => {
     value: t.times,
     subtopic: t.subtopic,
     topic: t.topic,
-    color: '#D4D5E1',
+    color: props.styles.topics[t.topic].color,
     type: 'tag',
   }));
 
@@ -98,13 +108,8 @@ const buildNodes = (allTags) => {
         color: props.styles.topics[tag.topic].color,
       });
     }
-    if(tag.subtopic === '2.1 Acceso universal a alimentos')
-    console.log(tag)
+    if (tag.subtopic === '2.1 Acceso universal a alimentos') console.log(tag);
   }
-
-
-
-  
 
   const topics = [];
   for (const subtopic of subtopics) {
@@ -133,10 +138,17 @@ const buildNodes = (allTags) => {
     }
   }
   const stdTagsMapValues = Object.values(stdTagsMap);
-  console.log(stdTagsMapValues);
-  
-  
-  console.log(subtopics);
+  // sort topics by ods number
+  try {
+    topics.sort((a, b) => {
+      const aNum = a.name.split(' ')[1];
+      const bNum = b.name.split(' ')[1];
+      if (parseInt(aNum) < parseInt(bNum)) return -1;
+      else return 1;
+    });
+  } catch (e) {
+    console.log('error on sorting, not sorting topics');
+  }
   return [...topics, ...subtopics, ...stdTagsMapValues];
 };
 
@@ -173,13 +185,59 @@ function buildLinksFromNodes(nodes) {
 
 const nodes = buildNodes(props.initiative.tagged[0].tags);
 const links = buildLinksFromNodes(nodes);
+const countOfTags = nodes.filter((n) => n.type === 'tag').length;
+const countOfSubtopics = nodes.filter((n) => n.type === 'subtopic').length;
+const countOfTopics = nodes.filter((n) => n.type === 'topic').length;
+const maxNodesCount = Math.max(countOfTags, countOfSubtopics, countOfTopics);
 console.log(nodes);
 console.log(links);
 
 /** sizes block */
-const margin = { top: 10, right: 10, bottom: 10, left: 10 };
-const width = computed(() => props.totalWidth - margin.left - margin.right);
-const height = computed(() => 700 - margin.top - margin.bottom);
+const chartWrapper = ref(null);
+const availableWidth = ref(800);
+const margin = { top: 0, right: 0, bottom: 0, left: 0 };
+const width = computed(() => availableWidth.value - margin.left - margin.right);
+const height = computed(() => {
+  const OPTIM_HEIGHT = 50;
+  const MIN_HEIGHT = 18;
+  // minimun space for each node is MIN_HEIGHTpx but it is too narrow. Spacing must go from MIN_HEIGHT to OPTIM_HEIGHTpx according to the number of nodes
+  //
+  // between countOfTags* OPTIM_HEIGHT < screen height *0.8  return OPTIM_HEIGHT
+  let h = margin.top + margin.bottom;
+  if (maxNodesCount * OPTIM_HEIGHT < window.innerHeight * 0.9) {
+    console.log(maxNodesCount + ' menor que tamanio de pantalla');
+    h += maxNodesCount * OPTIM_HEIGHT;
+  } else {
+    // then the newHeight is  linear function that goes from OPTIM_HEIGHT to MIN_HEIGHT keeping the height of the chart at 80% of the screen until it reaches MIN_HEIGHT.
+    let nodeHeight = (window.innerHeight * 0.8) / maxNodesCount;
+    if (nodeHeight < MIN_HEIGHT) nodeHeight = MIN_HEIGHT;
+    if (nodeHeight > OPTIM_HEIGHT) nodeHeight = OPTIM_HEIGHT;
+    console.log(nodeHeight);
+    h += nodeHeight * maxNodesCount;
+  }
+  return Math.max(h, 200);
+
+  return h;
+});
+
+onMounted(() => {
+  availableWidth.value = chartWrapper.value.clientWidth;
+  window.addEventListener('resize', () => {
+    availableWidth.value = chartWrapper.value.clientWidth;
+  });
+});
+
+watch(width, (newValue, oldValue) => {
+  if (newValue !== oldValue) {
+    updateChart();
+  }
+});
+
+onUnmounted(() => {
+  window.removeEventListener('resize', () => {
+    availableWidth.value = chartWrapper.value.clientWidth;
+  });
+});
 
 const NODE_WIDTH = 32;
 const NODE_PADDING = 14;
@@ -190,8 +248,8 @@ const TEXT_PADDING = VERT_PADDING;
 const SMALL_NODE_WIDTH = 20;
 const CENTER_NODE_WIDTH = NODE_WIDTH;
 
-const SANKEY_GLOBAL_PADDING_X = 300;
-const SANKEY_GLOBAL_PADDING_Y = 40;
+const SANKEY_GLOBAL_PADDING_X = 280; // this is the space for columns of text on both sides
+const SANKEY_GLOBAL_PADDING_Y = 20;
 
 /****************  Sankey building ************************/
 onMounted(() => {
@@ -215,11 +273,10 @@ const initChart = function () {
     return;
   }
 
-  svg = d3.select(canvas.value);
+  svg = select(canvas.value);
   svg.selectAll('g').remove();
   svg.append('g').classed('links', true);
   svg.append('g').classed('nodes', true);
-  updateChart('init chart mounted');
 };
 
 function sankeyGenerator() {
@@ -245,6 +302,7 @@ function sankeyGenerator() {
 }
 
 function updateChart(from) {
+  sankey = sankeyGenerator();
   graph = sankey({
     nodes: nodes.map((d) => Object.assign({}, d)),
     links: links.map((d) => Object.assign({}, d)),
@@ -275,45 +333,45 @@ function updateChart(from) {
     .attr('stroke-width', (d) => d.width)
     .attr('stroke-opacity', 0.5)
     .style('stroke', (d) => {
-      return d3.color(d.source.color).brighter(0.2);
+      return color(d.source.color).brighter(0.2);
     });
 
   // nouse interaction
   links_enter
     .on('mousemove', (event, d) => {
-      d3.select(event.target).raise();
-      d3.selectAll('.link').classed('faded', true);
+      select(event.target).raise();
+      selectAll('.link').classed('faded', true);
 
-      d3.select(event.target).classed('faded', false);
+      select(event.target).classed('faded', false);
 
       //       grey out nodes
-      d3.selectAll('g.node').classed('faded', true);
+      selectAll('g.node').classed('faded', true);
       // select adjacent nodes
-      d3.selectAll(
+      selectAll(
         'g.node.n-' + slugify(d.source.name, { strict: true, lower: true })
       ).classed('faded', false);
-      d3.selectAll(
+      selectAll(
         'g.node.n-' + slugify(d.target.name, { strict: true, lower: true })
       ).classed('faded', false);
 
       // show tooltip:
       selectedSubtopic.value = {
-        name: d.source.name +'<br>' + "&#8593" +'<br/>'+ d.target.name,
+        name: d.source.name + '<br>' + '&#8593' + '<br/>' + d.target.name,
         value: d.value,
-      }
+      };
       tooltipInfo.value = {
         x: event.pageX,
         y: event.pageY,
-        color: '#444'
+        color: d.source.color,
       };
     })
     .on('mouseout', (event) => {
       selectedSubtopic.value = null;
-      // d3.select(event.target)
+      // select(event.target)
       //   //.attr("stroke", (d)=> { return this.color(d) } )
       //   .classed("selected", false);
-      d3.selectAll('.link').classed('faded', false);
-      d3.selectAll('.node').classed('faded', false);
+      selectAll('.link').classed('faded', false);
+      selectAll('.node').classed('faded', false);
     });
 
   links_update.exit().remove();
@@ -338,13 +396,28 @@ function updateChart(from) {
   nodes_enter
     .append('rect')
     .merge(nodes_update.select('rect'))
-    .attr('fill', (d) => d.color)
+    .attr('fill', (d) => {
+      if(d.depth == 0 || d.depth==1) return d.color      
+      else return 'white'
+    })
+    .attr('stroke', (d) => {
+      if(d.depth === 0 || d.depth===1) return 'transparent'
+      if(d.targetLinks.length === 1) return d.color;
+      return 'grey'
+    })
+    .attr('stroke-width', (d) => {
+      
+      return 1
+    })
     .transition()
     .duration(1000)
     .attr('x', 0)
     .attr('y', 0)
     .attr('width', (d) => NODE_WIDTH)
-    .attr('height', (d) => Math.max(d.y1 - d.y0, 14));
+    .attr('height', (d) => {
+      if (d.layer === 1) return Math.max(d.y1 - d.y0, 14);
+      else return d.y1 - d.y0;
+    });
 
   //.append("title")
 
@@ -358,21 +431,46 @@ function updateChart(from) {
       else return 'middle';
     })
     .attr('x', (d) => {
-      if (d.layer === 0) return -TEXT_PADDING;
+      if (d.layer === 0) return -TEXT_PADDING + SMALL_NODE_WIDTH / 2;
       else if (d.layer === 2) return TEXT_PADDING + SMALL_NODE_WIDTH;
       else return CENTER_NODE_WIDTH / 2;
     })
     .attr('y', (d) => {
-      return (d.y1 - d.y0) / 2 + 7;
+      if (d.layer != 1) return (d.y1 - d.y0) / 2 + 7;
+      else {
+        const realHeight = Math.max(d.y1 - d.y0, 14);
+        return realHeight / 2 + 5;
+      }
     })
     .attr('class', (d) => {
       return 'layer-' + d.layer;
     })
     .text((d) => {
-      if (d.layer === 0) return d.name;
+      if (d.layer === 0) return '';
       if (d.layer === 2) return d.name;
       else return d.name.split(' ')[0];
+    })
+
+    .each(function (p, j) {
+      // divide text in two lines for ods
+      if (p.layer != 0) return;
+      // split the text in two lines each string stars with the words ODS X ZZZZ and we need to split it in two lines being ODS X the first line
+      const words = p.name.split(' ');
+      const firstLine = words.slice(0, 2).join(' ');
+      const secondLine = words.slice(2).join(' ');
+      select(this)
+        .selectAll('tspan')
+        .data([firstLine, secondLine])
+        .enter()
+        .append('tspan')
+        .attr('text-anchor', 'right')
+        .attr('x', (d, i) => -8)
+        .attr('y', () => (p.y1 - p.y0) / 2)
+        .attr('dy', (d, i) => (i ? '1.1em' : 0))
+        .text((d) => d);
     });
+  
+
   textnode.raise();
 
   nodes_update.exit().remove();
@@ -383,23 +481,23 @@ function updateChart(from) {
       selectedSubtopic.value = d;
       tooltipInfo.value = {
         x: event.pageX,
-        y: event.pageY-20,
-        color: d.layer===2 ? '#444':  d.color,
+        y: event.pageY - 20,
+        color: d.layer === 2 ? d.color : d.color,
       };
-      d3.select(event.target).classed('selected',true);
+      select(event.target).classed('selected', true);
       // grey out the other nodes and links and highlight only the ones connected to this node
-      d3.selectAll('.link').classed('faded', true);
-      d3.selectAll(
-              ".link.n-" + slugify(d.name, { strict: true, lower: true })
-            ).classed("faded", false);
+      selectAll('.link').classed('faded', true);
+      selectAll(
+        '.link.n-' + slugify(d.name, { strict: true, lower: true })
+      ).classed('faded', false);
     })
     .on('mouseout', () => {
       selectedSubtopic.value = null;
-      d3.select('.selected')
-              //.attr("stroke", (d)=> { return this.color(d) } )
-              .classed("selected", false);
-            d3.selectAll("g.node").classed("faded", false);
-           d3.selectAll(".link").classed("faded", false);
+      select('.selected')
+        //.attr("stroke", (d)=> { return this.color(d) } )
+        .classed('selected', false);
+      selectAll('g.node').classed('faded', false);
+      selectAll('.link').classed('faded', false);
     });
 
   function getNodePosition(d) {
@@ -413,6 +511,13 @@ function updateChart(from) {
       return `translate(${d.x0}, ${d.y0})`;
     }
   }
+
+  function getTextWidth(text) {
+    return textWidth(text, {
+      font: 'sans-serif',
+      size: 12,
+    });
+  }
 }
 </script>
 
@@ -424,20 +529,23 @@ function updateChart(from) {
   .nodes text {
     font-size: 15px;
     font-weight: lighter;
-    pointer-events: none;
     fill: #444;
   }
+  .nodes text {
+
+  }
   .nodes text.layer-1 {
-    font-weight: bolder;
+    font-weight: 800;
     font-size: 13px;
     fill: white;
   }
+
+  
 
   .node.interactive {
     cursor: pointer;
   }
 
-  
   .node rect {
     opacity: 0.9;
     transition: opacity 0.2s ease-out;
@@ -491,12 +599,27 @@ function updateChart(from) {
 }
 
 .link.faded {
-  opacity: 0.2!important;
+  opacity: 0.2 !important;
 }
 
-rect.selected  {
-  opacity:1!important;
-  stroke-width: 2px!important;
-  stroke:white!important;
+rect.selected {
+  opacity: 1 !important;
+  stroke-width: 2px !important;
+}
+
+.chart-titles div{
+ font-size:12px;
+ 
+}
+.chart-titles div:nth-child(1){
+  text-align:right;
+  padding-right: 74px;
+}
+.chart-titles div:nth-child(2){
+  text-align:center;
+}
+.chart-titles div:nth-child(3){
+  text-align:left;
+  padding-left: 76px;
 }
 </style>
