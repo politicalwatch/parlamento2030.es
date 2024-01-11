@@ -528,8 +528,8 @@ function updateChart(from) {
 
   .nodes text {
     font-size: 15px;
-    font-weight: lighter;
-    fill: #444;
+    font-weight: light;
+    fill: #2d4252;
   }
   .nodes text {
 
