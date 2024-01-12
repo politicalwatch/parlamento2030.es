@@ -29,7 +29,8 @@
   };
   </script>
   
-  <style scoped>
+  <style  lang="scss" scoped>
+
   .container {
     cursor: pointer;
     display: flex;
@@ -37,6 +38,7 @@
   }
   
   .label {
+    font-size: 14px;
     margin-left: 12px;
     color: #1a202c;
     /* Show an ellipsis if the text takes more than one line */
@@ -59,14 +61,14 @@
   }
   
   .switch {
-    --switch-container-width: 50px;
+    --switch-container-width: 32px;
     --switch-size: calc(var(--switch-container-width) / 2);
   
     --light-gray: #e2e8f0;
     --gray: #cbd5e0;
     --dark-gray: #a0aec0;
-    --teal: #4fd1c5;
-    --dark-teal: #319795;
+    // no he podido importar el color desde el archivo de variables usando $primary
+    
   
     /* Vertically center the inner circle */
     display: flex;
@@ -99,11 +101,11 @@
   }
   
   .input:checked + .switch {
-    background-color: var(--teal);
+    background-color: $primary;
   }
   
   .input:checked + .switch::before {
-    border-color: var(--teal);
+    border-color: $primary;
     /* Move the inner circle to the right */
     transform: translateX(
       calc(var(--switch-container-width) - var(--switch-size))
@@ -115,7 +117,7 @@
   }
   
   .input:focus:checked + .switch::before {
-    border-color: var(--dark-teal);
+    border-color: $primary-dark;
   }
   
   .input:disabled + .switch {

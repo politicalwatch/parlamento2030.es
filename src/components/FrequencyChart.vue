@@ -1,5 +1,5 @@
 <template>
-  <div class="chart-wrapper" ref="chartWrapper">
+  <div class="frequency-chart-wrapper" ref="chartWrapper">
     <svg :width="availableWidth" :height="availableHeight">
       <g class="top-text" :transform="`translate(${margin.left}, 0)`">
         <text
@@ -35,7 +35,7 @@
         :transform="`translate(${margin.left - MARGIN_AXIS}, ${margin.top})`"
       >
         <!-- vertical line for y axis-->
-        <line x1="0" x2="0" :y1="height" :y2="0" />
+        <!-- <line x1="0" x2="0" :y1="height" :y2="0" /> -->
         <g
           class="tick"
           v-for="(tick, index) in yScale.nice().ticks(5)"
@@ -79,7 +79,7 @@
 
       <!-- bars -->
       <g class="rects" :transform="`translate(${margin.left}, ${margin.top})`">
-        <g v-for="(bar, index) in bars" :key="bar.week.split('-')[1]">
+        <g v-for="(bar, index) in bars" :key="multiYearMode?bar.week.split('-')[1]:bar.week">
           <!-- a "background rect" invisible ocupying full height above each one of the previous rects useful only for interaction-->
           <rect
             :x="xScale(bar.week)"
@@ -164,35 +164,46 @@
               }"
               class="bar"
               :style="{
-                fill: '#999',
-                stroke: '#000',
+                fill: '#333',
+                stroke: 'transparent',
               }"
             />
           </g>
         </g>
       </g>
     </svg>
-
-    <div class="yearSelectors">
-      <a
-        href="#"
-        class="c-button c-button--compact"
-        :class="{
-          'c-button--secondary': activeYear != year,
-          'c-button--primary': activeYear == year,
-        }"
-        v-for="year in datasetAnalytics.allYears"
-        :key="year"
-        @click.prevent="activeYear = year"
-        >{{ year }}</a
-      >
-    </div>
-    <div>
-      <UiSwitch
-        label="Mostrar Evolución relativa"
-        :checked="showRelativeMode"
-        @update:checked="showRelativeMode = $event"
-      ></UiSwitch>
+    <div class="controls-container o-grid">
+      <div class="o-grid__col u-9">
+        <div class="yearSelectors" v-if="multiYearMode">
+          <a
+            href="#"
+            class="c-button c-button--compact"
+            :class="{
+              'c-button--secondary': activeYear != year,
+              'c-button--primary': activeYear == year,
+            }"
+            v-for="year in datasetAnalytics.allYears"
+            :key="year"
+            @click.prevent="activeYear = year"
+            >{{ year }}</a
+          >
+        </div>
+      </div>
+      <div class="o-grid__col u-3">
+        <UiSwitch
+          label="Comparar con toda la actividad"
+          :checked="showRelativeMode"
+          @update:checked="showRelativeMode = $event"
+        ></UiSwitch>
+        <UiSwitch
+          label="Mostrar todo el periodo"
+          :checked="forceSingleYearMode"
+          @update:checked="forceSingleYearMode = $event"
+          datasetAnalytics.value.countYears
+        >
+          1 >
+        </UiSwitch>
+      </div>
     </div>
   </div>
 </template>
@@ -459,7 +470,10 @@ const globalBars = computed(() => activeDataGlobal.value);
 //** interaction block*/
 const activeBar = ref(null);
 const activeYear = ref(null);
-const multiYearMode = computed(() => datasetAnalytics.value.countYears > 1);
+const forceSingleYearMode = ref(false);
+const multiYearMode = computed(
+  () => datasetAnalytics.value.countYears > 1 && !forceSingleYearMode.value
+); // multiYearMode is true if there is more than one year in the dataset
 
 onMounted(() => {
   // Code to fetch data and update the 'data' ref can be added here
@@ -546,9 +560,9 @@ function getSundayFromYearWeek(yearWeek) {
 .yearSelectors {
   display: flex;
   justify-content: center;
-  margin-top: 1rem;
+  
   gap: 2px;
-  margin-bottom: 1rem;
+  
 }
 .yearSelectors a:first-child {
   border-radius: 0.4rem 0 0 0.4rem;
@@ -558,5 +572,13 @@ function getSundayFromYearWeek(yearWeek) {
 }
 .yearSelectors a {
   border-radius: 0;
+}
+
+.controls-container {
+  align-items: center;
+  margin-top: 0rem;
+}
+.frequency-chart-wrapper{
+  margin-bottom: 1rem;
 }
 </style>
