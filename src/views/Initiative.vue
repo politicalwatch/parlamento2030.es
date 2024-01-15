@@ -204,7 +204,7 @@ export default {
       );
     },
     formattedDate: function () {
-      return format(new Date(this.initiative.created), 'dd/MM/Y');
+      return format(new Date(this.initiative.created), 'dd/MM/y');
     },
   },
   methods: {
