@@ -108,7 +108,7 @@ const buildNodes = (allTags) => {
         color: props.styles.topics[tag.topic].color,
       });
     }
-    if (tag.subtopic === '2.1 Acceso universal a alimentos') console.log(tag);
+    // if (tag.subtopic === '2.1 Acceso universal a alimentos') console.log(tag);
   }
 
   const topics = [];
@@ -219,8 +219,6 @@ const countOfTags = nodes.filter((n) => n.type === 'tag').length;
 const countOfSubtopics = nodes.filter((n) => n.type === 'subtopic').length;
 const countOfTopics = nodes.filter((n) => n.type === 'topic').length;
 const maxNodesCount = Math.max(countOfTags, countOfSubtopics, countOfTopics);
-console.log(nodes);
-console.log(links);
 
 /** sizes block */
 const chartWrapper = ref(null);
@@ -235,14 +233,12 @@ const height = computed(() => {
   // between countOfTags* OPTIM_HEIGHT < screen height *0.8  return OPTIM_HEIGHT
   let h = margin.top + margin.bottom;
   if (maxNodesCount * OPTIM_HEIGHT < window.innerHeight * 0.9) {
-    console.log(maxNodesCount + ' menor que tamanio de pantalla');
     h += maxNodesCount * OPTIM_HEIGHT;
   } else {
     // then the newHeight is  linear function that goes from OPTIM_HEIGHT to MIN_HEIGHT keeping the height of the chart at 80% of the screen until it reaches MIN_HEIGHT.
     let nodeHeight = (window.innerHeight * 0.8) / maxNodesCount;
     if (nodeHeight < MIN_HEIGHT) nodeHeight = MIN_HEIGHT;
     if (nodeHeight > OPTIM_HEIGHT) nodeHeight = OPTIM_HEIGHT;
-    console.log(nodeHeight);
     h += nodeHeight * maxNodesCount;
   }
   return Math.max(h, 200);
@@ -320,7 +316,7 @@ function sankeyGenerator() {
       .nodeId((d) => {
         return d.name;
       })
-      .iterations() // 6
+      .iterations(0) // 6
       .extent([
         [0, 0],
         [
