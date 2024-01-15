@@ -5,13 +5,33 @@
       target="_blank"
       style="text-decoration: none !important"
     >
-      Consulta aquí cómo funciona el algoritmo de huella parlamentaria
+      <p v-if="withLabel">
+        <footprint
+          v-if="withLabel"
+          :footprint="184.8"
+          style="display: inline-block !important"
+        />&nbsp;&nbsp;¿Qué es esto?
+      </p>
+      <p v-else>
+        Consulta aquí cómo funciona el algoritmo de huella parlamentaria
+      </p>
     </router-link>
   </div>
 </template>
 
 <script>
+import Footprint from '@/components/Footprint.vue';
+
 export default {
   name: 'FootprintInfo',
+  components: {
+    Footprint,
+  },
+  props: {
+    withLabel: {
+      type: Boolean,
+      default: false,
+    },
+  },
 };
 </script>

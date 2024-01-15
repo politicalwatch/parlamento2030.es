@@ -180,7 +180,7 @@ import {
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
-import format from 'date-fns/format';
+import { format } from 'date-fns/format';
 import InitiativeChart from '@/components/initiative-chart.vue';
 import ConversationLink from '@/components/conversation-link.vue';
 import InitiativeFlow from '@/components/InitiativeFlow.vue';
