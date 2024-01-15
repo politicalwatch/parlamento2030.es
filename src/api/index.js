@@ -266,7 +266,6 @@ export default {
   getTopicsByWeek(topic) {
     const params = { topic };
     params['knowledgebase'] = kb;
-    console.log(params);
     return axios.get(getEndpoint(), { params });
 
     function getEndpoint() {

@@ -143,7 +143,7 @@
           ></line>
         </g>
         <g v-if="isRelativeModeReady">
-          <g v-for="(bar, index) in globalBars" :key="index">
+          <g v-for="(bar, index) in aggregatedBars" :key="index">
             <rect
               :x="xScale(bar.week)"
               :width="barWidth"
@@ -192,10 +192,11 @@
       <div class="o-grid__col u-3">
         <UiSwitch
           label="Comparar con toda la actividad"
-          :checked="showRelativeMode"
-          @update:checked="showRelativeMode = $event"
+          :checked="showComparativeMode"
+          @update:checked="showComparativeMode = $event"
         ></UiSwitch>
         <UiSwitch
+        v-if="availableMultiYearOptions"
           label="Mostrar todo el periodo"
           :checked="forceSingleYearMode"
           @update:checked="forceSingleYearMode = $event"
@@ -210,6 +211,22 @@
 
 <script setup>
 // test at http://localhost:5173/ods/ods-2
+
+/* component functionality 
+Displays one barchart for the evolution of the topic
+The chart can be displayed in two modes:
+- All data: the chart displays the evolution of the topic for all years in the dataset
+- multi year mode: the chart displays the evolution of the topic for the selected year. Only available if there is more than one year in the dataset
+This is controled by the multiYearMode computed property and availableMultiYearOptions.
+
+-- comparative mode --
+The chart can also display the evolution of the topic compared to the evolution of all topics.
+This is controled by the showComparativeMode computed property and the showComparativeMode switch
+Since the default state is false, the chart will display the evolution of the topic only.
+To avoid loading unused data, the dataset for the aggregated dataset is provided by the parent component when the user clicks on the relative mode switch
+*/
+
+
 import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue';
 import * as d3 from 'd3';
 import vTr3nsition from './vTr3nsition.js';
@@ -258,7 +275,7 @@ const props = defineProps({
 });
 
 //*** set responsive width and  heights */
-const chartWrapper = ref(null);
+const chartWrapper = ref(null); // wrapper for the svg. Template reference
 /* svg size */
 const availableWidth = ref(800);
 const availableHeight = ref(props.defaultHeight);
@@ -273,7 +290,6 @@ const height = computed(
 );
 
 // adjust on resize
-
 onMounted(() => {
   availableWidth.value = chartWrapper.value.clientWidth;
   window.addEventListener('resize', () => {
@@ -286,9 +302,10 @@ onUnmounted(() => {
     availableWidth.value = chartWrapper.value.clientWidth;
   });
 });
-//**** end of size block ***/
+//**** end of size block**************** ***/
 
 const currentStyle = computed(() => props.topicsStyles[props.topic.name]);
+
 const data = computed(() => {
   if (props.dataset.length > 0) {
     // props .dataset.weeks is a string with the format YYYY-WW where WW is the week number
@@ -309,7 +326,7 @@ const data = computed(() => {
   }
 });
 
-/*** blcoks analyze the different datasets and compute analytics */
+/*** blocks analyze the different datasets and compute analytics ************************/
 
 /* analytics for all years ****/
 const datasetAnalytics = computed(() => {
@@ -348,14 +365,14 @@ const aggreagatedDatasetAnalytics = computed(() => {
   return a;
 });
 
-/* active data is the data for the selected year or the full datawset depenending on multiYearMode */
+/* active data is the data for the selected year or the full dataset depenending on multiYearMode */
 const activeData = computed(() => {
   if (multiYearMode.value === true)
     return data.value.filter((d) => d.week.split('-')[0] == activeYear.value);
   else return data.value;
 });
 
-const activeDataGlobal = computed(() => {
+const activeDataAggregated = computed(() => {
   if (multiYearMode.value === true)
     return props.aggreagatedDataset.filter(
       (d) => d.week.split('-')[0] == activeYear.value
@@ -385,22 +402,7 @@ const activeDataAnalytics = computed(() => {
   } else return datasetAnalytics.value;
 });
 
-const aggregatedActiveDataAnalytics = computed(() => {
-  if (
-    multiYearMode.value === true &&
-    activeDataGlobal.value != null &&
-    activeDataGlobal.value.length > 0
-  ) {
-    return {
-      initDate: d3.min(activeDataGlobal.value, (d) => d.week),
-      endDate: d3.max(activeDataGlobal.value, (d) => d.week),
-      firstYear: d3.min(activeDataGlobal.value, (d) => d.week).split('-')[0],
-      lastYear: d3.max(activeDataGlobal.value, (d) => d.week).split('-')[0],
-      maxInitiatives: d3.max(activeDataGlobal.value, (d) => d.initiatives),
-      minInitiatives: d3.min(activeDataGlobal.value, (d) => d.initiatives),
-    };
-  } else return aggreagatedDatasetAnalytics.value;
-});
+
 
 /*** scales for charts
  * To set the domains we take into account the mode (multiYearMode) and if aggregated data is also on the chart
@@ -465,15 +467,22 @@ const yScale = computed(() =>
 
 const barWidth = computed(() => xScale.value.bandwidth());
 const bars = computed(() => activeData.value);
-const globalBars = computed(() => activeDataGlobal.value);
+const aggregatedBars = computed(() => activeDataAggregated.value);
+
 
 //** interaction block*/
 const activeBar = ref(null);
 const activeYear = ref(null);
 const forceSingleYearMode = ref(false);
+
+// multiYearMode is true if there is more than one year in the dataset and forceSingleYearMode is false. 
+const availableMultiYearOptions = computed(
+  () =>
+    datasetAnalytics.value.countYears > 1
+);
 const multiYearMode = computed(
-  () => datasetAnalytics.value.countYears > 1 && !forceSingleYearMode.value
-); // multiYearMode is true if there is more than one year in the dataset
+  () =>  availableMultiYearOptions.value && !forceSingleYearMode.value
+); 
 
 onMounted(() => {
   // Code to fetch data and update the 'data' ref can be added here
@@ -485,18 +494,17 @@ const theme = ref({
   lightGray: '#9cb0bf',
 });
 
+
 // relative view
+const emit = defineEmits(['update:showComparativeMode']);
 
-const emit = defineEmits(['update:showRelativeMode']);
-
-const showRelativeMode = ref(false);
-watch(showRelativeMode, (newValue, oldValue) => {
-  console.log('emit update:showRelativeMode', newValue);
-  emit('update:showRelativeMode', newValue);
+const showComparativeMode = ref(false);
+watch(showComparativeMode, (newValue, oldValue) => {
+  emit('update:showComparativeMode', newValue);
 });
 
 const isRelativeModeReady = computed(
-  () => showRelativeMode.value === true && props.aggreagatedDataset?.length > 0
+  () => showComparativeMode.value === true && props.aggreagatedDataset?.length > 0
 );
 
 // utils for time conversion beteween yearly-weeks and dates according to the iso standard

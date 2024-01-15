@@ -33,7 +33,7 @@
           :topic="topic"
           :dataset="topicsByWeek"
           :aggreagatedDataset="allTopicsByWeek"
-          @update:showRelativeMode="getAllTopicsByWeek()"
+          @update:showComparativeMode="getAllTopicsByWeek()"
           v-if="topicsByWeek != null"
         ></frequency-chart>
       </div>
@@ -216,7 +216,6 @@ export default {
     },
 
     getAllTopicsByWeek: function () {
-      console.log('getTopicsByWeek All');
       api
         .getAllTopicsByWeek(topic)
         .then((response) => {
