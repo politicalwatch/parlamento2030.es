@@ -49,7 +49,6 @@
 import { select, selectAll, color } from 'd3';
 import * as d3sankey from 'd3-sankey';
 import slugify from 'slugify';
-import { textWidth } from 'd3plus-text';
 // testing at: http://localhost:5173/iniciativas/162-001066
 // more complex: http://localhost:5173/iniciativas/162-000605
 
@@ -538,12 +537,7 @@ function updateChart(from) {
     }
   }
 
-  function getTextWidth(text) {
-    return textWidth(text, {
-      font: 'sans-serif',
-      size: 12,
-    });
-  }
+  
 }
 </script>
 
