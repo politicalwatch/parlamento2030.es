@@ -138,6 +138,7 @@ const buildNodes = (allTags) => {
     }
   }
   const stdTagsMapValues = Object.values(stdTagsMap);
+
   // sort topics by ods number
   try {
     topics.sort((a, b) => {
@@ -146,9 +147,38 @@ const buildNodes = (allTags) => {
       if (parseInt(aNum) < parseInt(bNum)) return -1;
       else return 1;
     });
+    
   } catch (e) {
     console.log('error on sorting, not sorting topics');
   }
+// sort subtopics
+  try {
+    subtopics.sort((a, b) => {
+      const aNum = a.topic.split(' ')[1];
+      const bNum = b.topic.split(' ')[1];
+      if (parseInt(aNum) < parseInt(bNum)) return -1;
+      else return 1;
+    });
+    
+  } catch (e) {
+    console.log('error on sorting, not sorting topics');
+  }
+
+  // sort tags
+  try {
+    stdTagsMapValues.sort((a, b) => {
+      const aNum = a.topic.split(' ')[1];
+      const bNum = b.topic.split(' ')[1];
+      if (parseInt(aNum) < parseInt(bNum)) return -1;
+      else return 1;
+    });
+    
+  } catch (e) {
+    console.log('error on sorting, not sorting topics');
+  }
+
+  
+
   return [...topics, ...subtopics, ...stdTagsMapValues];
 };
 
@@ -290,7 +320,7 @@ function sankeyGenerator() {
       .nodeId((d) => {
         return d.name;
       })
-      .iterations(0) // 6
+      .iterations() // 6
       .extent([
         [0, 0],
         [
