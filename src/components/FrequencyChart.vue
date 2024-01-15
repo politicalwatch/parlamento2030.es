@@ -228,7 +228,7 @@ To avoid loading unused data, the dataset for the aggregated dataset is provided
 
 
 import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue';
-import * as d3 from 'd3';
+import {min, max, range, scaleBand, timeFormat, timeWeek, timeMonth, scaleLinear, scaleTime} from 'd3'
 import vTr3nsition from './vTr3nsition.js';
 import UiSwitch from './UiSwitch.vue';
 const props = defineProps({
@@ -315,8 +315,8 @@ const data = computed(() => {
     const arr = [];
     for (let i = 0; i < 90; i++) {
       arr.push({
-        week: d3.timeFormat('%Y-%W')(
-          d3.timeWeek.offset(new Date('2022-01-01'), i)
+        week: timeFormat('%Y-%W')(
+          timeWeek.offset(new Date('2022-01-01'), i)
         ),
         initiatives: Math.floor(Math.random() * 100),
       });
@@ -332,17 +332,17 @@ const data = computed(() => {
 const datasetAnalytics = computed(() => {
   // data.value contais the an array of objects with the format {week: '2021-01', initiatives: 10}
   const a = {
-    initDate: d3.min(data.value, (d) => d.week),
-    endDate: d3.max(data.value, (d) => d.week),
-    firstYear: d3.min(data.value, (d) => d.week).split('-')[0],
-    lastYear: d3.max(data.value, (d) => d.week).split('-')[0],
-    maxInitiatives: d3.max(data.value, (d) => d.initiatives),
-    minInitiatives: d3.min(data.value, (d) => d.initiatives),
+    initDate: min(data.value, (d) => d.week),
+    endDate: max(data.value, (d) => d.week),
+    firstYear: min(data.value, (d) => d.week).split('-')[0],
+    lastYear: max(data.value, (d) => d.week).split('-')[0],
+    maxInitiatives: max(data.value, (d) => d.initiatives),
+    minInitiatives: min(data.value, (d) => d.initiatives),
   };
   // allyears is an array going from firstYear to lastYear (both included)
   a.countYears = parseInt(a.lastYear) - parseInt(a.firstYear);
 
-  a.allYears = d3.range(parseInt(a.firstYear), parseInt(a.lastYear) + 1);
+  a.allYears = range(parseInt(a.firstYear), parseInt(a.lastYear) + 1);
   return a;
 });
 
@@ -351,17 +351,17 @@ const aggreagatedDatasetAnalytics = computed(() => {
   if (props.aggreagatedDataset == null || props.aggreagatedDataset.length == 0)
     return null;
   const a = {
-    initDate: d3.min(props.aggreagatedDataset, (d) => d.week),
-    endDate: d3.max(props.aggreagatedDataset, (d) => d.week),
-    firstYear: d3.min(props.aggreagatedDataset, (d) => d.week).split('-')[0],
-    lastYear: d3.max(props.aggreagatedDataset, (d) => d.week).split('-')[0],
-    maxInitiatives: d3.max(props.aggreagatedDataset, (d) => d.initiatives),
-    minInitiatives: d3.min(props.aggreagatedDataset, (d) => d.initiatives),
+    initDate: min(props.aggreagatedDataset, (d) => d.week),
+    endDate: max(props.aggreagatedDataset, (d) => d.week),
+    firstYear: min(props.aggreagatedDataset, (d) => d.week).split('-')[0],
+    lastYear: max(props.aggreagatedDataset, (d) => d.week).split('-')[0],
+    maxInitiatives: max(props.aggreagatedDataset, (d) => d.initiatives),
+    minInitiatives: min(props.aggreagatedDataset, (d) => d.initiatives),
   };
   // allyears is an array going from firstYear to lastYear (both included)
   a.countYears = parseInt(a.lastYear) - parseInt(a.firstYear);
 
-  a.allYears = d3.range(parseInt(a.firstYear), parseInt(a.lastYear) + 1);
+  a.allYears = range(parseInt(a.firstYear), parseInt(a.lastYear) + 1);
   return a;
 });
 
@@ -392,12 +392,12 @@ const activeDataAnalytics = computed(() => {
     activeData.value.length > 0
   ) {
     return {
-      initDate: d3.min(activeData.value, (d) => d.week),
-      endDate: d3.max(activeData.value, (d) => d.week),
-      firstYear: d3.min(activeData.value, (d) => d.week).split('-')[0],
-      lastYear: d3.max(activeData.value, (d) => d.week).split('-')[0],
-      maxInitiatives: d3.max(activeData.value, (d) => d.initiatives),
-      minInitiatives: d3.min(activeData.value, (d) => d.initiatives),
+      initDate: min(activeData.value, (d) => d.week),
+      endDate: max(activeData.value, (d) => d.week),
+      firstYear: min(activeData.value, (d) => d.week).split('-')[0],
+      lastYear: max(activeData.value, (d) => d.week).split('-')[0],
+      maxInitiatives: max(activeData.value, (d) => d.initiatives),
+      minInitiatives: min(activeData.value, (d) => d.initiatives),
     };
   } else return datasetAnalytics.value;
 });
@@ -411,11 +411,9 @@ const activeDataAnalytics = computed(() => {
 // xScale is a band scale with the weeks as domain
 const xScale = computed(() =>
   multiYearMode.value === true
-    ? d3
-        .scaleBand()
+    ? scaleBand()
         .domain(
-          d3
-            .range(52)
+          range(52)
             .map(
               (d) =>
                 activeDataAnalytics.value.firstYear +
@@ -425,8 +423,7 @@ const xScale = computed(() =>
         )
         .range([0, width.value])
         .padding(0)
-    : d3
-        .scaleBand()
+    : scaleBand()
         .domain(activeData.value.map((d) => d.week))
         .range([0, width.value])
         .padding(0)
@@ -436,8 +433,7 @@ const xScale = computed(() =>
 const xScaleTimeForAxis = computed(() => {
   const week0 = xScale.value?.domain()[0];
   const week1 = xScale.value?.domain()[xScale.value?.domain().length - 1];
-  const scale = d3
-    .scaleTime()
+  const scale = scaleTime()
     .domain([getMondayOfISOWeek(week0), getSundayFromYearWeek(week1)])
     .range([0, width.value]);
 
@@ -445,22 +441,20 @@ const xScaleTimeForAxis = computed(() => {
 });
 // this are the actual ticks for the x axis, label and positions
 const xScaleTicks = computed(() => {
-  const format = d3.timeFormat('%b %Y'); // short version of the date
-  return xScaleTimeForAxis.value.ticks(d3.timeMonth.every(3)).map(format); // ticks every 3 months
+  const format = timeFormat('%b %Y'); // short version of the date
+  return xScaleTimeForAxis.value.ticks(timeMonth.every(3)).map(format); // ticks every 3 months
 });
 
 const xScaleTicksPositions = computed(() =>
-  xScaleTimeForAxis.value.ticks(d3.timeMonth.every(3))
+  xScaleTimeForAxis.value.ticks(timeMonth.every(3))
 );
 
 const yScale = computed(() =>
   isRelativeModeReady.value
-    ? d3
-        .scaleLinear()
+    ? scaleLinear()
         .domain([0, aggreagatedDatasetAnalytics.value.maxInitiatives])
         .range([height.value, 0])
-    : d3
-        .scaleLinear()
+    : scaleLinear()
         .domain([0, datasetAnalytics.value.maxInitiatives])
         .range([height.value, 0])
 );

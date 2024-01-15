@@ -43,7 +43,7 @@
  * The sankey takes the whole width of the parent container
  * for a smaller or larger sankey the parent container of ref="chartWrapper" should be resized accordingly
  * Is relatively responsive, but the nodes are not resized. Since tags are long this requieres at least 960px
- * This implementation is not reactive to changes in the data (not necessary since data is static), but it is reactive to changes in the width of the parent container
+ * This implementation is **not reactive to changes** in the data (not necessary since data is static), but it is reactive to changes in the width of the parent container
  * canvas height is relative to the number of nodes
  */
 import { select, selectAll, color } from 'd3';
@@ -53,7 +53,6 @@ import slugify from 'slugify';
 // more complex: http://localhost:5173/iniciativas/162-000605
 
 import { computed, ref, onMounted, onUnmounted, nextTick, watch } from 'vue';
-import { ca } from 'date-fns/locale';
 
 const props = defineProps({
   initiative: {
@@ -285,19 +284,8 @@ onMounted(() => {
 let sankey = null;
 let svg = null;
 let graph = null;
-const canvas = ref(null);
+const canvas = ref(null); // template ref to the svg element
 const initChart = function () {
-  sankey = sankeyGenerator();
-  try {
-    graph = sankey({
-      nodes: nodes.map((d) => Object.assign({}, d)),
-      links: links.map((d) => Object.assign({}, d)),
-    });
-  } catch (e) {
-    console.log(e);
-    return;
-  }
-
   svg = select(canvas.value);
   svg.selectAll('g').remove();
   svg.append('g').classed('links', true);
