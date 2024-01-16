@@ -13,6 +13,7 @@
   "dependencies": {
     "@politicalwatch/tipi-uikit": "^1.5.7",
     "@vuepic/vue-datepicker": "^7.0.0",
+    "@vueuse/motion": "^2.0.0",
     "axios": "^1.5.1",
     "core-js": "^3.32.2",
     "crypto-js": "^4.1.1",
