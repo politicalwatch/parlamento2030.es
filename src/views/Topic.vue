@@ -3,7 +3,26 @@
     <tipi-topic-card :topic="topic" :topicsStyles="styles" />
 
     <div id="topic" class="o-container o-section">
+      <div class="u-margin-bottom-4">
+        <h4 class="u-margin-bottom-4" v-if="latestInitiatives">
+          Frecuencia de las iniciativas
+        </h4>
+        <FrequencyChart
+          :topicsStyles="styles"
+          :topic="topic"
+          :dataset="topicsByWeek"
+          :aggreagatedDataset="allTopicsByWeek"
+          @update:showComparativeMode="getAllTopicsByWeek()"
+          v-if="topicsByWeek != null"
+        />
+      </div>
+
       <div class="o-grid">
+        <div class="o-grid__col u-12">
+          <h4 class="u-margin-bottom-4" v-if="latestInitiatives">
+            Ranking de actividad
+          </h4>
+        </div>
         <div class="o-grid__col u-12 u-4@sm" v-if="deputies">
           <tipi-text
             meta="Diputadas/os más activas/os"
@@ -24,6 +43,7 @@
           <tipi-text meta="Dónde se trata más" :value="places" />
         </div>
       </div>
+
       <div class="u-border-top u-padding-top-4" v-if="latestInitiatives">
         <h4 class="u-margin-bottom-4" v-if="latestInitiatives">
           Últimas iniciativas
@@ -96,6 +116,7 @@ import AlertBlock from '@/components/alert-block.vue';
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
+import FrequencyChart from '../components/FrequencyChart.vue';
 
 export default {
   name: 'topic',
@@ -106,6 +127,7 @@ export default {
     TipiText,
     TipiLoader,
     AlertBlock,
+    FrequencyChart,
   },
   setup() {
     const store = useParliamentStore();
@@ -118,6 +140,8 @@ export default {
       places: null,
       parliamentarygroups: null,
       latestInitiatives: null,
+      topicsByWeek: null,
+      allTopicsByWeek: null,
       styles: config.STYLES.topics,
       use_alerts: config.USE_ALERTS,
       loaded: false,
@@ -133,6 +157,7 @@ export default {
           this.getParliamentarygroupsRanking(this.topic.name);
           this.getDeputiesRanking(this.topic.name);
           this.getPlacesRanking(this.topic.name);
+          this.getTopicsByWeek(this.topic.name);
         })
         .catch((error) => {
           this.errors = error;
@@ -184,6 +209,23 @@ export default {
         .then((response) => {
           if (response.initiatives)
             this.latestInitiatives = response.initiatives;
+        })
+        .catch((error) => (this.errors = error));
+    },
+    getTopicsByWeek: function (topic) {
+      api
+        .getTopicsByWeek(topic)
+        .then((response) => {
+          this.topicsByWeek = response.data;
+        })
+        .catch((error) => (this.errors = error));
+    },
+
+    getAllTopicsByWeek: function () {
+      api
+        .getAllTopicsByWeek(topic)
+        .then((response) => {
+          this.allTopicsByWeek = response.data;
         })
         .catch((error) => (this.errors = error));
     },

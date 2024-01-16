@@ -65,14 +65,25 @@
                 <tipi-text meta="Registro" :value="formattedDate" />
               </div>
             </div>
-            <tipi-topics
-              class="u-hide u-block@md"
-              meta="ODS tratados"
-              :topics="getTopics()"
-              :tags="getTags()"
-              :topicsStyles="styles.topics"
-            />
-
+            <div class="o-grid u-padding-top-4 u-margin-bottom-4">
+              <div class="o-grid__col u-12 u-3@sm">
+                <tipi-text
+                  meta="Autor"
+                  :value="initiative.authors"
+                  type="parliamentarygroup"
+                  :source="this.store.allParliamentaryGroups"
+                />
+              </div>
+              <div class="o-grid__col u-12 u-9@sm">
+                <tipi-text
+                  class="c-text__list--deputies"
+                  meta="Diputada/o"
+                  :value="initiative.deputies"
+                  type="deputy"
+                  :source="this.store.allDeputies"
+                />
+              </div>
+            </div>
             <div
               class="o-grid u-margin-top-4 u-padding-top-4 u-border-top u-hide u-block@md"
               v-if="initiative.related && initiative.related.length"
@@ -104,22 +115,34 @@
                 ></span
               >
             </div>
-            <div class="u-border-bottom u-margin-bottom-4">
-              <tipi-text
-                meta="Autor"
-                :value="initiative.authors"
-                type="parliamentarygroup"
-                :source="this.store.allParliamentaryGroups"
-              />
-              <tipi-text
-                meta="Diputada/o"
-                :value="initiative.deputies"
-                type="deputy"
-                :source="this.store.allDeputies"
-              />
-            </div>
+          </div>
+          <div class="o-grid__col u-12">
+            <h6 class="c-text__label u-margin-bottom-4">ODS tratados</h6>
+            <tabs :tabs="[{ label: 'Modo visual' }, { label: 'Modo texto' }]">
+              <template #tab-0>
+                <div v-motion-fade>
+                  <InitiativeFlow
+                    :initiative="initiative"
+                    :topics="this.store.allTopics"
+                    :styles="styles"
+                    v-if="dataLoaded"
+                  />
+                </div>
+              </template>
+              <template #tab-1>
+                <tipi-topics
+                  class="u-hide u-block@md"
+                  meta="ODS tratados"
+                  :topics="getTopics()"
+                  :tags="getTags()"
+                  :topicsStyles="styles.topics"
+                  v-motion-fade
+                />
+              </template>
+            </tabs>
           </div>
         </div>
+
         <div class="u-hide@md">
           <tipi-topics
             meta="ODS tratados"
@@ -170,6 +193,8 @@ import { useParliamentStore } from '@/stores/parliament';
 import { format } from 'date-fns/format';
 import InitiativeChart from '@/components/initiative-chart.vue';
 import ConversationLink from '@/components/conversation-link.vue';
+import Tabs from '@/components/Tabs.vue';
+import InitiativeFlow from '@/components/InitiativeFlow.vue';
 
 export default {
   name: 'initiative',
@@ -185,6 +210,8 @@ export default {
     TipiResults,
     InitiativeChart,
     TipiLoader,
+    Tabs,
+    InitiativeFlow,
   },
   setup() {
     const store = useParliamentStore();
@@ -270,5 +297,13 @@ export default {
 .c-congress-link {
   display: inline-block;
   margin-bottom: 37px;
+}
+
+.c-text__list--deputies {
+  .c-text__list {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+  }
 }
 </style>

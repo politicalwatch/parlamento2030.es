@@ -3,6 +3,7 @@ import App from './App.vue';
 import { createPinia } from 'pinia';
 import { createMetaManager } from 'vue-meta';
 import router from '@/router';
+import { MotionPlugin } from '@vueuse/motion';
 import VueGtag from 'vue-gtag';
 import VueScrollTo from 'vue-scrollto';
 
@@ -19,6 +20,7 @@ app.use(
   },
   router
 );
+app.use(MotionPlugin);
 
 app.directive('scroll-to', VueScrollTo);
 
