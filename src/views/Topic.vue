@@ -3,7 +3,26 @@
     <tipi-topic-card :topic="topic" :topicsStyles="styles" />
 
     <div id="topic" class="o-container o-section">
+      <div class="u-margin-bottom-4">
+        <h4 class="u-margin-bottom-4" v-if="latestInitiatives">
+          Frecuencia de las iniciativas
+        </h4>
+        <FrequencyChart
+          :topicsStyles="styles"
+          :topic="topic"
+          :dataset="topicsByWeek"
+          :aggreagatedDataset="allTopicsByWeek"
+          @update:showComparativeMode="getAllTopicsByWeek()"
+          v-if="topicsByWeek != null"
+        />
+      </div>
+
       <div class="o-grid">
+        <div class="o-grid__col u-12">
+          <h4 class="u-margin-bottom-4" v-if="latestInitiatives">
+            Ranking de actividad
+          </h4>
+        </div>
         <div class="o-grid__col u-12 u-4@sm" v-if="deputies">
           <tipi-text
             meta="Diputadas/os más activas/os"
@@ -23,19 +42,6 @@
         <div class="o-grid__col u-12 u-4@sm" v-if="places">
           <tipi-text meta="Dónde se trata más" :value="places" />
         </div>
-      </div>
-      <div>
-        <h4 class="u-margin-bottom-4" v-if="latestInitiatives">
-          Frecuencia de las iniciativas
-        </h4>
-        <frequency-chart
-          :topicsStyles="styles"
-          :topic="topic"
-          :dataset="topicsByWeek"
-          :aggreagatedDataset="allTopicsByWeek"
-          @update:showComparativeMode="getAllTopicsByWeek()"
-          v-if="topicsByWeek != null"
-        ></frequency-chart>
       </div>
 
       <div class="u-border-top u-padding-top-4" v-if="latestInitiatives">
@@ -223,7 +229,6 @@ export default {
         })
         .catch((error) => (this.errors = error));
     },
-
   },
   metaInfo() {
     const title = this.topic?.name
