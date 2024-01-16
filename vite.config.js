@@ -29,14 +29,7 @@ export default defineConfig({
     }),
   ],
   optimizeDeps: {
-    include: [
-      'masonry-layout',
-      'save-svg-as-png',
-      'pluralize',
-      'd3',
-      'd3-cloud',
-      'd3-dispatch',
-    ],
+    include: ['masonry-layout', 'save-svg-as-png', 'pluralize', 'd3-cloud'],
   },
   resolve: {
     alias: {
