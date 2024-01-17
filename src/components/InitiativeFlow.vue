@@ -11,29 +11,31 @@
         ref="canvas"
       ></g>
     </svg>
-    <transition name="popup">
-      <div
-        class="simple-tooltip"
-        v-show="selectedSubtopic"
-        :style="{ top: tooltipInfo.y + 'px', left: tooltipInfo.x + 'px' }"
-      >
+    <Teleport to="body">
+      <transition name="popup">
         <div
-          class="simple-tooltip-inner"
-          v-if="selectedSubtopic"
-          :style="{
-            'background-color': tooltipInfo.color,
-          }"
+          class="simple-tooltip"
+          v-show="selectedSubtopic"
+          :style="{ top: tooltipInfo.y + 'px', left: tooltipInfo.x + 'px' }"
         >
-          <div>
-            <i v-html="selectedSubtopic.name"></i>
-          </div>
+          <div
+            class="simple-tooltip-inner"
+            v-if="selectedSubtopic"
+            :style="{
+              'background-color': tooltipInfo.color,
+            }"
+          >
+            <div>
+              <i v-html="selectedSubtopic.name"></i>
+            </div>
 
-          <div style="margin-top: 1rem">
-            Apariciones: <strong>{{ selectedSubtopic.value }} </strong>
+            <div style="margin-top: 1rem">
+              Apariciones: <strong>{{ selectedSubtopic.value }} </strong>
+            </div>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </Teleport>
   </div>
 </template>
 

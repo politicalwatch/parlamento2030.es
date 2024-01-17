@@ -10,7 +10,7 @@
           :text-anchor="
             xScale(activeBar.week) < 50
               ? 'start'
-              : xScale(activeBar.week) > width - 20
+              : xScale(activeBar.week) > width - 30
                 ? 'end'
                 : 'middle'
           "
@@ -23,7 +23,7 @@
               })
             }})
           </tspan>
-          <tspan dy="0.9rem" :x="xScale(activeBar.week)" :y="margin.top / 2">
+          <tspan dy="1em" :x="xScale(activeBar.week)" :y="margin.top / 2">
             Iniciativas:
             <tspan font-weight="bold">{{ activeBar.initiatives }}</tspan>
           </tspan>
