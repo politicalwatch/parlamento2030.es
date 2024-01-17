@@ -11,7 +11,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@politicalwatch/tipi-uikit": "^1.5.7",
+    "@politicalwatch/tipi-uikit": "^1.7.19",
     "@vuepic/vue-datepicker": "^7.0.0",
     "@vueuse/motion": "^2.0.0",
     "axios": "^1.5.1",
