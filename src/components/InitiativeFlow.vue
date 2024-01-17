@@ -1,9 +1,9 @@
 <template>
   <div class="sankey-chart-initiatives-flow" ref="chartWrapper">
     <div class="o-grid chart-titles" style="">
-      <div class="o-grid__col u-4"> ODS </div>
-      <div class="o-grid__col u-4"> META</div>
-      <div class="o-grid__col u-4"> ETIQUETA </div>
+      <div class="o-grid__col u-4">ODS</div>
+      <div class="o-grid__col u-4">META</div>
+      <div class="o-grid__col u-4">ETIQUETA</div>
     </div>
     <svg id="canvas" :height="height" :width="width">
       <g
@@ -11,29 +11,31 @@
         ref="canvas"
       ></g>
     </svg>
-    <transition name="popup">
-      <div
-        class="simple-tooltip"
-        v-show="selectedSubtopic"
-        :style="{ top: tooltipInfo.y + 'px', left: tooltipInfo.x + 'px' }"
-      >
+    <Teleport to="body">
+      <transition name="popup">
         <div
-          class="simple-tooltip-inner"
-          v-if="selectedSubtopic"
-          :style="{
-            'background-color': tooltipInfo.color,
-          }"
+          class="simple-tooltip"
+          v-show="selectedSubtopic"
+          :style="{ top: tooltipInfo.y + 'px', left: tooltipInfo.x + 'px' }"
         >
-          <div>
-            <i v-html="selectedSubtopic.name"></i>
-          </div>
+          <div
+            class="simple-tooltip-inner"
+            v-if="selectedSubtopic"
+            :style="{
+              'background-color': tooltipInfo.color,
+            }"
+          >
+            <div>
+              <i v-html="selectedSubtopic.name"></i>
+            </div>
 
-          <div style="margin-top: 1rem">
-            Apariciones: <strong>{{ selectedSubtopic.value }} </strong>
+            <div style="margin-top: 1rem">
+              Apariciones: <strong>{{ selectedSubtopic.value }} </strong>
+            </div>
           </div>
         </div>
-      </div>
-    </transition>
+      </transition>
+    </Teleport>
   </div>
 </template>
 
@@ -145,11 +147,10 @@ const buildNodes = (allTags) => {
       if (parseInt(aNum) < parseInt(bNum)) return -1;
       else return 1;
     });
-    
   } catch (e) {
     console.log('error on sorting, not sorting topics');
   }
-// sort subtopics
+  // sort subtopics
   try {
     subtopics.sort((a, b) => {
       const aNum = a.topic.split(' ')[1];
@@ -157,7 +158,6 @@ const buildNodes = (allTags) => {
       if (parseInt(aNum) < parseInt(bNum)) return -1;
       else return 1;
     });
-    
   } catch (e) {
     console.log('error on sorting, not sorting topics');
   }
@@ -170,12 +170,9 @@ const buildNodes = (allTags) => {
       if (parseInt(aNum) < parseInt(bNum)) return -1;
       else return 1;
     });
-    
   } catch (e) {
     console.log('error on sorting, not sorting topics');
   }
-
-  
 
   return [...topics, ...subtopics, ...stdTagsMapValues];
 };
@@ -410,17 +407,16 @@ function updateChart(from) {
     .append('rect')
     .merge(nodes_update.select('rect'))
     .attr('fill', (d) => {
-      if(d.depth == 0 || d.depth==1) return d.color      
-      else return 'white'
+      if (d.depth == 0 || d.depth == 1) return d.color;
+      else return 'white';
     })
     .attr('stroke', (d) => {
-      if(d.depth === 0 || d.depth===1) return 'transparent'
-      if(d.targetLinks.length === 1) return d.color;
-      return 'grey'
+      if (d.depth === 0 || d.depth === 1) return 'transparent';
+      if (d.targetLinks.length === 1) return d.color;
+      return 'grey';
     })
     .attr('stroke-width', (d) => {
-      
-      return 1
+      return 1;
     })
     .transition()
     .duration(1000)
@@ -482,7 +478,6 @@ function updateChart(from) {
         .attr('dy', (d, i) => (i ? '1.1em' : 0))
         .text((d) => d);
     });
-  
 
   textnode.raise();
 
@@ -524,8 +519,6 @@ function updateChart(from) {
       return `translate(${d.x0}, ${d.y0})`;
     }
   }
-
-  
 }
 </script>
 
@@ -540,15 +533,12 @@ function updateChart(from) {
     fill: #2d4252;
   }
   .nodes text {
-
   }
   .nodes text.layer-1 {
     font-weight: 800;
     font-size: 13px;
     fill: white;
   }
-
-  
 
   .node.interactive {
     cursor: pointer;
@@ -615,19 +605,18 @@ rect.selected {
   stroke-width: 2px !important;
 }
 
-.chart-titles div{
- font-size:12px;
- 
+.chart-titles div {
+  font-size: 12px;
 }
-.chart-titles div:nth-child(1){
-  text-align:right;
+.chart-titles div:nth-child(1) {
+  text-align: right;
   padding-right: 74px;
 }
-.chart-titles div:nth-child(2){
-  text-align:center;
+.chart-titles div:nth-child(2) {
+  text-align: center;
 }
-.chart-titles div:nth-child(3){
-  text-align:left;
+.chart-titles div:nth-child(3) {
+  text-align: left;
   padding-left: 76px;
 }
 </style>
