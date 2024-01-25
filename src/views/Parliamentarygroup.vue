@@ -120,7 +120,17 @@ export default {
       topicsStyles: config.STYLES.topics,
     };
   },
+  head() {
+    return {
+      title: () => this.headTitle,
+    };
+  },
   computed: {
+    headTitle: function () {
+      return this.parliamentarygroup?.name
+        ? `${this.parliamentarygroup.name} - Parlamento2030`
+        : 'Parlamento2030';
+    },
     deputies: function () {
       if (this.parliamentarygroup) {
         return this.store
@@ -180,22 +190,6 @@ export default {
         })
         .catch((error) => (this.errors = error));
     },
-  },
-  metaInfo() {
-    const title = this.parliamentarygroup?.name
-      ? `${this.parliamentarygroup.name} - Qué hacen los diputados`
-      : '- Qué hacen los diputados';
-
-    return {
-      title,
-      meta: [
-        {
-          property: 'og:title',
-          content: title,
-          vmid: 'og:title',
-        },
-      ],
-    };
   },
   created: function () {
     this.getParliamentaryGroup();

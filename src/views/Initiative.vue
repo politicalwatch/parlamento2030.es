@@ -224,7 +224,17 @@ export default {
       loaded: false,
     };
   },
+  head() {
+    return {
+      title: () => this.headTitle,
+    };
+  },
   computed: {
+    headTitle: function () {
+      return this.initiative?.title
+        ? `${this.initiative.title} - Parlamento2030`
+        : 'Parlamento2030';
+    },
     dataLoaded: function () {
       return (
         Object.keys(this.initiative).length && this.store.allTopics.length > 0
@@ -261,27 +271,6 @@ export default {
       }
       return tags;
     },
-  },
-  metaInfo() {
-    const title = this.initiative?.title
-      ? `${this.initiative.title} - Parlamento2030`
-      : '- Parlamento2030';
-
-    return {
-      title,
-      meta: [
-        {
-          property: 'og:title',
-          content: title,
-          vmid: 'og:title',
-        },
-        {
-          property: 'twitter:title',
-          content: title,
-          vmid: 'twitter:title',
-        },
-      ],
-    };
   },
   created: function () {
     this.getInitiative();

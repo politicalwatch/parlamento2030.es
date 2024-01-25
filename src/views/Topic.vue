@@ -147,6 +147,18 @@ export default {
       loaded: false,
     };
   },
+  head() {
+    return {
+      title: () => this.headTitle,
+    };
+  },
+  computed: {
+    headTitle: function () {
+      return this.topic?.name
+        ? `${this.topic.name} - Parlamento2030`
+        : 'Parlamento2030';
+    },
+  },
   methods: {
     getTopic: function () {
       api
@@ -229,41 +241,6 @@ export default {
         })
         .catch((error) => (this.errors = error));
     },
-  },
-  metaInfo() {
-    const title = this.topic?.name
-      ? `${this.topic.name} - Parlamento2030`
-      : '- Parlamento2030';
-
-    const description = this.topic?.description
-      ? this.topic.description
-      : 'Parlamento2030 es una innovadora herramienta que rastrea, reúne y ofrece la información sobre la actividad del Congreso de los Diputados español relacionada con los Objetivos de Desarrollo Sostenible. Diseñada para superar los retos que plantea la naturaleza transversal de la Agenda 2030, Parlamento 2030 clasifica la información relacionada con los ODS gracias a un avanzado sistema automático de etiquetado masivo. Esta innovadora tecnología permite a los usuarios navegar por la actividad parlamentaria relacionada con los ODS a través de un buscador online, abierto y gratuito. La información ofrecida es esencial de cara a la monitorización y la rendición de cuentas de la implementación de la Agenda 2030 a nivel nacional.';
-
-    return {
-      title,
-      meta: [
-        {
-          property: 'og:title',
-          content: title,
-          vmid: 'og:title',
-        },
-        {
-          property: 'twitter:title',
-          content: title,
-          vmid: 'twitter:title',
-        },
-        {
-          vmid: 'description',
-          name: 'description',
-          content: description,
-        },
-        {
-          property: 'og:description',
-          content: description,
-          vmid: 'og:description',
-        },
-      ],
-    };
   },
   created: function () {
     this.getTopic();
