@@ -66,7 +66,14 @@
               </div>
             </div>
             <div class="o-grid u-padding-top-4 u-margin-bottom-4">
-              <div class="o-grid__col u-12 u-3@sm">
+              <div
+                :class="
+                  initiative.deputies.length
+                    ? 'o-grid__col u-12 u-4@sm'
+                    : 'o-grid__col u-12'
+                "
+                v-if="initiative.authors.length"
+              >
                 <tipi-text
                   meta="Autor"
                   :value="initiative.authors"
@@ -74,7 +81,10 @@
                   :source="this.store.allParliamentaryGroups"
                 />
               </div>
-              <div class="o-grid__col u-12 u-9@sm">
+              <div
+                class="o-grid__col u-12 u-8@sm"
+                v-if="initiative.deputies.length"
+              >
                 <tipi-text
                   class="c-text__list--deputies"
                   meta="Diputada/o"
