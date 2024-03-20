@@ -52,7 +52,7 @@ import {
   TipiResults,
 } from '@politicalwatch/tipi-uikit';
 import { nextTick } from 'vue';
-import { useParliamentStore } from "@/stores/parliament";
+import { useParliamentStore } from '@/stores/parliament';
 import qs from 'qs';
 import VueScrollTo from 'vue-scrollto';
 
@@ -180,7 +180,11 @@ export default {
       api
         .getInitiatives(params)
         .then((response) => {
-          this.csvItems = response.initiatives;
+          this.csvItems = response.initiatives.map((initiative) => ({
+            ...initiative,
+            topics: initiative.tagged[0].topics.join(', '),
+            tags: initiative.tagged[0].tags.map((tag) => tag.tag).join(', '),
+          }));
           event.target.innerText = 'Descarga los datos';
         })
         .catch((error) => (this.errors = error));
