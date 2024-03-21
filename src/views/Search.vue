@@ -11,7 +11,10 @@
       <div class="o-grid o-grid--align-center u-margin-bottom-4" id="results">
         <div class="o-grid__col o-grid__col--fill">
           <h4 v-if="this.query_meta.page">{{ message.message }}</h4>
-          <tipi-message v-if="!canDownloadCSV" icon type="info"
+          <tipi-message
+            v-if="initiatives.length > 0 && !canDownloadCSV"
+            icon
+            type="info"
             >Se ha superado el número máximo de datos para
             descargar</tipi-message
           >
