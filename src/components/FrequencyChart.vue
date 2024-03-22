@@ -1,5 +1,15 @@
 <template>
-  <div class="frequency-chart-wrapper" ref="chartWrapper">
+  <div class="frequency-chart-wrapper u-relative" ref="chartWrapper">
+    <tipi-loader
+      class="custom-tipi-loader-styles"
+      :style="{
+        width: availableWidth + 'px',
+        height: availableHeight + 'px',
+      }"
+      v-if="loadingDynamicData"
+      title="Cargando datos"
+      subtitle=""
+    />
     <svg :width="availableWidth" :height="availableHeight">
       <g class="top-text" :transform="`translate(${margin.left}, 0)`">
         <text
@@ -79,7 +89,10 @@
 
       <!-- bars -->
       <g class="rects" :transform="`translate(${margin.left}, ${margin.top})`">
-        <g v-for="(bar, index) in bars" :key="multiYearMode?bar.week.split('-')[1]:bar.week">
+        <g
+          v-for="(bar, index) in bars"
+          :key="multiYearMode ? bar.week.split('-')[1] : bar.week"
+        >
           <!-- a "background rect" invisible ocupying full height above each one of the previous rects useful only for interaction-->
           <rect
             :x="xScale(bar.week)"
@@ -196,7 +209,7 @@
           @update:checked="showComparativeMode = $event"
         ></UiSwitch>
         <UiSwitch
-        v-if="availableMultiYearOptions"
+          v-if="availableMultiYearOptions"
           label="Mostrar todo el periodo"
           :checked="forceSingleYearMode"
           @update:checked="forceSingleYearMode = $event"
@@ -226,11 +239,21 @@ Since the default state is false, the chart will display the evolution of the to
 To avoid loading unused data, the dataset for the aggregated dataset is provided by the parent component when the user clicks on the relative mode switch
 */
 
-
 import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue';
-import {min, max, range, scaleBand, timeFormat, timeWeek, timeMonth, scaleLinear, scaleTime} from 'd3'
+import {
+  min,
+  max,
+  range,
+  scaleBand,
+  timeFormat,
+  timeWeek,
+  timeMonth,
+  scaleLinear,
+  scaleTime,
+} from 'd3';
 import vTr3nsition from './vTr3nsition.js';
 import UiSwitch from './UiSwitch.vue';
+import { TipiLoader } from '@politicalwatch/tipi-uikit';
 const props = defineProps({
   defaultHeight: {
     type: Number,
@@ -271,6 +294,10 @@ const props = defineProps({
   aggreagatedDataset: {
     type: [null, Array],
     default: () => [[]],
+  },
+  loadingDynamicData: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -315,9 +342,7 @@ const data = computed(() => {
     const arr = [];
     for (let i = 0; i < 90; i++) {
       arr.push({
-        week: timeFormat('%Y-%W')(
-          timeWeek.offset(new Date('2022-01-01'), i)
-        ),
+        week: timeFormat('%Y-%W')(timeWeek.offset(new Date('2022-01-01'), i)),
         initiatives: Math.floor(Math.random() * 100),
       });
     }
@@ -402,8 +427,6 @@ const activeDataAnalytics = computed(() => {
   } else return datasetAnalytics.value;
 });
 
-
-
 /*** scales for charts
  * To set the domains we take into account the mode (multiYearMode) and if aggregated data is also on the chart
  */
@@ -413,13 +436,12 @@ const xScale = computed(() =>
   multiYearMode.value === true
     ? scaleBand()
         .domain(
-          range(52)
-            .map(
-              (d) =>
-                activeDataAnalytics.value.firstYear +
-                '-' +
-                ('0' + (d + 1)).slice(-2)
-            )
+          range(52).map(
+            (d) =>
+              activeDataAnalytics.value.firstYear +
+              '-' +
+              ('0' + (d + 1)).slice(-2)
+          )
         )
         .range([0, width.value])
         .padding(0)
@@ -463,20 +485,18 @@ const barWidth = computed(() => xScale.value.bandwidth());
 const bars = computed(() => activeData.value);
 const aggregatedBars = computed(() => activeDataAggregated.value);
 
-
 //** interaction block*/
 const activeBar = ref(null);
 const activeYear = ref(null);
 const forceSingleYearMode = ref(false);
 
-// multiYearMode is true if there is more than one year in the dataset and forceSingleYearMode is false. 
+// multiYearMode is true if there is more than one year in the dataset and forceSingleYearMode is false.
 const availableMultiYearOptions = computed(
-  () =>
-    datasetAnalytics.value.countYears > 1
+  () => datasetAnalytics.value.countYears > 1
 );
 const multiYearMode = computed(
-  () =>  availableMultiYearOptions.value && !forceSingleYearMode.value
-); 
+  () => availableMultiYearOptions.value && !forceSingleYearMode.value
+);
 
 onMounted(() => {
   // Code to fetch data and update the 'data' ref can be added here
@@ -488,7 +508,6 @@ const theme = ref({
   lightGray: '#9cb0bf',
 });
 
-
 // relative view
 const emit = defineEmits(['update:showComparativeMode']);
 
@@ -498,7 +517,8 @@ watch(showComparativeMode, (newValue, oldValue) => {
 });
 
 const isRelativeModeReady = computed(
-  () => showComparativeMode.value === true && props.aggreagatedDataset?.length > 0
+  () =>
+    showComparativeMode.value === true && props.aggreagatedDataset?.length > 0
 );
 
 // utils for time conversion beteween yearly-weeks and dates according to the iso standard
@@ -562,9 +582,8 @@ function getSundayFromYearWeek(yearWeek) {
 .yearSelectors {
   display: flex;
   justify-content: center;
-  
+
   gap: 2px;
-  
 }
 .yearSelectors a:first-child {
   border-radius: 0.4rem 0 0 0.4rem;
@@ -580,7 +599,15 @@ function getSundayFromYearWeek(yearWeek) {
   align-items: center;
   margin-top: 0rem;
 }
-.frequency-chart-wrapper{
+.frequency-chart-wrapper {
   margin-bottom: 1rem;
+}
+
+.custom-tipi-loader-styles {
+  position: absolute;
+  top: 0;
+  left: 0;
+  opacity: 0.5;
+  z-index: 100;
 }
 </style>
