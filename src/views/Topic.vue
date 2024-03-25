@@ -12,6 +12,7 @@
           :topic="topic"
           :dataset="topicsByWeek"
           :aggreagatedDataset="allTopicsByWeek"
+          :loadingDynamicData="loadingDynamicData"
           @update:showComparativeMode="getAllTopicsByWeek()"
           v-if="topicsByWeek != null"
         />
@@ -145,6 +146,7 @@ export default {
       styles: config.STYLES.topics,
       use_alerts: config.USE_ALERTS,
       loaded: false,
+      loadingDynamicData: false, // This is used to show the loader when the user clicks on the comparative mode
     };
   },
   head() {
@@ -225,21 +227,31 @@ export default {
         .catch((error) => (this.errors = error));
     },
     getTopicsByWeek: function (topic) {
+      this.loadingDynamicData = true
       api
         .getTopicsByWeek(topic)
         .then((response) => {
           this.topicsByWeek = response.data;
         })
-        .catch((error) => (this.errors = error));
+        .catch((error) => (this.errors = error))
+        .finally(() => {
+          this.loadingDynamicData = false
+        });
     },
 
     getAllTopicsByWeek: function () {
+      if(this.allTopicsByWeek !== null) return 
+      this.loadingDynamicData = true
       api
         .getAllTopicsByWeek(topic)
         .then((response) => {
           this.allTopicsByWeek = response.data;
         })
-        .catch((error) => (this.errors = error));
+        .catch((error) => (this.errors = error))
+        .finally(() => {
+          this.loadingDynamicData = false
+        });
+
     },
   },
   created: function () {
