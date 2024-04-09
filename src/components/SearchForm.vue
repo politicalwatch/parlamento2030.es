@@ -305,7 +305,6 @@ export default {
     return {
       subtopics: [],
       tags: [],
-      form: {},
       errors: null,
       selectedSubtopics: [],
       filteredTags: [],
