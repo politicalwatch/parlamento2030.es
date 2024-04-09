@@ -27,7 +27,7 @@
             @loadCSVItems="loadCSVItems"
           />
           <save-alert
-            :searchparams="data"
+            :searchparams="formData"
             v-show="alertsIsEnabled() && this.query_meta.page"
           />
         </div>
