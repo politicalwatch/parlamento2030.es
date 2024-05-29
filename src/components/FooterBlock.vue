@@ -114,56 +114,45 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline';
 import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css';
 import { bootstrap } from 'vue-gtag';
 import { TipiIcon } from '@politicalwatch/tipi-uikit';
 
-export default {
-  name: 'footer-block',
-  components: {
-    VueCookieAcceptDecline,
-    TipiIcon,
-  },
-  mounted() {
-    // this.$refs.cookiePanel.removeCookie();
-    // this.$refs.cookiePanel.init();
-  },
-  methods: {
-    cookieStatus: (val) => {
-      // console.log('Cookie status: ' + val);
-      if (val === 'decline' || val == null) {
-        if (gtag) {
-          gtag('consent', 'default', {
-            ad_storage: 'denied',
-            analytics_storage: 'denied',
-          });
-        }
-      } else if (val === 'accept') {
-        bootstrap().then(() => {
-          gtag('consent', 'update', {
-            ad_storage: 'granted',
-            analytics_storage: 'granted',
-          });
-        });
-      }
-    },
-    cookieClickedAccept: () => {
-      bootstrap().then(() => {
-        gtag('consent', 'update', {
-          ad_storage: 'granted',
-          analytics_storage: 'granted',
-        });
-      });
-    },
-    cookieClickedDecline: () => {
+const cookieStatus = (val) => {
+  // console.log('Cookie status: ' + val);
+  if (val === 'decline' || val == null) {
+    if (gtag) {
       gtag('consent', 'default', {
         ad_storage: 'denied',
         analytics_storage: 'denied',
       });
-    },
-  },
+    }
+  } else if (val === 'accept') {
+    bootstrap().then(() => {
+      gtag('consent', 'update', {
+        ad_storage: 'granted',
+        analytics_storage: 'granted',
+      });
+    });
+  }
+};
+
+const cookieClickedAccept = () => {
+  bootstrap().then(() => {
+    gtag('consent', 'update', {
+      ad_storage: 'granted',
+      analytics_storage: 'granted',
+    });
+  });
+};
+
+const cookieClickedDecline = () => {
+  gtag('consent', 'default', {
+    ad_storage: 'denied',
+    analytics_storage: 'denied',
+  });
 };
 </script>
 

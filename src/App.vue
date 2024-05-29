@@ -2,51 +2,41 @@
   <div id="app">
     <transition name="fade" mode="out-in">
       <div>
-        <tipi-navbar
+        <TipiNavbar
           pre-image="/img/multicolor.jpg"
           :links="MENU"
           :disclaimerLink="DISCLAIMER"
           :logo="LOGO"
         />
         <router-view />
-        <footer-block />
+        <FooterBlock />
       </div>
     </transition>
   </div>
 </template>
 
-<script>
+<script setup>
+import { onMounted } from 'vue';
 import { TipiNavbar } from '@politicalwatch/tipi-uikit';
-import FooterBlock from '@/components/footer-block.vue';
+
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
+import FooterBlock from '@/components/FooterBlock.vue';
 
-export default {
-  name: 'app',
-  components: {
-    TipiNavbar,
-    FooterBlock,
-  },
-  setup() {
-    const store = useParliamentStore();
-    return { store };
-  },
-  data: function () {
-    return {
-      MENU: config.MENU,
-      DISCLAIMER: config.DISCLAIMER,
-      LOGO: config.LOGO,
-    };
-  },
-  created: function () {
-    this.store.getDeputies();
-    this.store.getTopics();
-    this.store.getStatus();
-    this.store.getPlaces();
-    this.store.getTypes();
-    this.store.getParliamentaryGroups();
-  },
-};
+const store = useParliamentStore();
+
+const MENU = config.MENU;
+const DISCLAIMER = config.DISCLAIMER;
+const LOGO = config.LOGO;
+
+onMounted(() => {
+  store.getStatus();
+  store.getPlaces();
+  store.getTypes();
+  store.getTopics();
+  store.getParliamentaryGroups();
+  store.getDeputies();
+});
 </script>
 
 <style lang="scss">
