@@ -68,7 +68,7 @@ export default {
               title: 'Alerta creada',
               text: 'Recibirá en breve un correo de confirmación',
               focusConfirm: false,
-              type: 'success',
+              icon: 'success',
             });
           })
           .catch((error) => {
@@ -80,7 +80,7 @@ export default {
                 : 'Error al crear la alerta',
               text: 'Inténtalo de nuevo más tarde',
               focusConfirm: false,
-              type: 'error',
+              icon: 'error',
             });
           });
       } else {
