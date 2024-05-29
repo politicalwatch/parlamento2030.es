@@ -56,10 +56,10 @@
         />
       </div>
     </div>
-    <alert-block
+    <AlertBlock
       :text="'No te pierdas nada de la actividad parlamentaria relacionada con el '"
       :value="topic.name"
-      :searchparams="{ topic: topic.name }"
+      :searchParams="{ topic: topic.name }"
       v-if="use_alerts"
     />
     <div id="topic" class="o-container o-section">
@@ -113,7 +113,7 @@ import {
   TipiText,
   TipiLoader,
 } from '@politicalwatch/tipi-uikit';
-import AlertBlock from '@/components/alert-block.vue';
+import AlertBlock from '@/components/AlertBlock.vue';
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
@@ -227,7 +227,7 @@ export default {
         .catch((error) => (this.errors = error));
     },
     getTopicsByWeek: function (topic) {
-      this.loadingDynamicData = true
+      this.loadingDynamicData = true;
       api
         .getTopicsByWeek(topic)
         .then((response) => {
@@ -235,13 +235,13 @@ export default {
         })
         .catch((error) => (this.errors = error))
         .finally(() => {
-          this.loadingDynamicData = false
+          this.loadingDynamicData = false;
         });
     },
 
     getAllTopicsByWeek: function () {
-      if(this.allTopicsByWeek !== null) return 
-      this.loadingDynamicData = true
+      if (this.allTopicsByWeek !== null) return;
+      this.loadingDynamicData = true;
       api
         .getAllTopicsByWeek(topic)
         .then((response) => {
@@ -249,9 +249,8 @@ export default {
         })
         .catch((error) => (this.errors = error))
         .finally(() => {
-          this.loadingDynamicData = false
+          this.loadingDynamicData = false;
         });
-
     },
   },
   created: function () {

@@ -61,10 +61,10 @@
       </tipi-message>
     </div>
 
-    <alert-block
+    <AlertBlock
       :text="'No te pierdas nada de la actividad parlamentaria de '"
       :value="deputy.name"
-      :searchparams="{ deputy: deputy.name }"
+      :searchParams="{ deputy: deputy.name }"
       v-if="use_alerts && deputy.active"
     />
   </div>
@@ -83,12 +83,13 @@ import {
   TipiIcon,
   TipiLoader,
 } from '@politicalwatch/tipi-uikit';
-import AlertBlock from '@/components/alert-block.vue';
+import AlertBlock from '@/components/AlertBlock.vue';
 import SdgBarchartFootprint from '@/components/sdg-barchart-footprint.vue';
 import FootprintInfo from '@/components/FootprintInfo.vue';
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
+import AlertBlock from '../components/AlertBlock.vue';
 
 export default {
   name: 'deputy',

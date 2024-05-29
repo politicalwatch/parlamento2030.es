@@ -40,11 +40,11 @@
               <div
                 class="o-grid__col u-12 u-7@sm u-text-left u-text-center u-text-right@sm"
               >
-                <conversation-link
+                <ConversationLink
                   v-if="initiative.status == 'Respondida'"
                   :id="initiative.id"
                   :isAnswer="initiative.initiative_type_alt == 'Respuesta'"
-                ></conversation-link>
+                ></ConversationLink>
                 <tipi-congress-link :url="initiative.url"></tipi-congress-link>
               </div>
             </div>
@@ -202,7 +202,7 @@ import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
 import { format } from 'date-fns/format';
 import InitiativeChart from '@/components/initiative-chart.vue';
-import ConversationLink from '@/components/conversation-link.vue';
+import ConversationLink from '@/components/ConversationLink.vue';
 import Tabs from '@/components/Tabs.vue';
 import InitiativeFlow from '@/components/InitiativeFlow.vue';
 

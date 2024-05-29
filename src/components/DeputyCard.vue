@@ -1,7 +1,7 @@
 <template>
   <div :class="'c-deputy-card ' + layout + '-layout'">
     <div class="c-deputy-card__wrapper">
-      <router-link
+      <RouterLink
         :to="{ name: 'deputy', params: { id: deputy.id } }"
         style="position: relative"
       >
@@ -13,73 +13,59 @@
             layout
           "
         />
-        <party-logo-icon
+        <PartyLogoIcon
           :party="deputy.party_name"
           v-if="layout == 'large'"
           style="position: absolute; bottom: 0; left: 6rem"
         />
-      </router-link>
+      </RouterLink>
 
       <div v-if="layout != 'small'" class="c-deputy-card__wrapper__info">
-        <footprint
+        <Footprint
           v-if="layout == 'large'"
           :footprint="getFootprint()"
           :small="true"
         />
-        <router-link :to="{ name: 'deputy', params: { id: deputy.id } }">
+        <RouterLink :to="{ name: 'deputy', params: { id: deputy.id } }">
           <h4 v-html="getSeparatedName()"></h4>
-        </router-link>
+        </RouterLink>
         <p>{{ deputy.parliamentarygroup }}</p>
         <h5 v-if="layout == 'large'">
-          <tipi-icon icon="location" />{{ deputy.constituency }}
+          <TipiIcon icon="location" />{{ deputy.constituency }}
         </h5>
       </div>
     </div>
   </div>
 </template>
 
-<script>
+<script setup>
 import { TipiIcon, PartyLogoIcon } from '@politicalwatch/tipi-uikit';
 import Footprint from '@/components/Footprint.vue';
-import { useParliamentStore } from '@/stores/parliament';
 
-export default {
-  name: 'DeputyCard',
-  components: {
-    Footprint,
-    PartyLogoIcon,
-    TipiIcon,
+const { deputy, layout, footprint } = defineProps({
+  deputy: {
+    type: Object,
+    required: true,
   },
-  props: {
-    deputy: {
-      type: Object,
-      required: true,
-    },
-    layout: {
-      type: String,
-      default: 'medium', // small, medium, large
-    },
-    footprint: String,
+  layout: {
+    type: String,
+    default: 'medium', // small, medium, large
   },
-  setup() {
-    const store = useParliamentStore();
-    return { store };
-  },
-  methods: {
-    getSeparatedName: function () {
-      return this.deputy.name.split(',').join(',<br/>');
-    },
-    getFootprint: function () {
-      if (this.footprint != 'General') {
-        const filtered_footprint = this.deputy.footprint_by_topics.filter(
-          (item) => item.name == this.footprint
-        );
-        // console.log(filtered_footprint);
-        return filtered_footprint[0]?.score ?? 0;
-      }
-      return this.deputy.footprint;
-    },
-  },
+  footprint: String,
+});
+
+const getSeparatedName = () => {
+  return deputy.name.split(',').join(',<br/>');
+};
+
+const getFootprint = () => {
+  if (footprint != 'General') {
+    const filtered_footprint = deputy.footprint_by_topics.filter(
+      (item) => item.name == footprint
+    );
+    return filtered_footprint[0]?.score ?? 0;
+  }
+  return deputy.footprint;
 };
 </script>
 

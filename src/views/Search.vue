@@ -26,8 +26,8 @@
             :canDownloadCSV="canDownloadCSV"
             @loadCSVItems="loadCSVItems"
           />
-          <save-alert
-            :searchparams="formData"
+          <SaveAlert
+            :searchParams="formData"
             v-show="alertsIsEnabled() && this.query_meta.page"
           />
         </div>
@@ -45,7 +45,7 @@
 
 <script>
 import searchForm from '@/components/SearchForm.vue';
-import SaveAlert from '@/components/save-alert.vue';
+import SaveAlert from '@/components/SaveAlert.vue';
 import config from '@/config';
 import api from '@/api';
 import {

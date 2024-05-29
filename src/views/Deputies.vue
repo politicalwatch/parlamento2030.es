@@ -1,14 +1,14 @@
 <template>
   <div id="deputies" class="o-container o-section u-margin-bottom-10">
-    <tipi-header title="Listado de diputados" />
-    <deputies-form
-      :deputies="deputies"
+    <TipiHeader title="Listado de diputados" />
+    <DeputiesForm
+      :deputies="this.store.allDeputies"
       :groups="getGroupsLongNames()"
-      @setFilters="setFilters"
       :ranking="getRanking()"
-    ></deputies-form>
+      @setFilters="setFilters"
+    />
     <tipi-loader
-      v-if="!this.hasLoadedDeputies"
+      v-if="this.store.allDeputies.length == 0"
       title="Cargando diputados"
       subtitle="Puede llevar algun tiempo"
     />
@@ -19,10 +19,6 @@
       layout="large"
       :extra="{ footprint: getSelectedFootprint() }"
     />
-    <not-found
-      v-if="this.hasLoadedDeputies && getFilteredDeputies().length == 0"
-      message="No se han encontrado diputados."
-    />
   </div>
 </template>
 
@@ -31,8 +27,6 @@ import { TipiHeader, TipiLoader } from '@politicalwatch/tipi-uikit';
 import DeputiesForm from '@/components/DeputiesForm.vue';
 import DeputyCard from '@/components/DeputyCard.vue';
 import CardGrid from '@/components/CardGrid.vue';
-import NotFound from '@/components/NotFound.vue';
-import api from '@/api';
 import { useParliamentStore } from '@/stores/parliament';
 
 export default {
@@ -42,7 +36,6 @@ export default {
     TipiHeader,
     DeputyCard,
     CardGrid,
-    NotFound,
     TipiLoader,
   },
   setup() {
@@ -51,21 +44,10 @@ export default {
   },
   data: function () {
     return {
-      deputies: [],
       filters: {},
-      hasLoadedDeputies: false,
     };
   },
   methods: {
-    loadDeputies: function () {
-      api
-        .getDeputies()
-        .then((response) => {
-          this.deputies = response.filter((d) => d.active);
-          this.hasLoadedDeputies = true;
-        })
-        .catch((error) => console.log(error));
-    },
     getGroupsLongNames: function () {
       return this.store.allParliamentaryGroups.map(
         (group) => group.name || group
@@ -82,7 +64,7 @@ export default {
       this.filters = filters;
     },
     getFilteredDeputies: function () {
-      let filteredDeputies = this.deputies;
+      let filteredDeputies = this.store.allDeputies;
 
       if (
         'constituency' in this.filters &&
@@ -165,9 +147,6 @@ export default {
 
       return clean_name;
     },
-  },
-  beforeMount() {
-    this.loadDeputies();
   },
 };
 </script>

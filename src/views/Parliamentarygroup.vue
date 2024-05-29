@@ -35,10 +35,10 @@
       </tipi-message>
     </div>
 
-    <alert-block
+    <AlertBlock
       :text="'No te pierdas nada de la actividad del '"
       :value="parliamentarygroup.name"
-      :searchparams="{ author: parliamentarygroup.name }"
+      :searchParams="{ author: parliamentarygroup.name }"
       v-if="use_alerts"
     />
 
@@ -90,7 +90,7 @@ import {
 } from '@politicalwatch/tipi-uikit';
 import SdgBarchartFootprint from '@/components/sdg-barchart-footprint.vue';
 import FootprintInfo from '@/components/FootprintInfo.vue';
-import AlertBlock from '@/components/alert-block.vue';
+import AlertBlock from '@/components/AlertBlock.vue';
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
