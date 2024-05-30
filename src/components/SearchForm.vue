@@ -146,6 +146,7 @@
             :format="formatDatepickerDate"
             placeholder="dd/mm/yyyy"
             hide-input-icon
+            auto-apply
             @cleared="clearStartDate"
             :text-input="textInputOptions"
             name="startdate"
@@ -162,6 +163,7 @@
             placeholder="dd/mm/yyyy"
             :max-date="new Date()"
             hide-input-icon
+            auto-apply
             @cleared="clearEndDate"
             :text-input="textInputOptions"
             name="enddate"
