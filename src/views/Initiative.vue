@@ -78,7 +78,7 @@
                   meta="Autor"
                   :value="initiative.authors"
                   type="parliamentarygroup"
-                  :source="this.store.allParliamentaryGroups"
+                  :source="store.allParliamentaryGroups"
                 />
               </div>
               <div
@@ -90,7 +90,7 @@
                   meta="Diputada/o"
                   :value="initiative.deputies"
                   type="deputy"
-                  :source="this.store.allDeputies"
+                  :source="store.allDeputies"
                 />
               </div>
             </div>
@@ -113,7 +113,7 @@
             <div class="u-padding-bottom-4 u-border-bottom u-margin-bottom-4">
               <InitiativeChart
                 :initiative="initiative"
-                :topics="this.store.allTopics"
+                :topics="store.allTopics"
                 :styles="styles"
                 v-if="dataLoaded"
               ></InitiativeChart>
@@ -133,7 +133,7 @@
                 <div v-motion-fade>
                   <InitiativeFlow
                     :initiative="initiative"
-                    :topics="this.store.allTopics"
+                    :topics="store.allTopics"
                     :styles="styles"
                     v-if="dataLoaded"
                   />
@@ -185,110 +185,87 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted, watch } from 'vue';
+import { useRoute } from 'vue-router';
+import { useHead } from '@unhead/vue';
+import { format } from 'date-fns/format';
 import {
-  TipiHeader,
   TipiCongressLink,
   TipiText,
   TipiTopics,
   TipiInitiativeMeta,
-  TipiNeuron,
-  TipiTopicPill,
   TipiResults,
   TipiLoader,
 } from '@politicalwatch/tipi-uikit';
+
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
-import { format } from 'date-fns/format';
 import InitiativeChart from '@/components/InitiativeChart.vue';
 import ConversationLink from '@/components/ConversationLink.vue';
 import Tabs from '@/components/Tabs.vue';
 import InitiativeFlow from '@/components/InitiativeFlow.vue';
 
-export default {
-  name: 'initiative',
-  components: {
-    ConversationLink,
-    TipiCongressLink,
-    TipiHeader,
-    TipiText,
-    TipiTopics,
-    TipiInitiativeMeta,
-    TipiNeuron,
-    TipiTopicPill,
-    TipiResults,
-    InitiativeChart,
-    TipiLoader,
-    Tabs,
-    InitiativeFlow,
-  },
-  setup() {
-    const store = useParliamentStore();
-    return { store };
-  },
-  data: function () {
-    return {
-      initiative: {},
-      styles: config.STYLES,
-      loaded: false,
-    };
-  },
-  head() {
-    return {
-      title: () => this.headTitle,
-    };
-  },
-  computed: {
-    headTitle: function () {
-      return this.initiative?.title
-        ? `${this.initiative.title} - Parlamento2030`
-        : 'Parlamento2030';
-    },
-    dataLoaded: function () {
-      return (
-        Object.keys(this.initiative).length && this.store.allTopics.length > 0
-      );
-    },
-    formattedDate: function () {
-      return format(new Date(this.initiative.created), 'dd/MM/y');
-    },
-  },
-  methods: {
-    getInitiative: function () {
-      api
-        .getInitiative(this.$route.params.id)
-        .then((response) => {
-          this.initiative = response;
-          this.loaded = true;
-        })
-        .catch((error) => {
-          this.errors = error;
-          this.loaded = true;
-        });
-    },
-    getTopics: function () {
-      let topics = [];
-      for (const tagged of this.initiative['tagged']) {
-        topics = topics.concat(tagged['topics']);
-      }
-      return topics;
-    },
-    getTags: function () {
-      let tags = [];
-      for (const tagged of this.initiative['tagged']) {
-        tags = tags.concat(tagged['tags']);
-      }
-      return tags;
-    },
-  },
-  created: function () {
-    this.getInitiative();
-  },
-  watch: {
-    $route: 'getInitiative',
-  },
+const route = useRoute();
+const store = useParliamentStore();
+
+const styles = config.STYLES;
+
+const initiative = ref({});
+const loaded = ref(false);
+const errors = ref([]);
+
+const headTitle = computed(() => {
+  return initiative.value?.title
+    ? `${initiative.value.title} - Parlamento2030`
+    : 'Parlamento2030';
+});
+
+useHead({
+  title: headTitle,
+});
+
+const dataLoaded = computed(() => {
+  return Object.keys(initiative.value).length && store.allTopics.length > 0;
+});
+
+const formattedDate = computed(() => {
+  return format(new Date(initiative.value.created), 'dd/MM/y');
+});
+
+const getInitiative = () => {
+  api
+    .getInitiative(route.params.id)
+    .then((response) => {
+      initiative.value = response;
+      loaded.value = true;
+    })
+    .catch((error) => {
+      errors.value = error;
+      loaded.value = true;
+    });
 };
+
+const getTopics = () => {
+  return initiative.value['tagged'].reduce((topics, tagged) => {
+    return topics.concat(tagged['topics']);
+  }, []);
+};
+
+const getTags = () => {
+  return initiative.value['tagged'].reduce((tags, tagged) => {
+    return tags.concat(tagged['tags']);
+  }, []);
+};
+
+onMounted(() => {
+  getInitiative();
+});
+
+watch(route, () => {
+  getInitiative();
+});
 </script>
 
 <style lang="scss">

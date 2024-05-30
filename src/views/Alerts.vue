@@ -56,15 +56,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { TipiHeader } from '@politicalwatch/tipi-uikit';
-
-export default {
-  name: 'alerts',
-  components: {
-    TipiHeader,
-  },
-};
 </script>
 
 <style scoped lang="scss">

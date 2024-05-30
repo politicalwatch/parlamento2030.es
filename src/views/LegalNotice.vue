@@ -154,15 +154,8 @@ Email: coordinacion@unmundosalvadorsoler.org
   </div>
 </template>
 
-<script>
+<script setup>
 import { TipiHeader } from '@politicalwatch/tipi-uikit';
-
-export default {
-  name: 'legal-notice',
-  components: {
-    TipiHeader,
-  },
-};
 </script>
 
 <style scoped lang="scss"></style>

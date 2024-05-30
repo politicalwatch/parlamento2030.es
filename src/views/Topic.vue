@@ -29,7 +29,7 @@
             meta="Diputadas/os más activas/os"
             :value="deputies"
             type="deputy"
-            :source="this.store.allDeputies"
+            :source="store.allDeputies"
           />
         </div>
         <div class="o-grid__col u-12 u-4@sm" v-if="parliamentarygroups">
@@ -66,13 +66,13 @@
       <div class="o-grid">
         <div
           class="o-grid__col u-12 u-12@sm"
-          v-if="this.styles[topic.name].orgs_logos.length != 0"
+          v-if="styles[topic.name].orgs_logos.length != 0"
         >
           <h4 class="u-margin-bottom-4">Entidades colaboradoras</h4>
         </div>
         <div class="o-grid__col u-12 u-12@sm u-margin-bottom-4">
           <img
-            v-for="logo in this.styles[topic.name].orgs_logos"
+            v-for="logo in styles[topic.name].orgs_logos"
             :key="logo"
             class="u-padding-right-4"
             :src="'/img/collaborators/' + logo"
@@ -105,156 +105,149 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useHead } from '@unhead/vue';
 import {
-  TipiHeader,
   TipiResults,
   TipiTopicCard,
   TipiText,
   TipiLoader,
 } from '@politicalwatch/tipi-uikit';
-import AlertBlock from '@/components/AlertBlock.vue';
+
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
-import FrequencyChart from '../components/FrequencyChart.vue';
+import FrequencyChart from '@/components/FrequencyChart.vue';
+import AlertBlock from '@/components/AlertBlock.vue';
 
-export default {
-  name: 'topic',
-  components: {
-    TipiHeader,
-    TipiResults,
-    TipiTopicCard,
-    TipiText,
-    TipiLoader,
-    AlertBlock,
-    FrequencyChart,
-  },
-  setup() {
-    const store = useParliamentStore();
-    return { store };
-  },
-  data: function () {
-    return {
-      topic: {},
-      deputies: null,
-      places: null,
-      parliamentarygroups: null,
-      latestInitiatives: null,
-      topicsByWeek: null,
-      allTopicsByWeek: null,
-      styles: config.STYLES.topics,
-      use_alerts: config.USE_ALERTS,
-      loaded: false,
-      loadingDynamicData: false, // This is used to show the loader when the user clicks on the comparative mode
-    };
-  },
-  head() {
-    return {
-      title: () => this.headTitle,
-    };
-  },
-  computed: {
-    headTitle: function () {
-      return this.topic?.name
-        ? `${this.topic.name} - Parlamento2030`
-        : 'Parlamento2030';
-    },
-  },
-  methods: {
-    getTopic: function () {
-      api
-        .getTopic(this.$route.params.id)
-        .then((response) => {
-          this.topic = response;
-          this.getLatestInitiatives(this.topic.name);
-          this.getParliamentarygroupsRanking(this.topic.name);
-          this.getDeputiesRanking(this.topic.name);
-          this.getPlacesRanking(this.topic.name);
-          this.getTopicsByWeek(this.topic.name);
-        })
-        .catch((error) => {
-          this.errors = error;
-          this.$router.push({ name: 'Page404', params: { 0: '404' } });
-        });
-    },
-    getDeputiesRanking: function (topic) {
-      api
-        .getDeputiesRanking(topic, null, 3)
-        .then((response) => {
-          this.deputies = response;
-          this.deputies.forEach((deputy, index) => {
-            let foundDeputy = this.store.allDeputies.find(
-              (allD) => allD.name === deputy._id
-            );
-            this.deputies[index] = this.deputies[index]._id;
-          });
-        })
-        .catch((error) => (this.errors = error));
-    },
-    getPlacesRanking: function (topic) {
-      api
-        .getPlacesRanking(topic, null, 3)
-        .then((response) => {
-          this.places = response.map((place) => `${place._id}`);
-        })
-        .catch((error) => (this.errors = error));
-      this.loaded = true;
-    },
-    getParliamentarygroupsRanking: function (topic) {
-      api
-        .getParliamentarygroupsRanking(topic)
-        .then((response) => {
-          this.parliamentarygroups = response;
-          this.parliamentarygroups.forEach((group, index) => {
-            let foundGroup = this.store.allParliamentaryGroups.find(
-              (allPG) => allPG.name === group._id
-            );
-            this.parliamentarygroups[index].name =
-              this.parliamentarygroups[index]._id;
-            this.parliamentarygroups[index].id = foundGroup.id;
-          });
-        })
-        .catch((error) => (this.errors = error));
-    },
-    getLatestInitiatives: function (topic) {
-      api
-        .getInitiatives({ topic: topic, per_page: 12 })
-        .then((response) => {
-          if (response.initiatives)
-            this.latestInitiatives = response.initiatives;
-        })
-        .catch((error) => (this.errors = error));
-    },
-    getTopicsByWeek: function (topic) {
-      this.loadingDynamicData = true;
-      api
-        .getTopicsByWeek(topic)
-        .then((response) => {
-          this.topicsByWeek = response.data;
-        })
-        .catch((error) => (this.errors = error))
-        .finally(() => {
-          this.loadingDynamicData = false;
-        });
-    },
+const router = useRouter();
+const route = useRoute();
+const store = useParliamentStore();
 
-    getAllTopicsByWeek: function () {
-      if (this.allTopicsByWeek !== null) return;
-      this.loadingDynamicData = true;
-      api
-        .getAllTopicsByWeek(topic)
-        .then((response) => {
-          this.allTopicsByWeek = response.data;
-        })
-        .catch((error) => (this.errors = error))
-        .finally(() => {
-          this.loadingDynamicData = false;
-        });
-    },
-  },
-  created: function () {
-    this.getTopic();
-  },
+const use_alerts = config.USE_ALERTS;
+const styles = config.STYLES.topics;
+
+const topic = ref(null);
+const deputies = ref([]);
+const places = ref([]);
+const parliamentarygroups = ref(null);
+const latestInitiatives = ref(null);
+const topicsByWeek = ref(null);
+const allTopicsByWeek = ref(null);
+const loaded = ref(false);
+const loadingDynamicData = ref(false);
+const errors = ref([]);
+
+const headTitle = computed(() => {
+  return topic.value?.name
+    ? `${topic.value.name} - Qué hacen los diputados`
+    : 'Qué hacen los diputados';
+});
+
+useHead({
+  title: headTitle,
+});
+
+const getTopic = () => {
+  api
+    .getTopic(route.params.id)
+    .then((response) => {
+      topic.value = response;
+      getLatestInitiatives(topic.value.name);
+      getParliamentarygroupsRanking(topic.value.name);
+      getDeputiesRanking(topic.value.name);
+      getPlacesRanking(topic.value.name);
+      getTopicsByWeek(topic.value.name);
+    })
+    .catch((error) => {
+      errors.value = error;
+      router.push({ name: 'Page404', params: { 0: '404' } });
+    });
 };
+
+const getDeputiesRanking = (topic) => {
+  api
+    .getDeputiesRanking(topic, null, 3)
+    .then((response) => {
+      deputies.value = response;
+      deputies.value.forEach((deputy, index) => {
+        let foundDeputy = store.allDeputies.find(
+          (allD) => allD.name === deputy._id
+        );
+        deputies.value[index] = deputies.value[index]._id;
+      });
+    })
+    .catch((error) => (errors.value = error));
+};
+
+const getPlacesRanking = (topic) => {
+  api
+    .getPlacesRanking(topic, null, 3)
+    .then((response) => {
+      places.value = response.map((place) => `${place._id}`);
+    })
+    .catch((error) => (errors.value = error))
+    .finally(() => {
+      loaded.value = true;
+    });
+};
+
+const getParliamentarygroupsRanking = (topic) => {
+  api
+    .getParliamentarygroupsRanking(topic)
+    .then((response) => {
+      parliamentarygroups.value = response;
+      parliamentarygroups.value.forEach((group, index) => {
+        let foundGroup = store.allParliamentaryGroups.find(
+          (allPG) => allPG.name === group._id
+        );
+        parliamentarygroups.value[index].name =
+          parliamentarygroups.value[index]._id;
+        parliamentarygroups.value[index].id = foundGroup.id;
+      });
+    })
+    .catch((error) => (errors.value = error));
+};
+
+const getLatestInitiatives = (topic) => {
+  api
+    .getInitiatives({ topic: topic, per_page: 12 })
+    .then((response) => {
+      if (response.initiatives) latestInitiatives.value = response.initiatives;
+    })
+    .catch((error) => (errors.value = error));
+};
+
+const getTopicsByWeek = (topic) => {
+  loadingDynamicData.value = true;
+  api
+    .getTopicsByWeek(topic)
+    .then((response) => {
+      topicsByWeek.value = response.data;
+    })
+    .catch((error) => (errors.value = error))
+    .finally(() => {
+      loadingDynamicData.value = false;
+    });
+};
+
+const getAllTopicsByWeek = () => {
+  if (allTopicsByWeek.value !== null) return;
+  loadingDynamicData.value = true;
+  api
+    .getAllTopicsByWeek(topic)
+    .then((response) => {
+      allTopicsByWeek.value = response.data;
+    })
+    .catch((error) => (errors.value = error))
+    .finally(() => {
+      loadingDynamicData.value = false;
+    });
+};
+
+onMounted(() => {
+  getTopic();
+});
 </script>

@@ -4,7 +4,7 @@
     <div class="o-grid">
       <div
         class="o-grid__col u-6 u-3@sm u-2@md"
-        v-for="topic in this.store.allTopics"
+        v-for="topic in store.allTopics"
         :key="topic.id"
       >
         <tipi-topic-link
@@ -30,25 +30,13 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { TipiHeader, TipiTopicLink } from '@politicalwatch/tipi-uikit';
+
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
 
-export default {
-  name: 'topics',
-  components: {
-    TipiHeader,
-    TipiTopicLink,
-  },
-  setup() {
-    const store = useParliamentStore();
-    return { store };
-  },
-  data: function () {
-    return {
-      topicsStyles: config.STYLES.topics,
-    };
-  },
-};
+const store = useParliamentStore();
+
+const topicsStyles = config.STYLES.topics;
 </script>

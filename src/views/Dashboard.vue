@@ -15,7 +15,7 @@
                   <multiselect
                     @select="fillSubtopics"
                     v-model="data.topic"
-                    :options="this.store.allTopics.map((topic) => topic.name)"
+                    :options="store.allTopics.map((topic) => topic.name)"
                     name="topic"
                     id="topic"
                     placeholder="Todos"
@@ -87,7 +87,7 @@
               <tipi-two-circles
                 :selection="data.selection"
                 :topic="data.topic"
-                :styles="data.styles"
+                :styles="styles"
               />
             </div>
           </div>
@@ -119,7 +119,7 @@
                   )
                 "
                 type="parliamentarygroups"
-                :source="this.store.allParliamentaryGroups"
+                :source="store.allParliamentaryGroups"
               />
             </div>
             <div
@@ -150,7 +150,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, onMounted, watch } from 'vue';
 import {
   TipiHeader,
   TipiMessage,
@@ -158,159 +159,161 @@ import {
   TipiText,
 } from '@politicalwatch/tipi-uikit';
 import Multiselect from 'vue-multiselect';
+
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
 
-export default {
-  name: 'dashboard',
-  components: {
-    TipiText,
-    TipiHeader,
-    TipiTwoCircles,
-    Multiselect,
-    TipiMessage,
-  },
-  setup() {
-    const store = useParliamentStore();
-    return { store };
-  },
-  data: function () {
-    return {
-      subtopics: [],
-      data: {
-        topic: '',
-        subtopic: '',
-        isSelected: false,
-        selectedTarget: false,
-        sameSelection: false,
-        selection: {
-          compareswith: {
-            _id: '',
-            initiatives: 0,
-          },
-          selected: {
-            _id: '',
-            initiatives: 0,
-          },
-        },
-        parliamentarygroups: null,
-        places: null,
-        styles: config.STYLES,
-      },
-      loadingResults: false,
-    };
-  },
-  methods: {
-    fillSubtopics: function (selectedTopic, clearValues) {
-      this.data.subtopic = clearValues ? '' : this.data.subtopic;
-      const currentTopic = this.store.allTopics.find(
-        (topic) => topic.name === selectedTopic
-      );
-      this.getSubtopics(currentTopic.id);
-    },
+const store = useParliamentStore();
 
-    getSubtopics: function (topicID) {
-      api
-        .getTags(topicID)
-        .then((tags) => {
-          this.subtopics = [...new Set(tags.map((tag) => tag.subtopic))];
-        })
-        .catch((error) => (this.errors = error));
-    },
+const styles = config.STYLES;
 
-    getResults: function () {
-      console.log('Get results:', config.KNOWLEDGEBASE);
-      api
-        .getOverallStats()
-        .then((overall) => {
-          // If a subtopic is selected
-          if (this.data.subtopic) {
-            if (this.data.selection === null) this.data.selection = {};
-            this.data.selection.selected = overall.subtopics[
-              config.KNOWLEDGEBASE
-            ].find((el) => el._id === this.data.subtopic);
-            if (this.data.selection.selected === undefined) {
-              this.data.selection.selected = {};
-              this.data.selection.selected._id = this.data.subtopic;
-              this.data.selection.selected.initiatives = 0;
-            }
-            let compareswith_posibilities = overall.subtopics[
-              config.KNOWLEDGEBASE
-            ].filter((el) =>
-              el._id.startsWith(this.data.selection.selected._id.split('.')[0])
-            );
-            this.data.selection.compareswith = compareswith_posibilities[0];
-            this.data.isSelected = true;
-            this.data.selectedTarget = true;
-          }
-          // If no subtopic is selected
-          else {
-            if (this.data.selection === null) this.data.selection = {};
-            this.data.selection.selected = overall.topics[
-              config.KNOWLEDGEBASE
-            ].find((el) => el._id === this.data.topic);
-            if (this.data.selection.selected === undefined) {
-              this.data.selection.selected = {};
-              this.data.selection.selected._id = this.data.topic;
-              this.data.selection.selected.initiatives = 0;
-            }
-            //get the topic with more initiatives in overall.topics[config.KNOWLEDGEBASE]
-            this.data.selection.compareswith = overall.topics[
-              config.KNOWLEDGEBASE
-            ].reduce((max, topic) =>
-              max.initiatives > topic.initiatives ? max : topic
-            );
-            this.data.isSelected = true;
-            this.data.selectedTarget = false;
-          }
-          this.data.sameSelection =
-            this.data.selection.selected._id ==
-            this.data.selection.compareswith._id
-              ? true
-              : false;
-        })
-        .catch((error) => (this.errors = error));
-
-      api
-        .getParliamentarygroupsRanking(this.data.topic, this.data.subtopic)
-        .then((ranking) => {
-          this.data.parliamentarygroups = ranking;
-        })
-        .catch((error) => (this.errors = error));
-
-      api
-        .getPlacesRanking(this.data.topic, this.data.subtopic)
-        .then((ranking) => {
-          this.data.places = ranking;
-        })
-        .catch((error) => (this.errors = error));
+const subtopics = ref([]);
+const loadingResults = ref(false);
+const errors = ref(null);
+const data = ref({
+  topic: '',
+  subtopic: '',
+  isSelected: false,
+  selectedTarget: false,
+  sameSelection: false,
+  selection: {
+    compareswith: {
+      _id: '',
+      initiatives: 0,
     },
-    pluralizeInitiatives: function (number_of_initiatives) {
-      return number_of_initiatives == 1 ? 'iniciativa' : 'iniciativas';
-    },
-    prepareForm: function () {
-      if (this.data.topic) {
-        this.fillSubtopics(this.data.topic, false);
-      }
-    },
-    getPgIdFromName: function (name) {
-      return this.store.allParliamentaryGroups.find((s) => s.name == name).id;
+    selected: {
+      _id: '',
+      initiatives: 0,
     },
   },
-  created: function () {
-    this.prepareForm();
-  },
-  watch: {
-    'data.topic': 'getResults',
-    'data.subtopic': function () {
-      if (this.data.subtopic !== '') this.getResults();
-    },
-    'data.selection': function () {
-      console.log('Change selection');
-    },
-  },
+  parliamentarygroups: null,
+  places: null,
+});
+
+const fillSubtopics = (selectedTopic, clearValues) => {
+  data.value.subtopic = clearValues ? '' : data.value.subtopic;
+  const currentTopic = store.allTopics.find(
+    (topic) => topic.name === selectedTopic
+  );
+  getSubtopics(currentTopic.id);
 };
+
+const getSubtopics = (topicID) => {
+  api
+    .getTags(topicID)
+    .then((tags) => {
+      subtopics.value = [...new Set(tags.map((tag) => tag.subtopic))];
+    })
+    .catch((error) => (errors.value = error));
+};
+
+const pluralizeInitiatives = (number_of_initiatives) => {
+  return number_of_initiatives == 1 ? 'iniciativa' : 'iniciativas';
+};
+
+const prepareForm = () => {
+  if (data.value.topic) {
+    fillSubtopics(data.value.topic, false);
+  }
+};
+
+const getPgIdFromName = (name) => {
+  return store.allParliamentaryGroups.find((s) => s.name == name).id;
+};
+
+const getResults = () => {
+  // console.log('Get results:', config.KNOWLEDGEBASE);
+  api
+    .getOverallStats()
+    .then((overall) => {
+      // If a subtopic is selected
+      if (data.value.subtopic) {
+        if (data.value.selection === null) data.value.selection = {};
+        data.value.selection.selected = overall.subtopics[
+          config.KNOWLEDGEBASE
+        ].find((el) => el._id === data.value.subtopic);
+        if (data.value.selection.selected === undefined) {
+          data.value.selection.selected = {};
+          data.value.selection.selected._id = data.value.subtopic;
+          data.value.selection.selected.initiatives = 0;
+        }
+        let compareswith_posibilities = overall.subtopics[
+          config.KNOWLEDGEBASE
+        ].filter((el) =>
+          el._id.startsWith(data.value.selection.selected._id.split('.')[0])
+        );
+        data.value.selection.compareswith = compareswith_posibilities[0];
+        data.value.isSelected = true;
+        data.value.selectedTarget = true;
+      }
+      // If no subtopic is selected
+      else {
+        if (data.value.selection === null) data.value.selection = {};
+        data.value.selection.selected = overall.topics[
+          config.KNOWLEDGEBASE
+        ].find((el) => el._id === data.value.topic);
+        if (data.value.selection.selected === undefined) {
+          data.value.selection.selected = {};
+          data.value.selection.selected._id = data.value.topic;
+          data.value.selection.selected.initiatives = 0;
+        }
+        //get the topic with more initiatives in overall.topics[config.KNOWLEDGEBASE]
+        data.value.selection.compareswith = overall.topics[
+          config.KNOWLEDGEBASE
+        ].reduce((max, topic) =>
+          max.initiatives > topic.initiatives ? max : topic
+        );
+        data.value.isSelected = true;
+        data.value.selectedTarget = false;
+      }
+      data.value.sameSelection =
+        data.value.selection.selected._id ==
+        data.value.selection.compareswith._id
+          ? true
+          : false;
+    })
+    .catch((error) => (errors.value = error));
+
+  api
+    .getParliamentarygroupsRanking(data.value.topic, data.value.subtopic)
+    .then((ranking) => {
+      data.value.parliamentarygroups = ranking;
+    })
+    .catch((error) => (errors.value = error));
+
+  api
+    .getPlacesRanking(data.value.topic, data.value.subtopic)
+    .then((ranking) => {
+      data.value.places = ranking;
+    })
+    .catch((error) => (errors.value = error));
+};
+
+onMounted(() => {
+  prepareForm();
+});
+
+watch(
+  () => data.value.topic,
+  () => {
+    getResults();
+  }
+);
+
+watch(
+  () => data.value.subtopic,
+  () => {
+    if (data.subtopic !== '') getResults();
+  }
+);
+
+watch(
+  () => data.value.selection,
+  () => {
+    console.log('Change selection');
+  }
+);
 </script>
 
 <style src="vue-multiselect/dist/vue-multiselect.css"></style>

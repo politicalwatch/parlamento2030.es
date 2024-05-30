@@ -196,169 +196,130 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { TipiHeader } from '@politicalwatch/tipi-uikit';
 import ResponsiveTable from '@/components/ResponsiveTable.vue';
 
-export default {
-  name: 'footprint',
-  components: {
-    TipiHeader,
-    ResponsiveTable,
-  },
-  data: function () {
-    return {
-      weights: {
-        columns: ['Categoría', 'Subcategoría', 'Peso'],
-        rows: [
-          ['Iniciativas de Control', 'Pregunta oral en Pleno', '10'],
-          [
-            'Iniciativas de Control',
-            'Pregunta oral al Gobierno en Comisión',
-            '10',
-          ],
-          [
-            'Iniciativas de Control',
-            'Pregunta al Gobierno con respuesta escrita',
-            '0.1',
-          ],
-          [
-            'Iniciativas de Control',
-            'Comparecencia del Gobierno en Comisión (art. 44)',
-            '4',
-          ],
-          [
-            'Iniciativas de Control',
-            'Comparecendia del Gobierno en Comisión (arts. 202 y 203)',
-            '4',
-          ],
-          [
-            'Iniciativas de Control',
-            'Comparecencia de autoridades y funcionarios en Comisión',
-            '4',
-          ],
-          [
-            'Iniciativas de Control',
-            'Comparec. autoridades y funcionarios en Com. Mx. solicitada en Senado',
-            '4',
-          ],
-          ['Iniciativas de Control', 'Otras comparecencias en Comisión', '4'],
-          ['Iniciativas de Control', 'Moción de censura', '10'],
-          ['Iniciativas de Control', 'Interpelación urgente', '4'],
-          ['Iniciativas de Control', 'Interpelación ordinaria', '4'],
-          [
-            'Iniciativas de Control',
-            'Pregunta oral a la Corporación RTVE',
-            '10',
-          ],
-          [
-            'Iniciativas de Control',
-            'Pregunta a la Corporación RTVE con respuesta escrita',
-            '0.1',
-          ],
-          [
-            'Iniciativas de Control',
-            'Solicitud de informe a la Administración del Estado (art. 7)',
-            '4',
-          ],
-          [
-            'Iniciativas de Control',
-            'Solicitud de informe a otra Entidad Pública (art. 7)',
-            '4',
-          ],
-          [
-            'Iniciativas de Control',
-            'Solicitud de informe a la Administración del Estado (art. 44)',
-            '4',
-          ],
-          [
-            'Iniciativas de Control',
-            'Solicitud de informe a otra Entidad Pública (art. 44)',
-            '4',
-          ],
-          [
-            'Iniciativas de Control',
-            'Otras solicitudes de informe (art. 44)',
-            '4',
-          ],
-          [
-            'Iniciativas de orientación',
-            'Proposición no de Ley ante el Pleno',
-            '40',
-          ],
-          [
-            'Iniciativas de orientación',
-            'Proposición no de Ley en Comisión',
-            '40',
-          ],
-          [
-            'Iniciativas de orientación',
-            'Moción consecuencia de interpelación ordinaria',
-            '40',
-          ],
-          [
-            'Iniciativas de orientación',
-            'Moción consecuencia de interpelación urgente',
-            '40',
-          ],
-          [
-            'Iniciativas de legislativas',
-            'Proposición de ley de Grupos Parlamentarios del Congreso',
-            '80',
-          ],
-          [
-            'Iniciativas de legislativas',
-            'Proposición de ley de Diputados',
-            '80',
-          ],
-          [
-            'Iniciativas de legislativas',
-            'Proyecto de reforma Constitucional',
-            '80',
-          ],
-          [
-            'Iniciativas de legislativas',
-            'Proposición de reforma Constitucional de Grupos Parlamentarios',
-            '80',
-          ],
-          [
-            'Iniciativas de legislativas',
-            'Proposición de reforma constitucional de Comunidades Autónomas',
-            '80',
-          ],
-        ],
-      },
-      details: {
-        columns: ['Categoría', 'Tipo de iniciativa', 'Peso', 'Detalle'],
-        rows: [
-          [
-            'Iniciativas de orientación',
-            'Aprobación de Proposición no de Ley ante el Pleno',
-            '20 puntos extra',
-            '50% adicional sobre el peso de la iniciativa',
-          ],
-          [
-            'Iniciativas de orientación',
-            'Aprobación de Proposición no de Ley en Comisión',
-            '20 puntos extra',
-            '50% adicional sobre el peso de la iniciativa',
-          ],
-          [
-            'Iniciativas legislativas',
-            'Aprobación de Proposición de ley de Grupos Parlamentarios del Congreso',
-            '60 puntos extra',
-            '75% adicional sobre el peso de la iniciativa',
-          ],
-          [
-            'Iniciativas legislativaS',
-            'Aprobación de Proposición de ley de Diputados',
-            '60 puntos extra',
-            '75% adicional sobre el peso de la iniciativa',
-          ],
-        ],
-      },
-    };
-  },
+const weights = {
+  columns: ['Categoría', 'Subcategoría', 'Peso'],
+  rows: [
+    ['Iniciativas de Control', 'Pregunta oral en Pleno', '10'],
+    ['Iniciativas de Control', 'Pregunta oral al Gobierno en Comisión', '10'],
+    [
+      'Iniciativas de Control',
+      'Pregunta al Gobierno con respuesta escrita',
+      '0.1',
+    ],
+    [
+      'Iniciativas de Control',
+      'Comparecencia del Gobierno en Comisión (art. 44)',
+      '4',
+    ],
+    [
+      'Iniciativas de Control',
+      'Comparecendia del Gobierno en Comisión (arts. 202 y 203)',
+      '4',
+    ],
+    [
+      'Iniciativas de Control',
+      'Comparecencia de autoridades y funcionarios en Comisión',
+      '4',
+    ],
+    [
+      'Iniciativas de Control',
+      'Comparec. autoridades y funcionarios en Com. Mx. solicitada en Senado',
+      '4',
+    ],
+    ['Iniciativas de Control', 'Otras comparecencias en Comisión', '4'],
+    ['Iniciativas de Control', 'Moción de censura', '10'],
+    ['Iniciativas de Control', 'Interpelación urgente', '4'],
+    ['Iniciativas de Control', 'Interpelación ordinaria', '4'],
+    ['Iniciativas de Control', 'Pregunta oral a la Corporación RTVE', '10'],
+    [
+      'Iniciativas de Control',
+      'Pregunta a la Corporación RTVE con respuesta escrita',
+      '0.1',
+    ],
+    [
+      'Iniciativas de Control',
+      'Solicitud de informe a la Administración del Estado (art. 7)',
+      '4',
+    ],
+    [
+      'Iniciativas de Control',
+      'Solicitud de informe a otra Entidad Pública (art. 7)',
+      '4',
+    ],
+    [
+      'Iniciativas de Control',
+      'Solicitud de informe a la Administración del Estado (art. 44)',
+      '4',
+    ],
+    [
+      'Iniciativas de Control',
+      'Solicitud de informe a otra Entidad Pública (art. 44)',
+      '4',
+    ],
+    ['Iniciativas de Control', 'Otras solicitudes de informe (art. 44)', '4'],
+    ['Iniciativas de orientación', 'Proposición no de Ley ante el Pleno', '40'],
+    ['Iniciativas de orientación', 'Proposición no de Ley en Comisión', '40'],
+    [
+      'Iniciativas de orientación',
+      'Moción consecuencia de interpelación ordinaria',
+      '40',
+    ],
+    [
+      'Iniciativas de orientación',
+      'Moción consecuencia de interpelación urgente',
+      '40',
+    ],
+    [
+      'Iniciativas de legislativas',
+      'Proposición de ley de Grupos Parlamentarios del Congreso',
+      '80',
+    ],
+    ['Iniciativas de legislativas', 'Proposición de ley de Diputados', '80'],
+    ['Iniciativas de legislativas', 'Proyecto de reforma Constitucional', '80'],
+    [
+      'Iniciativas de legislativas',
+      'Proposición de reforma Constitucional de Grupos Parlamentarios',
+      '80',
+    ],
+    [
+      'Iniciativas de legislativas',
+      'Proposición de reforma constitucional de Comunidades Autónomas',
+      '80',
+    ],
+  ],
+};
+const details = {
+  columns: ['Categoría', 'Tipo de iniciativa', 'Peso', 'Detalle'],
+  rows: [
+    [
+      'Iniciativas de orientación',
+      'Aprobación de Proposición no de Ley ante el Pleno',
+      '20 puntos extra',
+      '50% adicional sobre el peso de la iniciativa',
+    ],
+    [
+      'Iniciativas de orientación',
+      'Aprobación de Proposición no de Ley en Comisión',
+      '20 puntos extra',
+      '50% adicional sobre el peso de la iniciativa',
+    ],
+    [
+      'Iniciativas legislativas',
+      'Aprobación de Proposición de ley de Grupos Parlamentarios del Congreso',
+      '60 puntos extra',
+      '75% adicional sobre el peso de la iniciativa',
+    ],
+    [
+      'Iniciativas legislativaS',
+      'Aprobación de Proposición de ley de Diputados',
+      '60 puntos extra',
+      '75% adicional sobre el peso de la iniciativa',
+    ],
+  ],
 };
 </script>
 

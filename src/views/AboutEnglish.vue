@@ -125,13 +125,6 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { TipiHeader } from '@politicalwatch/tipi-uikit';
-
-export default {
-  name: 'about-english',
-  components: {
-    TipiHeader,
-  },
-};
 </script>

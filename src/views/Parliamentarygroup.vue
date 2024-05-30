@@ -48,27 +48,27 @@
         <div class="o-grid__col u-12 u-4@sm">
           <tipi-text
             meta=""
-            :value="this.dividedDeputies[0]"
+            :value="dividedDeputies[0]"
             type="deputy"
-            :source="this.store.allDeputies"
+            :source="store.allDeputies"
             hideGroup
           />
         </div>
         <div class="o-grid__col u-12 u-4@sm">
           <tipi-text
             meta=""
-            :value="this.dividedDeputies[1]"
+            :value="dividedDeputies[1]"
             type="deputy"
-            :source="this.store.allDeputies"
+            :source="store.allDeputies"
             hideGroup
           />
         </div>
         <div class="o-grid__col u-12 u-4@sm">
           <tipi-text
             meta=""
-            :value="this.dividedDeputies[2]"
+            :value="dividedDeputies[2]"
             type="deputy"
-            :source="this.store.allDeputies"
+            :source="store.allDeputies"
             hideGroup
           />
         </div>
@@ -80,7 +80,10 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref, computed, watch, onMounted } from 'vue';
+import { useRoute, useRouter } from 'vue-router';
+import { useHead } from '@unhead/vue';
 import {
   TipiHeader,
   TipiMessage,
@@ -88,111 +91,98 @@ import {
   TipiText,
   TipiLoader,
 } from '@politicalwatch/tipi-uikit';
-import SdgBarchartFootprint from '@/components/SdgBarchartFootprint.vue';
-import FootprintInfo from '@/components/FootprintInfo.vue';
-import AlertBlock from '@/components/AlertBlock.vue';
+
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
+import SdgBarchartFootprint from '@/components/SdgBarchartFootprint.vue';
+import FootprintInfo from '@/components/FootprintInfo.vue';
+import AlertBlock from '@/components/AlertBlock.vue';
 
-export default {
-  name: 'parliamentarygroup',
-  components: {
-    TipiHeader,
-    TipiMessage,
-    TipiResults,
-    TipiText,
-    TipiLoader,
-    SdgBarchartFootprint,
-    FootprintInfo,
-    AlertBlock,
-  },
-  setup() {
-    const store = useParliamentStore();
-    return { store };
-  },
-  data: function () {
-    return {
-      parliamentarygroup: null,
-      latestInitiatives: null,
-      topicsRanking: null,
-      use_alerts: config.USE_ALERTS,
-      topicsStyles: config.STYLES.topics,
-    };
-  },
-  head() {
-    return {
-      title: () => this.headTitle,
-    };
-  },
-  computed: {
-    headTitle: function () {
-      return this.parliamentarygroup?.name
-        ? `${this.parliamentarygroup.name} - Parlamento2030`
-        : 'Parlamento2030';
-    },
-    deputies: function () {
-      if (this.parliamentarygroup) {
-        return this.store
-          .getDeputiesByParliamentaryGroup(this.parliamentarygroup.shortname)
-          .filter((deputy) => deputy.active)
-          .map((deputy) => deputy.name);
-      }
-      return [];
-    },
-    dividedDeputies: function () {
-      let results = [];
-      let divided = this.deputies;
+const route = useRoute();
+const router = useRouter();
+const store = useParliamentStore();
 
-      for (let i = 3; i > 0; i--) {
-        results.push(divided.splice(0, Math.ceil(divided.length / i)));
-      }
+const use_alerts = config.USE_ALERTS;
+const topicsStyles = config.STYLES.topics;
 
-      return results;
-    },
-    footprintByTopics: function () {
-      if (this.parliamentarygroup) {
-        return this.parliamentarygroup.footprint_by_topics.filter((item) =>
-          this.store.allTopics.some((topic) => topic.name === item.name)
-        );
-      }
-      return [];
-    },
-  },
-  methods: {
-    getParliamentaryGroup: function () {
-      api
-        .getGroup(this.$route.params.id)
-        .then((response) => {
-          this.parliamentarygroup = response;
-          this.getTopicsRanking();
-          this.getLatestInitiatives();
-        })
-        .catch((error) => {
-          this.errors = error;
-          this.$router.push({ name: 'Page404', params: { 0: '404' } });
-        });
-    },
-    getLatestInitiatives: function () {
-      api
-        .getInitiatives({ author: this.parliamentarygroup.name, per_page: 12 })
-        .then((response) => {
-          if (response.initiatives)
-            this.latestInitiatives = response.initiatives;
-        })
-        .catch((error) => (this.errors = error));
-    },
-    getTopicsRanking: function () {
-      api
-        .getTopicsByParliamentaryGroupRanking(this.parliamentarygroup.name)
-        .then((response) => {
-          this.topicsRanking = response;
-        })
-        .catch((error) => (this.errors = error));
-    },
-  },
-  created: function () {
-    this.getParliamentaryGroup();
-  },
+const parliamentarygroup = ref(null);
+const latestInitiatives = ref([]);
+const topicsRanking = ref(null);
+const errors = ref([]);
+
+const headTitle = computed(() => {
+  return parliamentarygroup.value?.name
+    ? `${parliamentarygroup.value.name} - Parlamento2030`
+    : 'Parlamento2030';
+});
+
+useHead({
+  title: headTitle,
+});
+
+const deputies = computed(() => {
+  if (parliamentarygroup.value) {
+    return store
+      .getDeputiesByParliamentaryGroup(parliamentarygroup.value.shortname)
+      .filter((deputy) => deputy.active)
+      .map((deputy) => deputy);
+  }
+  return [];
+});
+
+const dividedDeputies = computed(() => {
+  let results = [];
+  let divided = deputies.value;
+
+  for (let i = 3; i > 0; i--) {
+    results.push(divided.splice(0, Math.ceil(divided.length / i)));
+  }
+
+  return results;
+});
+
+const footprintByTopics = computed(() => {
+  return parliamentarygroup.value
+    ? parliamentarygroup.value.footprint_by_topics.filter((item) =>
+        store.allTopics.some((topic) => topic.name === item.name)
+      )
+    : [];
+});
+
+const getParliamentaryGroup = () => {
+  api
+    .getGroup(route.params.id)
+    .then((response) => {
+      parliamentarygroup.value = response;
+      getTopicsRanking();
+      getLatestInitiatives();
+    })
+    .catch((error) => {
+      errors.value = error;
+      router.push({ name: 'Page404', params: { 0: '404' } });
+    });
 };
+
+const getLatestInitiatives = () => {
+  api
+    .getInitiatives({ author: parliamentarygroup.value.name, per_page: 12 })
+    .then((response) => {
+      if (response.initiatives) latestInitiatives.value = response.initiatives;
+    })
+    .catch((error) => (errors.value = error));
+};
+
+const getTopicsRanking = () => {
+  api
+    .getTopicsByParliamentaryGroupRanking(parliamentarygroup.value.name)
+    .then((response) => {
+      topicsRanking.value = response;
+    })
+    .catch((error) => (errors.value = error));
+};
+
+onMounted(() => {
+  getParliamentaryGroup();
+});
 </script>

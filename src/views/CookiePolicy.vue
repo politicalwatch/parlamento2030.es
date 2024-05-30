@@ -70,15 +70,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { TipiHeader } from '@politicalwatch/tipi-uikit';
-
-export default {
-  name: 'cookie-policy',
-  components: {
-    TipiHeader,
-  },
-};
 </script>
 
 <style scoped lang="scss"></style>

@@ -131,15 +131,8 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { TipiHeader } from '@politicalwatch/tipi-uikit';
-
-export default {
-  name: 'faq',
-  components: {
-    TipiHeader,
-  },
-};
 </script>
 
 <style scoped lang="scss"></style>
