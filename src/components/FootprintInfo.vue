@@ -6,7 +6,7 @@
       style="text-decoration: none !important"
     >
       <p v-if="withLabel">
-        <footprint
+        <Footprint
           v-if="withLabel"
           :footprint="184.8"
           style="display: inline-block !important"
@@ -19,19 +19,13 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import Footprint from '@/components/Footprint.vue';
 
-export default {
-  name: 'FootprintInfo',
-  components: {
-    Footprint,
+const { withLabel } = defineProps({
+  withLabel: {
+    type: Boolean,
+    default: false,
   },
-  props: {
-    withLabel: {
-      type: Boolean,
-      default: false,
-    },
-  },
-};
+});
 </script>

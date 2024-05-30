@@ -88,7 +88,7 @@ import {
   TipiText,
   TipiLoader,
 } from '@politicalwatch/tipi-uikit';
-import SdgBarchartFootprint from '@/components/sdg-barchart-footprint.vue';
+import SdgBarchartFootprint from '@/components/SdgBarchartFootprint.vue';
 import FootprintInfo from '@/components/FootprintInfo.vue';
 import AlertBlock from '@/components/AlertBlock.vue';
 import api from '@/api';

@@ -83,13 +83,13 @@ import {
   TipiIcon,
   TipiLoader,
 } from '@politicalwatch/tipi-uikit';
-import AlertBlock from '@/components/AlertBlock.vue';
-import SdgBarchartFootprint from '@/components/sdg-barchart-footprint.vue';
-import FootprintInfo from '@/components/FootprintInfo.vue';
+
 import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
-import AlertBlock from '../components/AlertBlock.vue';
+import AlertBlock from '@/components/AlertBlock.vue';
+import SdgBarchartFootprint from '@/components/SdgBarchartFootprint.vue';
+import FootprintInfo from '@/components/FootprintInfo.vue';
 
 export default {
   name: 'deputy',

@@ -6,26 +6,16 @@
   </div>
 </template>
 
-<script>
+<script setup>
 import { TipiIcon } from '@politicalwatch/tipi-uikit';
 
-export default {
-  name: 'Footprint',
-  components: {
-    TipiIcon,
-  },
-  props: {
-    footprint: [Number, String],
-    small: Boolean,
-  },
-  methods: {
-    isSmall: function () {
-      if (this.small) {
-        return this.small;
-      }
-      return false;
-    },
-  },
+const { footprint, small } = defineProps({
+  footprint: [Number, String],
+  small: Boolean,
+});
+
+const isSmall = () => {
+  return small ? true : false;
 };
 </script>
 

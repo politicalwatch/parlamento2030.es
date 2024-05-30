@@ -44,7 +44,7 @@
 </template>
 
 <script>
-import searchForm from '@/components/SearchForm.vue';
+import SearchForm from '@/components/SearchForm.vue';
 import SaveAlert from '@/components/SaveAlert.vue';
 import config from '@/config';
 import api from '@/api';
@@ -67,7 +67,7 @@ export default {
     TipiMessage,
     TipiCsvDownload,
     TipiHeader,
-    searchForm,
+    SearchForm,
   },
   setup() {
     const store = useParliamentStore();

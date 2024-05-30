@@ -201,7 +201,7 @@ import api from '@/api';
 import config from '@/config';
 import { useParliamentStore } from '@/stores/parliament';
 import { format } from 'date-fns/format';
-import InitiativeChart from '@/components/initiative-chart.vue';
+import InitiativeChart from '@/components/InitiativeChart.vue';
 import ConversationLink from '@/components/ConversationLink.vue';
 import Tabs from '@/components/Tabs.vue';
 import InitiativeFlow from '@/components/InitiativeFlow.vue';

@@ -17,9 +17,10 @@
   </div>
 </template>
 
-<script>
-export default {
-  props: {
+<script setup>
+import {ref} from 'vue';
+
+const { tabs, initialTab } = defineProps({
     tabs: {
       type: Array,
       required: true,
@@ -28,17 +29,12 @@ export default {
       type: Number,
       default: 0,
     },
-  },
-  data() {
-    return {
-      selectedTab: this.initialTab,
-    };
-  },
-  methods: {
-    selectTab(index) {
-      this.selectedTab = index;
-    },
-  },
+  });
+
+const selectedTab = ref(initialTab);
+
+const selectTab = (index) => {
+  selectedTab.value = index;
 };
 </script>
 

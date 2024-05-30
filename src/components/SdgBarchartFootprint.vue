@@ -35,16 +35,11 @@
   </transition-group>
 </template>
 
-<script>
-export default {
-  name: 'SdgBarchartFootprint',
-  data() {
-    return {
-      rows: [],
-      totalFootprint: 0,
-    };
-  },
-  props: {
+<script setup>
+import { ref, onMounted } from 'vue';
+
+const { footprint, styles, linkToSearchField, linkToSearchValue } = defineProps(
+  {
     footprint: {
       type: Array,
       required: false,
@@ -65,51 +60,52 @@ export default {
       required: false,
       default: '',
     },
-  },
-  mounted() {
-    this.calculateRows();
-  },
-  methods: {
-    calculateRows() {
-      const rows = [];
+  }
+);
 
-      this.totalFootprint = this.footprint.reduce((cnt, o) => cnt + o.score, 0);
+const rows = ref([]);
+const totalFootprint = ref(0);
 
-      const higherCount = this.footprint.reduce((max, o) => {
-        if (max > o.score) {
-          return max;
-        }
-        return o.score;
-      }, 0);
+const calculateRows = () => {
+  // const rows = [];
 
-      this.footprint
-        .sort((a, b) => {
-          const numA = parseInt(a.name.split(' ')[1], 10);
-          const numB = parseInt(b.name.split(' ')[1], 10);
-          return numA - numB;
-        })
-        .forEach((d) => {
-          const percentage = (d.score / higherCount) * 100;
-          if (d.name in this.styles) {
-            this.rows.push({
-              topic: d.name,
-              times: d.score,
-              iconStyle: {
-                backgroundImage: `url(/img/topics/${
-                  this.styles[d.name].image
-                })`,
-                backgroundColor: this.styles[d.name].color,
-              },
-              overbarStyle: {
-                height: `${percentage}%`,
-                backgroundColor: this.styles[d.name].color,
-              },
-            });
-          }
-        });
-    },
-  },
+  totalFootprint.value = footprint.reduce((cnt, o) => cnt + o.score, 0);
+
+  const higherCount = footprint.reduce((max, o) => {
+    if (max > o.score) {
+      return max;
+    }
+    return o.score;
+  }, 0);
+
+  rows.value = footprint
+    .sort((a, b) => {
+      const numA = parseInt(a.name.split(' ')[1], 10);
+      const numB = parseInt(b.name.split(' ')[1], 10);
+      return numA - numB;
+    })
+    .map((d) => {
+      const percentage = (d.score / higherCount) * 100;
+      if (d.name in styles) {
+        return {
+          topic: d.name,
+          times: d.score,
+          iconStyle: {
+            backgroundImage: `url(/img/topics/${styles[d.name].image})`,
+            backgroundColor: styles[d.name].color,
+          },
+          overbarStyle: {
+            height: `${percentage}%`,
+            backgroundColor: styles[d.name].color,
+          },
+        };
+      }
+    });
 };
+
+onMounted(() => {
+  calculateRows();
+});
 </script>
 
 <style lang="scss">

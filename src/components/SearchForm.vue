@@ -16,7 +16,7 @@
             @select="fillSubtopicsAndTags"
             @remove="clearSubtopicsAndTags"
             v-model="formData.topic"
-            :options="this.store.allTopics.map((topic) => topic.name)"
+            :options="store.allTopics.map((topic) => topic.name)"
             :allow-empty="true"
             name="topic"
             id="topic"
@@ -84,7 +84,7 @@
             deselectLabel="Pulsa para deseleccionar"
             v-model="formData.author"
             :options="
-              this.store.getAllParliamentaryGroupsWithGoverment.map(
+              store.getAllParliamentaryGroupsWithGoverment.map(
                 (group) => group.name || group
               )
             "
@@ -97,10 +97,10 @@
         </div>
         <router-link
           class="u-text-tbody2"
-          v-if="this.store.getParliamentaryGroupByName(formData.author)"
+          v-if="store.getParliamentaryGroupByName(formData.author)"
           :to="{
             path: `/grupos/${
-              this.store.getParliamentaryGroupByName(formData.author).id
+              store.getParliamentaryGroupByName(formData.author).id
             }`,
           }"
         >
@@ -126,9 +126,9 @@
         </div>
         <router-link
           class="u-text-tbody2"
-          v-if="this.store.getDeputyByName(formData.deputy)"
+          v-if="store.getDeputyByName(formData.deputy)"
           :to="{
-            path: `/diputados/${this.store.getDeputyByName(formData.deputy).id}`,
+            path: `/diputados/${store.getDeputyByName(formData.deputy).id}`,
           }"
         >
           ¿Quieres ver el perfil de {{ formData.deputy }}?
@@ -176,7 +176,7 @@
             selectLabel=""
             deselectLabel="Pulsa para deseleccionar"
             v-model="formData.status"
-            :options="this.store.allStatus"
+            :options="store.allStatus"
             :allow-empty="true"
             name="status"
             id="status"
@@ -193,7 +193,7 @@
             selectLabel=""
             deselectLabel="Pulsa para deseleccionar"
             v-model="formData.place"
-            :options="this.store.getAllPlacesName"
+            :options="store.getAllPlacesName"
             :allow-empty="true"
             name="place"
             id="place"
@@ -271,182 +271,191 @@
   </form>
 </template>
 
-<script>
+<script setup>
+import { ref, toRefs, computed, onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import Multiselect from 'vue-multiselect';
 import { TipiIcon, Utils } from '@politicalwatch/tipi-uikit';
+import { format } from 'date-fns/format';
+
 import api from '@/api';
 import { useParliamentStore } from '@/stores/parliament';
 
-import { format } from 'date-fns/format';
+const props = defineProps({
+  formData: Object,
+});
 
-export default {
-  name: 'searchForm',
-  components: {
-    VueDatePicker,
-    Multiselect,
-    TipiIcon,
-  },
-  props: {
-    formData: Object,
-  },
-  setup() {
-    const store = useParliamentStore();
-    const textInputOptions = {
-      enterSubmit: true,
-      tabSubmit: true,
-      selectOnFocus: true,
-      format: 'dd/MM/yyyy',
-    };
-    return { store, textInputOptions };
-  },
-  data: function () {
-    return {
-      subtopics: [],
-      tags: [],
-      errors: null,
-      selectedSubtopics: [],
-      filteredTags: [],
-      advanced:
-        this.formData &&
-        (this.formData.startdate ||
-          this.formData.enddate ||
-          this.formData.status ||
-          this.formData.place ||
-          this.formData.type ||
-          this.formData.reference ||
-          this.formData.text),
-    };
-  },
-  methods: {
-    cleanForm: function () {
-      this.formData.topic = '';
-      this.formData.subtopics = [];
-      this.formData.tags = [];
-      this.formData.author = '';
-      this.formData.deputy = '';
-      this.formData.status = '';
-      this.formData.place = '';
-      this.formData.type = '';
-      this.formData.reference = '';
-      this.formData.enddate = '';
-      this.formData.startdate = '';
-      this.formData.text = '';
-      // //clear url
-      this.$router.push({ name: 'search' });
-    },
-    getTypes: function () {
-      const options = [];
-      for (const type of this.store.getAllTypesName) {
-        options.push(type);
-      }
-      return options;
-    },
-    getDeputies: function () {
-      const { author } = this.formData;
-      if (author == 'Gobierno') {
-        return [];
-      }
+const { formData } = toRefs(props);
 
-      if (author) {
-        const parliamentaryGroup =
-          this.store.getParliamentaryGroupByName(author);
-        const deputies = this.store.getDeputiesByParliamentaryGroup(
-          parliamentaryGroup.shortname
-        );
-        return deputies.map((deputy) => deputy.name);
-      }
+const emit = defineEmits(['getResults', 'clearInitiatives']);
 
-      return this.store.getAllDeputiesName;
-    },
-    fillSubtopicsAndTags: function (selectedTopic, clearValues) {
-      if (clearValues) {
-        this.formData.subtopics = [];
-        this.formData.tags = [];
-      }
-      const currentTopic = this.store.allTopics.find(
-        (topic) => topic.name === selectedTopic
+const router = useRouter();
+const store = useParliamentStore();
+
+const textInputOptions = {
+  enterSubmit: true,
+  tabSubmit: true,
+  selectOnFocus: true,
+  format: 'dd/MM/yyyy',
+};
+
+const subtopics = ref([]);
+const tags = ref([]);
+const errors = ref(null);
+const selectedSubtopics = ref([]);
+const filteredTags = ref([]);
+const advanced = ref(
+  formData.value &&
+    (formData.value.startdate ||
+      formData.value.enddate ||
+      formData.value.status ||
+      formData.value.place ||
+      formData.value.type ||
+      formData.value.reference ||
+      formData.value.text)
+);
+
+const cleanForm = () => {
+  formData.value.topic = '';
+  formData.value.subtopics = [];
+  formData.value.tags = [];
+  formData.value.author = '';
+  formData.value.deputy = '';
+  formData.value.status = '';
+  formData.value.place = '';
+  formData.value.type = '';
+  formData.value.reference = '';
+  formData.value.enddate = '';
+  formData.value.startdate = '';
+  formData.value.text = '';
+  clearSubtopicsAndTags();
+  // //clear url
+  router.push({ name: 'search' });
+};
+
+const getTypes = () => {
+  const options = [];
+  for (const type of store.getAllTypesName) {
+    options.push(type);
+  }
+  return options;
+};
+
+const getDeputies = () => {
+  const { author } = formData.value;
+  if (author == 'Gobierno') {
+    return [];
+  }
+
+  if (author) {
+    const parliamentaryGroup = store.getParliamentaryGroupByName(author);
+    const deputies = store.getDeputiesByParliamentaryGroup(
+      parliamentaryGroup.shortname
+    );
+    return deputies.map((deputy) => deputy.name);
+  }
+
+  return store.getAllDeputiesName;
+};
+
+const fillSubtopicsAndTags = (selectedTopic, clearValues) => {
+  if (clearValues) {
+    formData.value.subtopics = [];
+    formData.value.tags = [];
+  }
+  const currentTopic = store.allTopics.find(
+    (topic) => topic.name === selectedTopic
+  );
+  getSubtopicsAndTags(currentTopic.id);
+};
+
+const clearSubtopicsAndTags = () => {
+  subtopics.value = [];
+  selectedSubtopics.value = [];
+  tags.value = [];
+  filteredTags.value = [];
+  formData.value.subtopics = [];
+  formData.value.tags = [];
+};
+
+const clearStartDate = () => {
+  formData.value.startdate = '';
+};
+
+const clearEndDate = () => {
+  formData.value.enddate = '';
+};
+
+const formatDatepickerDate = (date) => {
+  return format(new Date(date), 'dd/MM/yyyy');
+};
+
+const getSubtopicsAndTags = (topicID) => {
+  api
+    .getTags(topicID)
+    .then((tempTags) => {
+      subtopics.value = [...new Set(tempTags.map((tag) => tag.subtopic))].sort(
+        Utils.naturalSort
       );
-      this.getSubtopicsAndTags(currentTopic.id);
-    },
-    clearSubtopicsAndTags: function () {
-      this.subtopics = [];
-      this.selectedSubtopics = [];
-      this.tags = [];
-      this.filteredTags = [];
-      this.formData.subtopics = [];
-      this.formData.tags = [];
-    },
-    clearStartDate: function () {
-      this.formData.startdate = '';
-    },
-    clearEndDate: function () {
-      this.formData.enddate = '';
-    },
-    formatDatepickerDate: function (date) {
-      return format(new Date(date), 'dd/MM/yyyy');
-    },
-    getSubtopicsAndTags: function (topicID) {
-      api
-        .getTags(topicID)
-        .then((tags) => {
-          this.subtopics = [...new Set(tags.map((tag) => tag.subtopic))].sort(
-            Utils.naturalSort
-          );
-          this.tags = tags;
-          this.filteredTags = this.tags
-            .map((tag) => tag.tag)
-            .sort(Utils.naturalSort);
-        })
-        .catch((error) => (this.errors = error));
-    },
-    filterTags: function () {
-      let filtered = this.selectedSubtopics.length
-        ? (tag) => this.selectedSubtopics.indexOf(tag.subtopic) !== -1
-        : () => true;
-      this.filteredTags = this.tags
-        .filter(filtered)
+      tags.value = tempTags;
+      filteredTags.value = tags.value
         .map((tag) => tag.tag)
         .sort(Utils.naturalSort);
-    },
-    addSubtopicToTagsFilter: function (selectedSubtopic) {
-      this.formData.tags = [];
-      this.selectedSubtopics.push(selectedSubtopic);
-      this.filterTags();
-    },
-    removeSubtopicToTagsFilter: function (removedSubtopic) {
-      this.formData.tags = [];
-      this.selectedSubtopics.splice(
-        this.selectedSubtopics.indexOf(removedSubtopic),
-        1
-      );
-      this.filterTags();
-    },
-    getResults: function (event) {
-      this.formData.enddate = this.formData.enddate
-        ? format(new Date(this.formData.enddate), 'yyyy-MM-dd')
-        : undefined;
+    })
+    .catch((error) => (errors.value = error));
+};
 
-      this.formData.startdate = this.formData.startdate
-        ? format(new Date(this.formData.startdate), 'yyyy-MM-dd')
-        : undefined;
-      this.$emit('getResults', event, this.formData);
-    },
-    prepareForm: function () {
-      if (this.formData.topic) {
-        this.fillSubtopicsAndTags(this.formData.topic, false);
-      }
-    },
-    toggleAdvanced: function () {
-      this.advanced = !this.advanced;
-    },
-  },
-  created: function () {
-    if (this.store.allTopics.length) {
-      this.prepareForm();
-    }
-  },
+const filterTags = () => {
+  let filtered = selectedSubtopics.value.length
+    ? (tag) => selectedSubtopics.value.indexOf(tag.subtopic) !== -1
+    : () => true;
+  filteredTags.value = tags.value
+    .filter(filtered)
+    .map((tag) => tag.tag)
+    .sort(Utils.naturalSort);
+};
+
+const addSubtopicToTagsFilter = (selectedSubtopic) => {
+  formData.value.tags = [];
+  selectedSubtopics.value.push(selectedSubtopic);
+  filterTags();
+};
+
+const removeSubtopicToTagsFilter = (removedSubtopic) => {
+  formData.value.tags = [];
+  selectedSubtopics.value.splice(
+    selectedSubtopics.value.indexOf(removedSubtopic),
+    1
+  );
+  filterTags();
+};
+
+const toggleAdvanced = () => {
+  advanced.value = !advanced.value;
+};
+
+onMounted(function () {
+  if (store.allTopics.length) {
+    prepareForm();
+  }
+});
+
+const getResults = (event) => {
+  formData.value.enddate = formData.value.enddate
+    ? format(new Date(formData.value.enddate), 'yyyy-MM-dd')
+    : undefined;
+
+  formData.value.startdate = formData.value.startdate
+    ? format(new Date(formData.value.startdate), 'yyyy-MM-dd')
+    : undefined;
+  emit('getResults', event, formData.value);
+};
+const prepareForm = () => {
+  if (formData.value.topic) {
+    fillSubtopicsAndTags(formData.value.topic, false);
+  }
 };
 </script>
 
