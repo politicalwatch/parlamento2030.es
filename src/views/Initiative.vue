@@ -117,13 +117,11 @@
                 :styles="styles"
                 v-if="dataLoaded"
               ></InitiativeChart>
-              <span class="u-text-tbody2"
-                >Relación de esta iniciativa con los ODS
-                <sup
-                  title="El gráfico muestra los ODS relacionados con la iniciativa y el grado de relación con cada uno de ellos, cuya intensidad se refleja en la barra circular que los rodea."
-                  >?</sup
-                ></span
+              <Tooltip
+                text="El gráfico muestra los ODS relacionados con la iniciativa y el grado de relación con cada uno de ellos, cuya intensidad se refleja en la barra circular que los rodea."
               >
+                <span>Relación de esta iniciativa con los ODS</span>
+              </Tooltip>
             </div>
           </div>
           <div class="o-grid__col u-12">
@@ -205,6 +203,7 @@ import { useParliamentStore } from '@/stores/parliament';
 import InitiativeChart from '@/components/InitiativeChart.vue';
 import ConversationLink from '@/components/ConversationLink.vue';
 import Tabs from '@/components/Tabs.vue';
+import Tooltip from '@/components/Tooltip.vue';
 import InitiativeFlow from '@/components/InitiativeFlow.vue';
 
 const route = useRoute();
