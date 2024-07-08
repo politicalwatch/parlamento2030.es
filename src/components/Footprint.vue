@@ -1,13 +1,13 @@
 <template>
   <div class="c-footprint" :class="{ 'c-footprint--small': isSmall() }">
     <span class="c-footprint__wrapper">
-      <tipi-icon icon="footprint" /><span>{{ footprint }}</span>
+      <Icon icon="mdi:bar-chart" :height="16" /><span>{{ footprint }}</span>
     </span>
   </div>
 </template>
 
 <script setup>
-import { TipiIcon } from '@politicalwatch/tipi-uikit';
+import { Icon } from '@iconify/vue';
 
 const { footprint, small } = defineProps({
   footprint: [Number, String],
@@ -48,6 +48,9 @@ const isSmall = () => {
     padding: 8px;
     font-family: $font-primary;
     font-weight: 500;
+    display: inline-flex;
+    align-items: center;
+    gap: 4px;
   }
 
   .c-icon {

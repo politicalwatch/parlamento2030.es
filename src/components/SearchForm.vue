@@ -255,7 +255,7 @@
           class="c-button u-padding-left-0"
           @click.prevent="toggleAdvanced"
         >
-          <tipi-icon icon="advanced" />
+          <Icon icon="mdi:mixer-settings" />
           <span v-if="!advanced">Mostrar búsqueda avanzada</span>
           <span v-else>Ocultar búsqueda avanzada</span>
         </a>
@@ -274,12 +274,13 @@
 </template>
 
 <script setup>
-import { ref, toRefs, computed, onMounted } from 'vue';
+import { ref, toRefs, onMounted } from 'vue';
 import { useRouter } from 'vue-router';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
 import Multiselect from 'vue-multiselect';
-import { TipiIcon, Utils } from '@politicalwatch/tipi-uikit';
+import { Icon } from '@iconify/vue';
+import { Utils } from '@politicalwatch/tipi-uikit';
 import { format } from 'date-fns/format';
 
 import api from '@/api';

@@ -31,7 +31,9 @@
         </RouterLink>
         <p>{{ deputy.parliamentarygroup }}</p>
         <h5 v-if="layout == 'large'">
-          <TipiIcon icon="location" />{{ deputy.constituency }}
+          <Icon icon="mdi:location" :width="20" :heigth="20" />{{
+            deputy.constituency
+          }}
         </h5>
       </div>
     </div>
@@ -39,7 +41,9 @@
 </template>
 
 <script setup>
-import { TipiIcon, PartyLogoIcon } from '@politicalwatch/tipi-uikit';
+import { Icon } from '@iconify/vue';
+
+import { PartyLogoIcon } from '@politicalwatch/tipi-uikit';
 import Footprint from '@/components/Footprint.vue';
 
 const { deputy, layout, footprint } = defineProps({
@@ -124,12 +128,11 @@ const getFootprint = () => {
       h5 {
         font-size: 0.65rem;
         display: flex;
+        align-items: center;
         gap: 4px;
 
         .c-icon {
           display: inline-block;
-          width: 12px;
-          height: 12px;
         }
       }
     }

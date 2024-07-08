@@ -4,7 +4,7 @@
     href="#"
     @click.prevent="saveAlert"
   >
-    Crea una alerta <TipiIcon class="c-icon--white" icon="bell" />
+    Crea una alerta <Icon class="c-icon--white" icon="mdi:bell" />
   </a>
 </template>
 
@@ -12,7 +12,7 @@
 import { ref, toRefs } from 'vue';
 import Swal from 'sweetalert2';
 import api from '@/api';
-import { TipiIcon } from '@politicalwatch/tipi-uikit';
+import { Icon } from '@iconify/vue';
 
 const props = defineProps({
   searchParams: {

@@ -43,7 +43,7 @@
               >Huella</router-link
             >
             <br />
-            <tipi-icon icon="github" class="c-icon--secondary-dark" />&nbsp;<a
+            <Icon icon="mdi:github" class="c-icon--secondary-dark" />&nbsp;<a
               class="u-color-secondary-dark u-text-tbody2"
               href="http://github.com/politicalwatch/"
               title="github.com/politicalwatch"
@@ -51,7 +51,7 @@
               >Consulta nuestro código en Github</a
             >
             <br />
-            <tipi-icon icon="mail" class="c-icon--secondary-dark" />&nbsp;<a
+            <Icon icon="mdi:email" class="c-icon--secondary-dark" />&nbsp;<a
               class="u-color-secondary-dark u-text-tbody2"
               href="mailto:parlamento2030@politicalwatch.es"
               title="parlamento2030@politicalwatch.es"
@@ -118,7 +118,7 @@
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline';
 import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css';
 import { bootstrap } from 'vue-gtag';
-import { TipiIcon } from '@politicalwatch/tipi-uikit';
+import { Icon } from '@iconify/vue';
 
 const cookieStatus = (val) => {
   // console.log('Cookie status: ' + val);

@@ -9,13 +9,13 @@
         v-if="deputy.hasOwnProperty('email')"
         :href="`mailto:${deputy.email}`"
         target="_blank"
-        ><tipi-icon icon="mail" /> {{ deputy.email }}</a
+        ><Icon icon="mdi:email" /> {{ deputy.email }}</a
       >
       <a
         v-if="deputy.hasOwnProperty('twitter')"
         :href="deputy.twitter"
         target="_blank"
-        ><tipi-icon icon="twitter" /> @{{
+        ><Icon icon="mdi:twitter" /> @{{
           deputy.twitter.split('/').reverse()[0]
         }}</a
       >
@@ -77,12 +77,12 @@
 import { ref, computed, onBeforeMount } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import { useSeoMeta } from '@unhead/vue';
+import { Icon } from '@iconify/vue';
 import {
   TipiCongressLink,
   TipiDeputy,
   TipiMessage,
   TipiResults,
-  TipiIcon,
   TipiLoader,
 } from '@politicalwatch/tipi-uikit';
 

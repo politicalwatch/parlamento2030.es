@@ -4,13 +4,13 @@
     class="c-congress-link u-uppercase u-border-link"
     :title="getName()"
   >
-    <TipiIcon class="u-filling-primary" icon="conversation" />
+    <Icon class="u-filling-primary" icon="mdi:conversation" :width="18" />
     {{ getName() }}
   </RouterLink>
 </template>
 
 <script setup>
-import { TipiIcon } from '@politicalwatch/tipi-uikit';
+import { Icon } from '@iconify/vue';
 
 const { id, isAnswer } = defineProps({
   id: {
