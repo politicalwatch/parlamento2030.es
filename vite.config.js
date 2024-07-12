@@ -39,7 +39,7 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
-        additionalData: `@import "@/styles/_variables.scss";`,
+        additionalData: `@import "@politicalwatch/tipi-uikit/src/styles/main.scss";\n@import "@/styles/_variables.scss";`,
       },
     },
   },
