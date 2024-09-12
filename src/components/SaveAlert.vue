@@ -50,6 +50,10 @@ const saveAlert = async () => {
       if (!value) {
         return 'Debes introducir un correo electrónico';
       }
+      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailPattern.test(value)) {
+        return 'Debes introducir un correo electrónico válido.';
+      }
     },
     imageUrl: '/img/email-alert-icon.svg',
     imageWidth: 64,
