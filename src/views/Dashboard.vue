@@ -77,10 +77,8 @@
                   {{ data.selection.compareswith.initiatives }} iniciativas, es
                   <span v-show="!data.selectedTarget">el</span
                   ><span v-show="data.selectedTarget">la</span> que más
-                  actividad concentra<span v-show="data.selectedTarget">
-                    dentro del {{ data.topic }}</span
-                  >.</span
-                >
+                  actividad concentra.
+                  </span>
               </p>
             </div>
             <div class="o-grid__col u-4@sm u-text-right">
