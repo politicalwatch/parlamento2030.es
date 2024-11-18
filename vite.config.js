@@ -39,6 +39,8 @@ export default defineConfig({
   css: {
     preprocessorOptions: {
       scss: {
+        api: "modern-compiler",
+        silenceDeprecations: ['import'],
         additionalData: `@import "@politicalwatch/tipi-uikit/src/styles/main.scss";\n@import "@/styles/_variables.scss";`,
       },
     },
