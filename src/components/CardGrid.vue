@@ -37,6 +37,7 @@ const classes = computed(() => {
 
 <style scoped lang="scss">
 .c-card_grid {
+  min-height: 160px;
   &__item {
     margin-bottom: 32px;
 

@@ -8,7 +8,9 @@
           :disclaimerLink="DISCLAIMER"
           :logo="LOGO"
         />
-        <router-view />
+        <div class="page-container">
+          <router-view />
+        </div>
         <FooterBlock />
       </div>
     </transition>
@@ -40,6 +42,13 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
+.page-container {
+  min-height: 80vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
 .c-disclaimer {
   a {
     img {

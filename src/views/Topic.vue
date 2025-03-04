@@ -18,7 +18,7 @@
         />
       </div>
 
-      <div class="o-grid">
+      <div class="o-grid c-ranking-actividad">
         <div class="o-grid__col u-12">
           <h4 class="u-margin-bottom-4" v-if="latestInitiatives">
             Ranking de actividad
@@ -45,7 +45,10 @@
         </div>
       </div>
 
-      <div class="u-border-top u-padding-top-4" v-if="latestInitiatives">
+      <div
+        class="u-border-top u-padding-top-4 c-ultimas-iniciativas"
+        v-if="latestInitiatives"
+      >
         <h4 class="u-margin-bottom-4" v-if="latestInitiatives">
           Últimas iniciativas
         </h4>
@@ -188,10 +191,7 @@ const getPlacesRanking = (topic) => {
     .then((response) => {
       places.value = response.map((place) => `${place._id}`);
     })
-    .catch((error) => (errors.value = error))
-    .finally(() => {
-      loaded.value = true;
-    });
+    .catch((error) => (errors.value = error));
 };
 
 const getParliamentarygroupsRanking = (topic) => {
@@ -230,6 +230,7 @@ const getTopicsByWeek = (topic) => {
     .catch((error) => (errors.value = error))
     .finally(() => {
       loadingDynamicData.value = false;
+      loaded.value = true;
     });
 };
 
@@ -251,3 +252,10 @@ onMounted(() => {
   getTopic();
 });
 </script>
+
+<style lang="scss" scoped>
+.c-ranking-actividad,
+.c-ultimas-iniciativas {
+  min-height: 300px;
+}
+</style>
