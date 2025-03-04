@@ -145,6 +145,7 @@
             locale="es"
             :format="formatDatepickerDate"
             placeholder="dd/mm/yyyy"
+            :max-date="new Date()"
             hide-input-icon
             auto-apply
             @cleared="clearStartDate"
@@ -274,7 +275,7 @@
 </template>
 
 <script setup>
-import { ref, toRefs, onMounted } from 'vue';
+import { ref, toRefs, onMounted, nextTick } from 'vue';
 import { useRouter } from 'vue-router';
 import VueDatePicker from '@vuepic/vue-datepicker';
 import '@vuepic/vue-datepicker/dist/main.css';
@@ -440,6 +441,12 @@ const toggleAdvanced = () => {
 };
 
 onMounted(function () {
+  nextTick(() => {
+    // Populates topic dependant fields on redirection (from topic graphs)
+    if (formData.value.topic) {
+      fillSubtopicsAndTags(formData.value.topic);
+    }
+  });
   if (store.allTopics.length) {
     prepareForm();
   }
