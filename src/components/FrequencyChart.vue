@@ -541,7 +541,7 @@ function getYearWeekRange(yearWeek) {
 const searchWeekInitiatives = (bar) => {
   let weekRange = getYearWeekRange(bar.week);
   let topic = props.topic.name;
-  const data = `topic=${topic}&startdate=${weekRange.monday}&enddate=${weekRange.sunday}&knowledgebase=politicas`;
+  const data = `topic=${topic}&startdate=${weekRange.monday}&enddate=${weekRange.sunday}&knowledgebase=ods&ignoretagless=1`;
 
   router.push({
     name: "results",
