@@ -115,21 +115,19 @@
 <script setup>
 import VueCookieAcceptDecline from 'vue-cookie-accept-decline';
 import 'vue-cookie-accept-decline/dist/vue-cookie-accept-decline.css';
-import { bootstrap } from 'vue-gtag';
+import { addGtag, consent } from 'vue-gtag';
 import { Icon } from '@iconify/vue';
 
 const cookieStatus = (val) => {
   // console.log('Cookie status: ' + val);
   if (val === 'decline' || val == null) {
-    if (gtag) {
-      gtag('consent', 'default', {
-        ad_storage: 'denied',
-        analytics_storage: 'denied',
-      });
-    }
+    consent('default', {
+      ad_storage: 'denied',
+      analytics_storage: 'denied',
+    });
   } else if (val === 'accept') {
-    bootstrap().then(() => {
-      gtag('consent', 'update', {
+    addGtag().then(() => {
+      consent('update', {
         ad_storage: 'granted',
         analytics_storage: 'granted',
       });
@@ -138,8 +136,8 @@ const cookieStatus = (val) => {
 };
 
 const cookieClickedAccept = () => {
-  bootstrap().then(() => {
-    gtag('consent', 'update', {
+  addGtag().then(() => {
+    consent('update', {
       ad_storage: 'granted',
       analytics_storage: 'granted',
     });
@@ -147,7 +145,7 @@ const cookieClickedAccept = () => {
 };
 
 const cookieClickedDecline = () => {
-  gtag('consent', 'default', {
+  consent('default', {
     ad_storage: 'denied',
     analytics_storage: 'denied',
   });
