@@ -27,10 +27,7 @@
         >
           <tspan :x="xScale(activeBar.week)" :y="margin.top / 2">
             Semana {{ activeBar.week.split('-')[1] }} ({{
-              new Date(getYearWeekRange(activeBar.week).monday).toLocaleDateString("es-ES", {
-                day: '2-digit',
-                month: 'long',
-              })
+              formatActiveWeekMonday
             }})
           </tspan>
           <tspan dy="1em" :x="xScale(activeBar.week)" :y="margin.top / 2">
@@ -242,7 +239,7 @@ To avoid loading unused data, the dataset for the aggregated dataset is provided
 
 import { ref, computed, onMounted, nextTick, onUnmounted, watch } from 'vue';
 import { setWeek, startOfWeek, endOfWeek, format } from 'date-fns';
-import { useRouter } from "vue-router";
+import { useRouter } from 'vue-router';
 import {
   min,
   max,
@@ -461,7 +458,10 @@ const xScaleTimeForAxis = computed(() => {
   const week0 = xScale.value?.domain()[0];
   const week1 = xScale.value?.domain()[xScale.value?.domain().length - 1];
   const scale = scaleTime()
-    .domain([new Date(getYearWeekRange(week0).monday), new Date(getYearWeekRange(week1).sunday)])
+    .domain([
+      new Date(getYearWeekRange(week0).monday),
+      new Date(getYearWeekRange(week1).sunday),
+    ])
     .range([0, width.value]);
 
   return scale;
@@ -527,16 +527,30 @@ const isRelativeModeReady = computed(
 );
 
 function getYearWeekRange(yearWeek) {
-  let [year, week] = yearWeek.split("-").map(Number);
+  let [year, week] = yearWeek.split('-').map(Number);
   let baseDate = new Date(year, 0, 4);
-  let weekDate = setWeek(baseDate, week, { weekStartsOn: 1, firstWeekContainsDate: 4 });
+  let weekDate = setWeek(baseDate, week, {
+    weekStartsOn: 1,
+    firstWeekContainsDate: 4,
+  });
   let monday = startOfWeek(weekDate, { weekStartsOn: 1 });
   let sunday = endOfWeek(weekDate, { weekStartsOn: 1 });
   return {
     monday: format(monday, 'yyyy-MM-dd'),
     sunday: format(sunday, 'yyyy-MM-dd'),
-  };  
+  };
 }
+
+const formatActiveWeekMonday = computed(() => {
+  if (activeBar.value) {
+    return new Date(
+      getYearWeekRange(activeBar.value.week).monday
+    ).toLocaleDateString('es-ES', {
+      day: '2-digit',
+      month: 'long',
+    });
+  }
+});
 
 const searchWeekInitiatives = (bar) => {
   let weekRange = getYearWeekRange(bar.week);
@@ -544,8 +558,8 @@ const searchWeekInitiatives = (bar) => {
   const data = `topic=${topic}&startdate=${weekRange.monday}&enddate=${weekRange.sunday}&knowledgebase=ods&ignoretagless=1`;
 
   router.push({
-    name: "results",
-    params: { data }
+    name: 'results',
+    params: { data },
   });
 };
 </script>
