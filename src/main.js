@@ -1,7 +1,7 @@
 import { createApp } from 'vue';
 import App from './App.vue';
 import { createPinia } from 'pinia';
-import { createHead, VueHeadMixin } from '@unhead/vue';
+import { createHead } from '@unhead/vue/client';
 import router from '@/router';
 import { MotionPlugin } from '@vueuse/motion';
 import VueGtag from 'vue-gtag';
@@ -21,8 +21,6 @@ app.use(
   router
 );
 app.use(MotionPlugin);
-
-app.mixin(VueHeadMixin);
 
 app.directive('scroll-to', VueScrollTo);
 
