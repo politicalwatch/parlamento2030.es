@@ -11,7 +11,7 @@
     "lint": "eslint . --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
   },
   "dependencies": {
-    "@politicalwatch/tipi-uikit": "^1.9.24",
+    "@politicalwatch/tipi-uikit": "^1.10.0",
     "@unhead/vue": "^2.0.0",
     "@vuepic/vue-datepicker": "^11.0.0",
     "@vueuse/motion": "^3.0.0",
@@ -47,13 +47,13 @@
     "autoprefixer": "^10.4.16",
     "eslint": "^9.0.0",
     "eslint-plugin-vue": "^10.0.0",
-    "jsdom": "^26.0.0",
+    "jsdom": "^27.0.0",
     "prettier": "^3.0.3",
     "sass": "^1.67.0",
     "stylelint": "^16.1.0",
     "terser": "^5.14.2",
     "vite": "^7.0.0",
-    "vitest": "^3.0.0"
+    "vitest": "^4.0.0"
   },
   "browserslist": [
     "> 1%",
