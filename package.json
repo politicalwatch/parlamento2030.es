@@ -13,7 +13,7 @@
   "dependencies": {
     "@politicalwatch/tipi-uikit": "^1.10.0",
     "@unhead/vue": "^2.0.0",
-    "@vuepic/vue-datepicker": "^11.0.0",
+    "@vuepic/vue-datepicker": "^12.0.0",
     "@vueuse/motion": "^3.0.0",
     "axios": "^1.5.1",
     "core-js": "^3.32.2",
@@ -34,7 +34,7 @@
     "vue-gtag": "^3.2.0",
     "vue-inline-svg": "^4.0.0",
     "vue-multiselect": "^3.0.0-beta.2",
-    "vue-router": "^4.2.5",
+    "vue-router": "^5.0.0",
     "vue-scrollto": "^2.15.0"
   },
   "devDependencies": {
