@@ -13,8 +13,8 @@
   },
   "dependencies": {
     "@politicalwatch/tipi-uikit": "^1.11.0",
-    "@unhead/vue": "^2.0.0",
-    "@vuepic/vue-datepicker": "^12.0.0",
+    "@unhead/vue": "^3.0.0",
+    "@vuepic/vue-datepicker": "^14.0.0",
     "@vueuse/motion": "^3.0.0",
     "axios": "^1.5.1",
     "core-js": "^3.32.2",
