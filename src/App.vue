@@ -1,19 +1,19 @@
 <template>
   <div id="app">
-    <transition name="fade" mode="out-in">
-      <div>
-        <TipiNavbar
-          pre-image="/img/multicolor.jpg"
-          :links="MENU"
-          :disclaimerLink="DISCLAIMER"
-          :logo="LOGO"
-        />
-        <div class="page-container">
-          <router-view />
-        </div>
-        <FooterBlock />
-      </div>
-    </transition>
+    <TipiNavbar
+      pre-image="/img/multicolor.jpg"
+      :links="MENU"
+      :disclaimerLink="DISCLAIMER"
+      :logo="LOGO"
+    />
+    <div class="page-container">
+      <router-view v-slot="{ Component }">
+        <transition name="fade" mode="out-in">
+          <component :is="Component" />
+        </transition>
+      </router-view>
+    </div>
+    <FooterBlock />
   </div>
 </template>
 
@@ -47,6 +47,16 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   align-items: center;
+}
+
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.2s ease;
+}
+
+.fade-enter-from,
+.fade-leave-to {
+  opacity: 0;
 }
 
 .c-disclaimer {
