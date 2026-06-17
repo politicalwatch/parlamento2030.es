@@ -78,7 +78,7 @@ const calculateRows = () => {
     return o.score;
   }, 0);
 
-  rows.value = footprint
+  rows.value = [...footprint]
     .sort((a, b) => {
       const numA = parseInt(a.name.split(' ')[1], 10);
       const numB = parseInt(b.name.split(' ')[1], 10);

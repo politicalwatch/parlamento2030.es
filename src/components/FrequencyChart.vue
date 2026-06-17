@@ -551,6 +551,7 @@ const formatActiveWeekMonday = computed(() => {
       month: 'long',
     });
   }
+  return '';
 });
 
 const searchWeekInitiatives = (bar) => {
