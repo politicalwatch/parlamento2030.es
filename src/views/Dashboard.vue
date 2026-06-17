@@ -302,7 +302,7 @@ watch(
 watch(
   () => data.value.subtopic,
   () => {
-    if (data.subtopic !== '') getResults();
+    if (data.value.subtopic !== '') getResults();
   }
 );
 

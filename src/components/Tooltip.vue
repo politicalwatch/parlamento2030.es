@@ -47,7 +47,7 @@ const toggleTooltip = () => {
   z-index: 1;
   border-radius: 2px;
   text-align: center;
-  color: #ffffff;
+  color: #fff;
   background: #2d4252;
 }
 
@@ -59,12 +59,12 @@ const toggleTooltip = () => {
   margin-left: -5px;
   border-width: 5px;
   border-style: solid;
-  border-color: #2d4252 transparent transparent transparent;
+  border-color: #2d4252 transparent transparent;
 }
 
 button {
   background: #2d4252;
-  color: #ffffff;
+  color: #fff;
   border: none;
   border-radius: 50%;
   width: 16px;

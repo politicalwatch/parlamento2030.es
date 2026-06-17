@@ -63,6 +63,7 @@ import { TipiHeader } from '@politicalwatch/tipi-uikit';
 <style scoped lang="scss">
 .item {
   padding: 40px 20px;
+
   .icon {
     font-size: 1.5em;
     border-radius: 50%;
@@ -73,26 +74,32 @@ import { TipiHeader } from '@politicalwatch/tipi-uikit';
     width: 35px;
     color: #f8f8f8;
     background-color: #222;
+
     span {
       margin: 7px 9px;
     }
   }
+
   h2 {
     margin-top: 20px;
     font-size: 1.5em;
     font-weight: bold;
   }
+
   img {
     max-width: 75%;
   }
 }
-@media only screen and (max-width: 980px) and (min-width: 300px) {
+
+@media only screen and (width <= 980px) and (width >= 300px) {
   .icon {
     margin: -5px 5px 0 0 !important;
   }
 }
+
 .cta {
-  padding: 40px 0px;
+  padding: 40px 0;
+
   p {
     font-size: 1.2em;
     text-align: center;

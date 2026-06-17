@@ -47,6 +47,7 @@ const selectTab = (index) => {
   margin: 0;
   border-bottom: 2px solid #f3f3f3;
 }
+
 .tab {
   cursor: pointer;
   padding: 0.5rem 1rem;
@@ -62,6 +63,7 @@ const selectTab = (index) => {
   font-weight: bold;
   background-color: #f3f3f3;
 }
+
 .tab-content {
   padding: 2rem 1rem;
 }

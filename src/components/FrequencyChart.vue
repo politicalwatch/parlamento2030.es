@@ -572,6 +572,7 @@ const searchWeekInitiatives = (bar) => {
   pointer-events: none;
   transition: 0.1s;
 }
+
 .bar:hover,
 .bar.active {
   fill-opacity: 1;
@@ -581,6 +582,7 @@ const searchWeekInitiatives = (bar) => {
 .bar-background {
   fill: transparent;
 }
+
 .bar-background.active {
   fill: #f8f8f8;
   transition: 0.1s;
@@ -591,9 +593,11 @@ const searchWeekInitiatives = (bar) => {
   font-weight: light;
   fill: v-bind('theme.lightGray');
 }
+
 .axis line {
   stroke: v-bind('theme.lightGray');
 }
+
 .axis line.ticks {
   stroke-opacity: 0.2;
 }
@@ -601,15 +605,17 @@ const searchWeekInitiatives = (bar) => {
 .yearSelectors {
   display: flex;
   justify-content: center;
-
   gap: 2px;
 }
+
 .yearSelectors a:first-child {
   border-radius: 0.4rem 0 0 0.4rem;
 }
+
 .yearSelectors a:last-child {
   border-radius: 0 0.4rem 0.4rem 0;
 }
+
 .yearSelectors a {
   border-radius: 0;
 }
@@ -619,15 +625,16 @@ const searchWeekInitiatives = (bar) => {
   justify-content: center;
   gap: 2px;
 
-  @media (min-width: 768px) {
+  @media (width >= 768px) {
     flex-direction: column;
   }
 }
 
 .controls-container {
   align-items: center;
-  margin-top: 0rem;
+  margin-top: 0;
 }
+
 .frequency-chart-wrapper {
   max-width: calc(100vw - 32px);
   margin-bottom: 1rem;

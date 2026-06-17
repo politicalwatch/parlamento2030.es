@@ -38,6 +38,7 @@ const classes = computed(() => {
 <style scoped lang="scss">
 .c-card_grid {
   min-height: 160px;
+
   &__item {
     margin-bottom: 32px;
 
@@ -45,7 +46,7 @@ const classes = computed(() => {
       &.c-card_grid__medium {
         height: 350px;
         min-width: 350px;
-        padding-bottom: 0px;
+        padding-bottom: 0;
         position: relative;
 
         @media (min-width: $sm) {

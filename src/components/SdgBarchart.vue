@@ -90,6 +90,7 @@ onMounted(() => {
 <style lang="scss">
 .tipichart {
   justify-content: center;
+
   &__row {
     display: inline-block;
     width: 64px;
@@ -101,6 +102,7 @@ onMounted(() => {
       display: block;
     }
   }
+
   &__tooltip {
     position: absolute;
     left: 0;
@@ -110,6 +112,7 @@ onMounted(() => {
     display: none;
     pointer-events: none;
   }
+
   &__tip {
     background: black;
     color: white;
@@ -118,6 +121,7 @@ onMounted(() => {
     padding: 0 4px;
     line-height: 1.5;
   }
+
   &__icon {
     width: 52px;
     height: 48px;
@@ -125,12 +129,14 @@ onMounted(() => {
     background-position: center;
     background-size: 55%;
   }
+
   &__bar {
     height: 234px;
     margin-bottom: 8px;
     display: flex;
     border-radius: 0;
   }
+
   &__overbar {
     width: 100%;
     transition: width 500ms cubic-bezier(0.59, 0.12, 0.34, 0.95) 350ms;
@@ -139,6 +145,7 @@ onMounted(() => {
     border-radius: 0;
   }
 }
+
 hr {
   border-top: 2px solid #fff;
   border-bottom: 0;

@@ -328,6 +328,7 @@ thead {
   position: sticky;
   top: 0;
 }
+
 .example {
   background-color: #f3f3f3;
   padding: 32px;

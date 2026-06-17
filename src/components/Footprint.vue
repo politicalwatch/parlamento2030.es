@@ -57,6 +57,7 @@ const isSmall = () => {
     padding-right: 8px;
     display: inline-block;
     width: 22px;
+
     svg {
       fill: $secondary-dark;
       width: auto;

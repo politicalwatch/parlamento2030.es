@@ -46,12 +46,14 @@ const { text, value, searchParams } = toRefs(props);
     align-items: center;
   }
 }
-@media (max-width: 754px) {
+
+@media (width <= 754px) {
   #alert-block {
     .o-grid__col:last-of-type {
       display: flex;
       justify-content: flex-start;
       align-items: left;
+
       a {
         margin-top: 30px;
       }

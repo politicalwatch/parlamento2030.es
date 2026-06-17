@@ -541,9 +541,11 @@ function updateChart(from) {
     font-weight: light;
     fill: #2d4252;
   }
+
   .nodes text {
 
   }
+
   .nodes text.layer-1 {
     font-weight: 800;
     font-size: 13px;
@@ -578,7 +580,7 @@ function updateChart(from) {
 .simple-tooltip {
   position: absolute;
   z-index: 10;
-  padding: 0px;
+  padding: 0;
   border-radius: 5px;
   pointer-events: none;
   width: auto;
@@ -586,6 +588,7 @@ function updateChart(from) {
   min-height: 50px;
   font-size: 14px;
 }
+
 .simple-tooltip-inner {
   padding: 12px;
   color: white;
@@ -621,13 +624,16 @@ rect.selected {
  font-size:12px;
  
 }
+
 .chart-titles div:nth-child(1){
   text-align:right;
   padding-right: 74px;
 }
+
 .chart-titles div:nth-child(2){
   text-align:center;
 }
+
 .chart-titles div:nth-child(3){
   text-align:left;
   padding-left: 76px;

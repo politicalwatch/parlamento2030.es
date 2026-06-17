@@ -121,7 +121,7 @@ const getFootprint = () => {
       h5 {
         font-size: 0.875rem;
         line-height: 1.2;
-        margin-top: 0px;
+        margin-top: 0;
         margin-bottom: rem(calc($spacer-unit));
       }
 
@@ -144,11 +144,11 @@ const getFootprint = () => {
 
     &__image {
       border-radius: 50%;
-      object-fit: cover;
       border: 2px solid $primary;
       object-fit: cover;
       vertical-align: middle;
     }
+
     &__name {
       font-family: $font-primary;
       font-size: 1rem;
@@ -167,11 +167,11 @@ const getFootprint = () => {
 
     &__image {
       border-radius: 50%;
-      object-fit: cover;
       border: 2px solid $primary;
       object-fit: cover;
       vertical-align: middle;
     }
+
     &__name {
       font-family: $font-primary;
       font-size: 1rem;
@@ -194,6 +194,7 @@ const getFootprint = () => {
 
   a {
     text-decoration: none;
+
     &:hover {
       text-decoration: underline;
     }
@@ -203,6 +204,7 @@ const getFootprint = () => {
 .c-deputy-card.small-layout {
   display: inline-block;
 }
+
 .c-deputy-card.medium-layout {
   margin-bottom: rem($spacer-unit);
 }

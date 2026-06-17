@@ -23,6 +23,7 @@
 .container {
   padding: 80px 15px;
 }
+
 p {
   font-size: 1.2em;
 }
